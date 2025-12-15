@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Görünmeyeni Göster - Erişilebilirlik Haritası</title>
+    <title>Görünmeyeni Göster - İzmir Metro</title>
     <link rel="stylesheet" href="style.css">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,56 +12,43 @@
 
     <div class="container">
         <aside class="sidebar">
-            <div class="logo-area">
-                <h2>Görünmeyeni<br>Göster</h2>
-                <p>Erişilebilir Mekanlar</p>
-            </div>
-
-            <div class="filters">
-                <label>Mekan Türü</label>
-                <select id="category-select">
-                    <option value="all">Tümü</option>
-                    <option value="cafe">Kafe & Restoran</option>
-                    <option value="public">Kamu Alanı</option>
-                    <option value="park">Parklar</option>
-                </select>
-
-                <label>Erişilebilirlik Durumu</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="ramp" checked> <label for="ramp">Rampa Var</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="wc" checked> <label for="wc">Engelli WC</label>
-                </div>
-
-                <button class="btn-primary" onclick="openModal()">+ Yeni Mekan Ekle</button>
-            </div>
             
-            <div class="footer-info">
-                <p>Proje: Yeni Medya 4. Sınıf</p>
+            <div class="filter-header">
+                <h3><i class="fas fa-filter"></i> Filtrele</h3>
+                
+                <label>Tesis Tipi</label>
+                <div class="select-wrapper">
+                    <select id="type-select">
+                        <option value="all">Tümü</option>
+                        <option value="metro">Metro İstasyonu</option>
+                        <option value="tram">Tramvay</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+
+                <label>Durum</label>
+                <div class="select-wrapper">
+                    <select id="status-select">
+                        <option value="all">Tümü</option>
+                        <option value="active">Çalışıyor</option>
+                        <option value="inactive">Çalışmıyor</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
             </div>
+
+            <div class="divider">
+                <span id="result-count">0 istasyon bulundu</span>
+            </div>
+
+            <div class="results-list" id="station-list">
+                </div>
+            
         </aside>
 
         <main class="map-container">
             <div id="map"></div>
         </main>
-    </div>
-
-    <div id="addModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3>Yeni Mekan Bildir</h3>
-            <form id="placeForm">
-                <input type="text" placeholder="Mekan Adı" required>
-                <select>
-                    <option>Kategori Seçiniz</option>
-                    <option>Kafe</option>
-                    <option>Park</option>
-                </select>
-                <textarea placeholder="Erişilebilirlik notları..."></textarea>
-                <button type="submit" class="btn-submit">Kaydet ve Gönder</button>
-            </form>
-        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
