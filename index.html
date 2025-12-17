@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Görünmeyeni Göster - İzmir Metro (Ücretsiz Versiyon)</title>
+    <title>Görünmeyeni Göster - İzmir Metro</title>
     <link rel="stylesheet" href="style.css">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
     <div class="container">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="filter-header">
                 <h3><i class="fas fa-map-marked-alt"></i> İstasyonlar</h3>
                 <p style="font-size:0.85rem; color:#666; margin-top:5px;">
-                    Sorun bildirmek istediğiniz istasyonu listeden seçiniz veya haritadan tıklayınız.
+                    Listeden seçim yapın veya haritayı kullanın.
                 </p>
             </div>
 
@@ -29,6 +27,20 @@
         </aside>
 
         <main class="map-container">
+            <button id="sidebar-toggle" class="btn-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="profile-card">
+                <div class="profile-info">
+                    <span class="user-name">Merhaba, Öğrenci</span>
+                    <span class="user-points"><i class="fas fa-star"></i> <span id="display-points">0</span> Puan</span>
+                </div>
+                <div class="profile-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profil">
+                </div>
+            </div>
+
             <div id="map"></div>
         </main>
     </div>
