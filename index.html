@@ -42,20 +42,10 @@
             </div>
 
             <div class="results-list" id="station-list" role="list"></div>
-
-            <div class="map-legend sidebar-legend">
-                <h4>Durum Göstergesi</h4>
-                <ul>
-                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
-                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
-                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
-                </ul>
-            </div>
         </aside>
 
         <main class="map-container" aria-label="Metro Haritası">
             <button id="sidebar-toggle" class="btn-toggle" aria-label="Menüyü Aç"><i class="fas fa-bars"></i></button>
-
             <button id="gps-btn" class="btn-gps" onclick="locateUser()" aria-label="Konumumu Bul">
                 <i class="fas fa-location-arrow"></i>
             </button>
@@ -71,7 +61,16 @@
             </div>
 
             <div id="map"></div>
-            </main>
+
+            <div class="map-legend">
+                <h4>Durum Göstergesi</h4>
+                <ul>
+                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
+                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
+                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
+                </ul>
+            </div>
+        </main>
     </div>
 
     <div id="loginModal" class="modal">
@@ -187,9 +186,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => console.log('PWA Başlatıldı: ', registration.scope))
-                    .catch(err => console.log('PWA Hatası: ', err));
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Hatası: ', err));
             });
         }
     </script>
