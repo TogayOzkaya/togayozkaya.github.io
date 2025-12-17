@@ -25,9 +25,8 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
     flex-direction: column; 
     box-shadow: 2px 0 15px rgba(0,0,0,0.05); 
     z-index: 1000; 
-    transition: margin-left 0.3s ease; /* Kapanma efekti için */
+    transition: margin-left 0.3s ease; 
 }
-/* Sidebar kapanınca sola çıkması için margin kullanıyoruz, böylece yanındaki harita alanı genişler */
 .sidebar.closed { margin-left: calc(var(--sidebar-width) * -1); position: absolute; height: 100%; }
 
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
@@ -68,7 +67,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 
 .btn-toggle { position: absolute; top: 20px; left: 20px; z-index: 1500; background: white; width: 45px; height: 45px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; }
 
-/* GPS BUTONU */
+/* GPS BUTONU (Sağ Altta Sabit) */
 .btn-gps {
     position: absolute; bottom: 30px; right: 20px; z-index: 1001;
     background: white; width: 45px; height: 45px; border-radius: 50%;
@@ -78,6 +77,13 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 }
 .btn-gps:hover { background: var(--light-bg); color: var(--primary-color); }
 
+/* --- ZOOM KONTROLLERİ İÇİN DÜZENLEME (YENİ) --- */
+/* Hamburger butonu 20px top + 45px height = 65px yer kaplıyor.
+   Zoom butonlarını bunun altına (yaklaşık 80px) itiyoruz. */
+.leaflet-top.leaflet-left {
+    margin-top: 80px; 
+}
+
 .profile-card { position: absolute; top: 20px; right: 20px; z-index: 1500; background: white; padding: 8px 12px 8px 20px; border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
 .profile-card:hover { transform: translateY(-2px); }
 .profile-info { text-align: right; }
@@ -85,17 +91,11 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .user-points { font-size: 0.8rem; color: var(--text-muted); }
 .profile-img img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--border-color); }
 
-/* LEJANT (DURUM GÖSTERGESİ) */
+/* LEJANT */
 .map-legend {
-    position: absolute; 
-    bottom: 30px; /* Aşağıdan 30px yukarıda */
-    left: 20px; /* Soldan 20px içeride */
-    z-index: 1001; 
-    background: white; 
-    padding: 15px 20px; 
-    border-radius: 12px; 
+    position: absolute; bottom: 30px; left: 20px; z-index: 1001; 
+    background: white; padding: 15px 20px; border-radius: 12px; 
     box-shadow: 0 5px 25px rgba(0,0,0,0.1); 
-    /* Map Container flex olduğu için sidebar kapanınca container genişler, bu da sola kayar */
 }
 .map-legend h4 { font-size: 0.9rem; margin-bottom: 10px; }
 .map-legend ul { list-style: none; }
@@ -105,7 +105,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .legend-dot.status-err { background: var(--danger-color); }
 .legend-dot.status-pending { background: var(--warning-color); }
 
-/* MODAL STİLLERİ */
+/* MODALLAR (Aynı kaldı) */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
 .modal-content { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.2); animation: modalFadeIn 0.3s ease; }
 @keyframes modalFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -161,9 +161,7 @@ textarea { width: 100%; padding: 15px; border: 2px solid var(--border-color); bo
 @media (max-width: 768px) {
     .sidebar { position: absolute; height: 100%; }
     .btn-toggle { display: flex; }
-    /* Mobilde Lejant'ı sağ üstte veya sidebar kapanınca sol altta görmek için */
     .map-legend { bottom: 90px; right: 10px; left: auto; }
-    /* Sidebar açılınca lejantı gizle ki üstüne binmesin */
     body:has(.sidebar:not(.closed)) .map-legend { display: none; }
     
     .profile-card { top: 10px; right: 10px; padding: 5px 10px; }
