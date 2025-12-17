@@ -42,6 +42,15 @@
             </div>
 
             <div class="results-list" id="station-list" role="list"></div>
+
+            <div class="map-legend sidebar-legend">
+                <h4>Durum Göstergesi</h4>
+                <ul>
+                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
+                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
+                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
+                </ul>
+            </div>
         </aside>
 
         <main class="map-container" aria-label="Metro Haritası">
@@ -62,16 +71,7 @@
             </div>
 
             <div id="map"></div>
-
-            <div class="map-legend">
-                <h4>Durum Göstergesi</h4>
-                <ul>
-                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
-                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
-                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
-                </ul>
-            </div>
-        </main>
+            </main>
     </div>
 
     <div id="loginModal" class="modal">
