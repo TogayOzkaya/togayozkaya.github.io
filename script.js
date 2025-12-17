@@ -2,20 +2,15 @@
 const TEST_MODE = true;
 const REPORT_THRESHOLD = 3; 
 
-/* --- GÜVENLİK --- */
 if (typeof L === 'undefined') { alert("Harita yüklenemedi. İnternet bağlantınızı kontrol edin."); }
 
-/* --- 1. HARİTA --- */
 var map = L.map('map', {zoomControl: false}).setView([38.4189, 27.1287], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
-// ZOOM KONTROLÜ SOL ÜSTTE
 L.control.zoom({position: 'topleft'}).addTo(map);
 var markersLayer = L.layerGroup().addTo(map);
 
-/* --- 2. STATE --- */
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
-/* --- 3. İSTASYONLAR --- */
 const metroStations = [
     { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, zones: [{ name: "Ana Giriş", offset: [0,0] }] },
     { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
@@ -45,8 +40,7 @@ const metroStations = [
 
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
-/* --- 4. YARDIMCILAR & DURUM DÜZELTME --- */
-// Bu fonksiyon renk hatasını çözer
+/* --- FONKSİYONLAR --- */
 function checkAndFixStatus(station) {
     let score = parseInt(station.reportScore) || 0;
     station.reportScore = score;
@@ -59,7 +53,6 @@ function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&b
 function calculateLevel() { return Math.floor(gameState.xp / 100) + 1; }
 function getNextLevelXp() { return calculateLevel() * 100; }
 
-/* --- 5. VERİ YÖNETİMİ --- */
 function saveData() {
     try {
         localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
@@ -82,7 +75,7 @@ function loadData() {
                 const originalS = metroStations.find(s => s.name === savedS.name);
                 if (originalS) {
                     originalS.reportScore = savedS.reportScore;
-                    checkAndFixStatus(originalS); // Yüklerken durumu zorla düzelt
+                    checkAndFixStatus(originalS); 
                 }
             });
         }
@@ -91,7 +84,6 @@ function loadData() {
     renderStations();
 }
 
-/* --- 6. RENDER --- */
 function renderStations(searchTerm = "") {
     markersLayer.clearLayers();
     const listDiv = document.getElementById('station-list');
@@ -102,8 +94,7 @@ function renderStations(searchTerm = "") {
     if(countSpan) countSpan.innerText = filtered.length;
 
     filtered.forEach(station => {
-        checkAndFixStatus(station); // Her render'da kontrol et
-        
+        checkAndFixStatus(station);
         let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok', icon = '<i class="fas fa-check-circle"></i>';
         if (station.status === 'inactive') { color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; icon = '<i class="fas fa-times-circle"></i>'; } 
         else if (station.status === 'pending') { color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; icon = '<i class="fas fa-exclamation-circle"></i>'; }
@@ -115,21 +106,17 @@ function renderStations(searchTerm = "") {
         const card = document.createElement('div');
         card.className = 'station-card';
         card.onclick = () => triggerListClick(station.name);
-        
         let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')" title="Bildir"><i class="fas fa-bullhorn"></i></button>`;
         if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')" title="Doğrula"><i class="fas fa-check"></i></button>`;
-
         card.innerHTML = `<div class="card-info"><div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div><span class="status-badge ${statusClass}">${icon} ${statusText}</span></div><div class="card-actions">${btns}</div>`;
         listDiv.appendChild(card);
     });
 }
 
-// BAŞLAT
 loadData();
 const searchInput = document.getElementById('station-search');
 if(searchInput) searchInput.addEventListener('input', (e) => renderStations(e.target.value));
 
-/* --- 7. ETKİLEŞİM --- */
 function triggerAction(stationOrName, type) {
     const name = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
     const s = metroStations.find(st => st.name === name);
@@ -139,7 +126,6 @@ function triggerAction(stationOrName, type) {
     else openVerifyModal(name);
 }
 
-/* --- 8. MODAL --- */
 const reportModal = document.getElementById('reportModal');
 const verifyModal = document.getElementById('verifyModal');
 const loginModal = document.getElementById('loginModal');
@@ -206,7 +192,6 @@ window.submitVerification = (fixed) => {
     saveData(); updateUI(); renderStations(); closeAllModals(); alert("✅ Teşekkürler!");
 }
 
-/* --- 9. UI VE DİĞER --- */
 function updateUI() {
     document.getElementById('top-user-name').innerText = gameState.username;
     document.getElementById('top-user-desc').innerHTML = `<i class="fas fa-star" style="color:#f1c40f;"></i> Seviye ${calculateLevel()}`;
