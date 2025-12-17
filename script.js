@@ -1,16 +1,44 @@
-// 1. HARİTAYI BAŞLAT
+// --- 1. HARİTAYI BAŞLAT ---
 var map = L.map('map').setView([38.4100, 27.0900], 13);
-
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Markerları (Pinleri) tutacak bir katman grubu oluşturuyoruz.
-// Bu sayede "Temizle ve Yeniden Çiz" yapabileceğiz.
 var markersLayer = L.layerGroup().addTo(map);
 
-// 2. İSTASYON VERİLERİ
-// (Durumu sonradan değiştireceğimiz için 'const' yerine 'let' veya içeriği değiştirilebilir obje kullanıyoruz)
+// --- 2. KULLANICI PUANI & PROFİL ---
+let userPoints = 0; // Başlangıç puanı
+
+// Puanı ekranda güncelleyen fonksiyon
+function updateProfilePoints(pointsToAdd) {
+    userPoints += pointsToAdd;
+    // Animasyonlu sayı artışı (Basitçe)
+    const display = document.getElementById('display-points');
+    display.innerText = userPoints;
+    
+    // Küçük bir parlama efekti verelim
+    const card = document.querySelector('.profile-card');
+    card.style.transform = "scale(1.1)";
+    setTimeout(() => { card.style.transform = "scale(1)"; }, 200);
+}
+
+// --- 3. SIDEBAR (SOL MENÜ) AÇMA KAPAMA ---
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('sidebar-toggle');
+
+toggleBtn.addEventListener('click', () => {
+    // 'closed' sınıfını ekle veya çıkar
+    sidebar.classList.toggle('closed');
+    
+    // Haritanın boyutunun değiştiğini Leaflet'e bildir (Önemli!)
+    // Geçiş efekti (0.4s) bitince haritayı yenile
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 400);
+});
+
+
+// --- 4. İSTASYON VERİLERİ ---
 const metroStations = [
     { 
         name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active",
@@ -110,47 +138,32 @@ const metroStations = [
     }
 ];
 
-// 3. HAT ÇİZİMİ
+// --- 5. HATTI ÇİZ ---
 var polyline = L.polyline(metroStations.map(s => s.coords), { 
-    color: '#e74c3c', 
-    weight: 6,
-    opacity: 0.9,
-    lineCap: 'round'
+    color: '#e74c3c', weight: 6, opacity: 0.9, lineCap: 'round'
 }).addTo(map);
 
 map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
 
-
-// 4. İSTASYONLARI EKRANA ÇİZEN FONKSİYON
-// (Bunu fonksiyon yaptık çünkü güncelleme olunca silip tekrar çizmemiz gerekecek)
+// --- 6. İSTASYONLARI OLUŞTUR ---
 function renderStations() {
-    // A. Önce Haritadaki eski pinleri temizle
     markersLayer.clearLayers();
-    
-    // B. Listedeki eski kartları temizle
     const listDiv = document.getElementById('station-list');
     listDiv.innerHTML = "";
     document.getElementById('result-count').innerText = `${metroStations.length} istasyon listelendi`;
 
-    // C. Yeniden oluştur
     metroStations.forEach(station => {
-        // Harita Pin Rengi (Duruma göre)
         const color = station.status === 'active' ? '#27ae60' : '#c0392b';
         
         const marker = L.circleMarker(station.coords, { 
-            color: color, 
-            radius: 8, 
-            fillOpacity: 1,
-            fillColor: color 
+            color: color, radius: 8, fillOpacity: 1, fillColor: color 
         });
-        
-        // Markeri katmana ekle
         markersLayer.addLayer(marker);
 
         marker.bindPopup(`<b>${station.name}</b>`);
         marker.on('click', () => { openModal(station.name); });
 
-        // Liste Kartı
+        // Kart Oluştur
         const card = document.createElement('div');
         card.className = 'station-card';
         const statusBadge = station.status === 'active' 
@@ -167,29 +180,27 @@ function renderStations() {
         listDiv.appendChild(card);
     });
 }
-
-// İlk açılışta istasyonları çiz
 renderStations();
 
-
-// Listeden tıklama fonksiyonu
 window.triggerListClick = function(stationName) {
     const station = metroStations.find(s => s.name === stationName);
     if(station) {
         map.flyTo(station.coords, 15, { duration: 1.5 });
+        // Mobilde veya dar ekranda menüyü kapatmak istersen burayı aç:
+        // sidebar.classList.add('closed'); 
         setTimeout(() => openModal(stationName), 1000);
     }
 }
 
-// --- MODAL VE BİLDİRİM İŞLEMLERİ ---
+// --- 7. MODAL MANTIĞI ---
 const modal = document.getElementById('reportModal');
 const zoneLayer = document.getElementById('click-zones');
 const alertBox = document.getElementById('selected-zone-info');
 let selectedZoneName = null;
-let currentStationName = null; // Şu an hangi istasyona bildirim yapıyoruz?
+let currentStationName = null;
 
 window.openModal = function(stationName) {
-    currentStationName = stationName; // İstasyon adını kaydet
+    currentStationName = stationName;
     const station = metroStations.find(s => s.name === stationName);
     if (!station) return;
 
@@ -225,30 +236,25 @@ window.closeReportModal = function() {
     modal.style.display = 'none';
 }
 
-// --- FORMU GÖNDERİNCE ÇALIŞACAK KISIM ---
 document.getElementById('reportForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    // 1. Kontrol: Yer seçildi mi?
     if (!selectedZoneName) {
         alert("Lütfen önce soldaki görselden (krokiden) sorunlu bölgeyi seçiniz!");
         return;
     }
 
-    // 2. PUAN MESAJI VE TEŞEKKÜR
-    // SweetAlert gibi kütüphaneler yoksa standart alert kullanalım:
-    alert(`🎉 TEBRİKLER! 🎉\n\nBildiriminiz başarıyla alındı.\nBu katkınızla engelleri kaldırdınız!\n\n🏆 KAZANILAN PUAN: 50`);
+    // 1. Puan Kazanma Mesajı
+    alert(`🎉 TEBRİKLER! 🎉\n\nBildiriminiz alındı.\n🏆 KAZANILAN PUAN: 50`);
+    
+    // 2. Profildeki Puanı Güncelle (YENİ ÖZELLİK)
+    updateProfilePoints(50);
 
-    // 3. İSTASYON RENGİNİ DEĞİŞTİRME (KIRMIZI YAPMA)
-    // Bildirim yapıldığına göre bir sorun var demektir, istasyonu 'inactive' yapıyoruz.
+    // 3. İstasyon Durumunu Kırmızı Yap
     if (currentStationName) {
         const stationIndex = metroStations.findIndex(s => s.name === currentStationName);
         if (stationIndex !== -1) {
-            // İstasyon durumunu güncelle
             metroStations[stationIndex].status = 'inactive'; 
-            
-            // 4. EKRANI YENİLE
-            // Haritayı ve listeyi yeni renkle tekrar çiz
             renderStations();
         }
     }
