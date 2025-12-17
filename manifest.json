@@ -1,0 +1,20 @@
+{
+  "name": "Erişilebilir İzmir",
+  "short_name": "Erişilebilirİzmir",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e69de",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5695/5695641.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5695/5695641.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
