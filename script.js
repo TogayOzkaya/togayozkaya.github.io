@@ -9,7 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:
 L.control.zoom({position: 'bottomright'}).addTo(map);
 var markersLayer = L.layerGroup().addTo(map);
 
-/* --- 2. OYUN STATE (VARSAYILAN) --- */
+/* --- 2. OYUN STATE --- */
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
 /* --- 3. İSTASYON VERİLERİ (COĞRAFİ SIRALI) --- */
@@ -42,11 +42,29 @@ const metroStations = [
 
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
-/* --- 4. VERİ KAYDETME & YÜKLEME SİSTEMİ (YENİ) --- */
+/* --- 4. YARDIMCI FONKSİYONLAR --- */
+// Bu fonksiyon istasyonun puanına bakıp rengini zorla günceller
+function refreshStationStatus(station) {
+    // Puanı sayıya çevir (Hata önlemek için)
+    station.reportScore = parseInt(station.reportScore) || 0;
+    
+    if (station.reportScore >= REPORT_THRESHOLD) {
+        station.status = 'inactive'; // KIRMIZI
+    } else if (station.reportScore > 0) {
+        station.status = 'pending'; // SARI
+    } else {
+        station.status = 'active'; // YEŞİL
+    }
+}
+
+function calculateLevel() { return Math.floor(gameState.xp / 100) + 1; }
+function getNextLevelXp() { return gameState.level * 100; }
+function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&background=1e69de&color=fff&rounded=true&bold=true`; }
+
+/* --- 5. VERİ KAYDETME & YÜKLEME --- */
 function saveData() {
     localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
-    // Sadece değişen verileri (status ve score) kaydet
-    const stationData = metroStations.map(s => ({ name: s.name, status: s.status, reportScore: s.reportScore }));
+    const stationData = metroStations.map(s => ({ name: s.name, reportScore: s.reportScore }));
     localStorage.setItem('izmirMetro_stations', JSON.stringify(stationData));
 }
 
@@ -54,34 +72,31 @@ function loadData() {
     const savedState = localStorage.getItem('izmirMetro_gameState');
     const savedStations = localStorage.getItem('izmirMetro_stations');
 
-    if (savedState) {
-        gameState = JSON.parse(savedState);
-    }
+    if (savedState) { gameState = JSON.parse(savedState); }
     if (savedStations) {
         const parsedStations = JSON.parse(savedStations);
-        // Kayıtlı verileri ana listeye eşle
         parsedStations.forEach(savedS => {
             const originalS = metroStations.find(s => s.name === savedS.name);
             if (originalS) {
-                originalS.status = savedS.status;
                 originalS.reportScore = savedS.reportScore;
+                // Veri yüklendikten sonra durumu hemen güncelle
+                refreshStationStatus(originalS);
             }
         });
     }
-    // Veriler yüklendikten sonra UI'ı güncelle
     if(gameState.isLoggedIn) updateProfileUI();
     renderStations();
 }
 
-// Tüm Verileri Sıfırla (Çıkış Yap Butonu İçin) - Opsiyonel eklenebilir
+// Çıkış Yap Butonu İçin
 window.resetData = function() {
-    if(confirm("Tüm veriler sıfırlanacak. Emin misiniz?")) {
+    if(confirm("Tüm ilerleme silinecek ve çıkış yapılacak. Emin misiniz?")) {
         localStorage.clear();
         location.reload();
     }
 }
 
-/* --- 5. RENDER FONKSİYONU --- */
+/* --- 6. RENDER FONKSİYONU --- */
 function renderStations(searchTerm = "") {
     markersLayer.clearLayers();
     const listDiv = document.getElementById('station-list');
@@ -91,14 +106,16 @@ function renderStations(searchTerm = "") {
     document.getElementById('result-count').innerText = filtered.length;
 
     filtered.forEach(station => {
-        // Renk Mantığını Garantiye Al
-        if (station.reportScore >= REPORT_THRESHOLD) { station.status = 'inactive'; } 
-        else if (station.reportScore > 0) { station.status = 'pending'; } 
-        else { station.status = 'active'; }
+        // Her çizimde durumu tekrar kontrol et
+        refreshStationStatus(station);
 
-        let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok';
-        if (station.status === 'inactive') { color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; }
-        else if (station.status === 'pending') { color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; }
+        let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok', icon = '<i class="fas fa-check-circle"></i>';
+        
+        if (station.status === 'inactive') { 
+            color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; icon = '<i class="fas fa-times-circle"></i>';
+        } else if (station.status === 'pending') { 
+            color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; icon = '<i class="fas fa-exclamation-circle"></i>';
+        }
 
         const marker = L.circleMarker(station.coords, {color: 'white', weight: 2, fillColor: color, fillOpacity: 1, radius: 9}).addTo(markersLayer);
         marker.bindTooltip(`<b>${station.name}</b><br>${statusText}`);
@@ -108,19 +125,19 @@ function renderStations(searchTerm = "") {
         card.className = 'station-card';
         card.onclick = () => triggerListClick(station.name);
         
-        let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')"><i class="fas fa-bullhorn"></i></button>`;
-        if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')"><i class="fas fa-check"></i></button>`;
+        let btns = `<button class="btn-icon-action btn-report" onclick="event.stopPropagation(); triggerAction('${station.name}', 'report')" title="Durum Bildir"><i class="fas fa-bullhorn"></i></button>`;
+        if(station.status !== 'active') btns += `<button class="btn-icon-action btn-verify" onclick="event.stopPropagation(); triggerAction('${station.name}', 'verify')" title="Doğrula"><i class="fas fa-check"></i></button>`;
 
-        card.innerHTML = `<div class="card-info"><div>${station.name}</div><span class="status-badge ${statusClass}">${statusText}</span></div><div class="card-actions">${btns}</div>`;
+        card.innerHTML = `<div class="card-info"><div class="card-header"><i class="fas fa-subway station-icon"></i> ${station.name}</div><span class="status-badge ${statusClass}">${icon} ${statusText}</span></div><div class="card-actions">${btns}</div>`;
         listDiv.appendChild(card);
     });
 }
 
-// SAYFA YÜKLENİNCE VERİLERİ ÇEK
+// SAYFA YÜKLENİNCE ÇALIŞTIR
 loadData();
 document.getElementById('station-search').addEventListener('input', (e) => renderStations(e.target.value));
 
-/* --- 6. AKSİYONLAR --- */
+/* --- 7. AKSİYONLAR --- */
 function triggerAction(stationOrName, type) {
     const name = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
     const s = metroStations.find(st => st.name === name);
@@ -130,7 +147,7 @@ function triggerAction(stationOrName, type) {
     else openVerifyModal(name);
 }
 
-/* --- 7. MODAL & MANTIK --- */
+/* --- 8. MODAL & MANTIK --- */
 const reportModal = document.getElementById('reportModal');
 const verifyModal = document.getElementById('verifyModal');
 const loginModal = document.getElementById('loginModal');
@@ -173,10 +190,20 @@ function openReportModal(name) {
 document.getElementById('reportForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const s = metroStations.find(st => st.name === currentStationName);
+    
+    // Puan artır ve durumu güncelle
     s.reportScore++;
-    addXp(50 + (hasPhoto?20:0)); gameState.totalReports++; gameState.badges.firstReport=true;
-    saveData(); // KAYDET
-    updateUI(); renderStations(); closeAllModals(); alert("Bildirim Alındı!");
+    refreshStationStatus(s); // Durumu hemen güncelle
+    
+    addXp(50 + (hasPhoto?20:0)); 
+    gameState.totalReports++; 
+    gameState.badges.firstReport=true;
+    
+    saveData(); 
+    updateUI(); 
+    renderStations(); 
+    closeAllModals(); 
+    alert("Bildirim Alındı!");
 });
 
 function openVerifyModal(name) {
@@ -187,11 +214,24 @@ function openVerifyModal(name) {
 
 window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
-    if(fixed) { s.status = 'active'; s.reportScore = 0; addXp(30); }
-    else { s.reportScore++; addXp(15); }
-    gameState.verifiedCount++; gameState.badges.verifier=true;
-    saveData(); // KAYDET
-    updateUI(); renderStations(); closeAllModals(); alert("Teşekkürler!");
+    if(fixed) { 
+        s.reportScore = 0; 
+        refreshStationStatus(s);
+        addXp(30); 
+    } else { 
+        s.reportScore++; 
+        refreshStationStatus(s); // Puan artınca durumu hemen kontrol et
+        addXp(15); 
+    }
+    
+    gameState.verifiedCount++; 
+    gameState.badges.verifier=true;
+    
+    saveData(); 
+    updateUI(); 
+    renderStations(); 
+    closeAllModals(); 
+    alert("Teşekkürler!");
 }
 
 function openLoginModal() { loginModal.style.display = 'flex'; }
@@ -199,7 +239,7 @@ function openProfileModal() { profileModal.style.display = 'flex'; updateUI(); }
 function closeAllModals() { reportModal.style.display='none'; verifyModal.style.display='none'; loginModal.style.display='none'; profileModal.style.display='none'; }
 window.closeReportModal = closeAllModals; window.closeVerifyModal = closeAllModals; window.closeLoginModal = closeAllModals; window.closeProfileModal = closeAllModals;
 
-/* --- 8. YARDIMCILAR --- */
+/* --- 9. YARDIMCILAR --- */
 function getAlternative(name) {
     const i = metroStations.findIndex(s => s.name === name);
     if(i>0 && metroStations[i-1].status==='active') return metroStations[i-1].name;
@@ -209,12 +249,8 @@ function getAlternative(name) {
 function addXp(amount) { 
     gameState.xp += amount; 
     if(calculateLevel() > gameState.level) { gameState.level++; alert("Seviye Atladın!"); } 
-    saveData(); // Puan değişince kaydet
+    // saveData(); // loadData içinde zaten kaydediliyor
 }
-function calculateLevel() { return Math.floor(gameState.xp/100)+1; }
-function getNextLevelXp() { return gameState.level * 100; }
-function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&background=1e69de&color=fff&rounded=true&bold=true`; }
-
 function updateUI() {
     document.getElementById('top-user-name').innerText = gameState.username;
     document.getElementById('top-user-desc').innerText = `Seviye ${gameState.level}`;
@@ -233,7 +269,6 @@ function updateUI() {
     document.getElementById('xp-bar').style.width = `${progress}%`;
     document.getElementById('xp-text').innerText = `${gameState.xp}/${nextXp} XP`;
     
-    // Rozetleri Güncelle
     const updateBadge = (id, unlocked) => {
         const el = document.getElementById(id);
         if(unlocked) {
@@ -245,7 +280,6 @@ function updateUI() {
     updateBadge('badge-first-report', gameState.badges.firstReport);
     updateBadge('badge-verifier', gameState.badges.verifier);
 }
-// UI fonksiyonunu globale aç
 window.updateProfileUI = updateUI;
 
 window.handleProfileClick = () => gameState.isLoggedIn ? openProfileModal() : openLoginModal();
