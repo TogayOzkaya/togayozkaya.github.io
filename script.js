@@ -50,10 +50,17 @@ function updateBadgeStatus(id, unlocked) {
     }
 }
 
-// --- 3. İSTASYON VERİLERİ ---
-// zones: Artık [lat_offset, lng_offset] olarak tutuyoruz.
-// Örnek: [0.0005, 0.0005] demek, istasyon merkezinin biraz kuzey doğusu demek.
+// --- 3. İSTASYON VERİLERİ (SIRALI - BATI'DAN DOĞU'YA) ---
+// Sıralama önemlidir, yoksa çizgi zigzag yapar.
+// zones offset: [lat_farkı, lng_farkı] -> Ana konumdan ne kadar uzakta?
 const metroStations = [
+    { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, zones: [{ name: "Ana Giriş", offset: [0,0] }] },
+    { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "Narlıdere (İtfaiye)", coords: [38.3936, 27.0150], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "Güzel Sanatlar", coords: [38.3925, 27.0236], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "DEÜ Hastanesi", coords: [38.3944, 27.0386], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "Çağdaş", coords: [38.3944, 27.0453], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "Balçova", coords: [38.3958, 27.0569], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { 
         name: "Fahrettin Altay", coords: [38.3969, 27.0700], status: "active", reportScore: 0,
         zones: [
@@ -69,17 +76,6 @@ const metroStations = [
             { name: "Okul Tarafı", offset: [-0.0002, 0.0002] }
         ]
     },
-    { 
-        name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0,
-        zones: [{ name: "Ana Giriş", offset: [0,0] }]
-    },
-    // Diğer istasyonlar... (Kısalık için diğerlerini özet geçiyorum, aynısı uygulanır)
-    { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Narlıdere (İtfaiye)", coords: [38.3936, 27.0150], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Güzel Sanatlar", coords: [38.3925, 27.0236], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "DEÜ Hastanesi", coords: [38.3944, 27.0386], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Çağdaş", coords: [38.3944, 27.0453], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
-    { name: "Balçova", coords: [38.3958, 27.0569], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "Göztepe", coords: [38.3961, 27.0944], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "İzmirspor", coords: [38.4017, 27.1106], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
@@ -135,7 +131,7 @@ function renderStations() {
 renderStations();
 updateProfileUI(); 
 
-// --- 4. MODAL & MİNİ HARİTA MANTIĞI ---
+// --- 4. MODAL & MİNİ HARİTA MANTIĞI (GÜNCELLENDİ) ---
 let miniMap = null; // Mini harita örneği
 let selectedZone = null;
 let currentStationName = null;
@@ -150,57 +146,56 @@ window.openReportModal = (name) => {
     alertBox.className = "selection-alert";
     alertBox.innerText = "Lütfen haritadan seçim yapın";
 
-    // İstasyon verisini bul
     const station = metroStations.find(s => s.name === name);
     
-    // Mini Harita Kurulumu (Gecikmeli yüklenmeli yoksa gri görünür)
+    // Mini Haritayı (Tekrar) Oluştur
+    // setTimeout kullanıyoruz çünkü modal açılmadan (display:flex olmadan) harita boyutu hesaplanamaz.
     setTimeout(() => {
         if (miniMap) {
             miniMap.remove(); // Varsa eskisini sil
         }
 
-        // Yeni mini harita oluştur (Kuş bakışı)
         miniMap = L.map('mini-map', {
             center: station.coords,
-            zoom: 18, // Çok yakın zoom
+            zoom: 18, 
             zoomControl: false,
             dragging: false,
             scrollWheelZoom: false
         });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; OSM'
+            attribution: '© OSM'
         }).addTo(miniMap);
 
         // Çıkış Noktalarını İşaretle
-        station.zones.forEach(zone => {
-            // Koordinat hesapla (Merkez + Offset)
+        // Eğer zone yoksa varsayılan bir nokta koy (Merkeze)
+        const zones = station.zones || [{name: "Genel Alan", offset: [0,0]}];
+
+        zones.forEach(zone => {
             const zoneLat = station.coords[0] + zone.offset[0];
             const zoneLng = station.coords[1] + zone.offset[1];
 
-            // Mavi Pin
+            // Mavi Pinler (Seçilebilir)
             const zoneMarker = L.circleMarker([zoneLat, zoneLng], {
                 color: '#3498db',
                 fillColor: '#3498db',
                 fillOpacity: 0.8,
-                radius: 10
+                radius: 12
             }).addTo(miniMap);
 
-            // Tıklayınca Seç
+            zoneMarker.bindTooltip(zone.name, {permanent: true, direction: 'top', offset: [0, -10]});
+
             zoneMarker.on('click', () => {
                 selectedZone = zone.name;
                 alertBox.className = "selection-alert selected";
                 alertBox.innerText = `Seçildi: ${zone.name}`;
                 
-                // Diğerlerini söndür, bunu parlat
+                // Diğerlerini söndür, bunu parlat (Kırmızı yap)
                 miniMap.eachLayer((layer) => {
                     if(layer instanceof L.CircleMarker) layer.setStyle({color: '#3498db', fillColor: '#3498db'});
                 });
-                zoneMarker.setStyle({color: '#e74c3c', fillColor: '#e74c3c'}); // Kırmızı yap
+                zoneMarker.setStyle({color: '#e74c3c', fillColor: '#e74c3c'}); 
             });
-
-            // İsim etiketi
-            zoneMarker.bindTooltip(zone.name, {permanent: true, direction: 'top', offset: [0, -10]}).openTooltip();
         });
     }, 200);
 }
@@ -214,7 +209,6 @@ document.getElementById('reportForm').addEventListener('submit', function(e) {
 
     const station = metroStations.find(s => s.name === currentStationName);
     
-    // Basit Simülasyon (GPS kontrolü burada eklenebilir)
     station.reportScore += 1;
     if(station.reportScore >= REPORT_THRESHOLD) station.status = 'inactive';
     else station.status = 'pending';
