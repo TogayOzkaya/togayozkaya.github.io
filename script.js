@@ -10,7 +10,10 @@ if (typeof L === 'undefined') {
 /* --- 1. HARİTA BAŞLATMA --- */
 var map = L.map('map', {zoomControl: false}).setView([38.4189, 27.1287], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM' }).addTo(map);
-L.control.zoom({position: 'bottomright'}).addTo(map);
+
+// DEĞİŞİKLİK: Zoom kontrolünü SOL ÜST köşeye alıyoruz
+L.control.zoom({position: 'topleft'}).addTo(map);
+
 var markersLayer = L.layerGroup().addTo(map);
 
 /* --- 2. OYUN STATE --- */
@@ -36,6 +39,7 @@ const metroStations = [
     { name: "Fahrettin Altay", coords: [38.3969, 27.0700], status: "active", reportScore: 0, zones: [{name:"AVM", offset:[0.0003,-0.0003]}, {name:"Pazar", offset:[-0.0003,0.0003]}] },
     { name: "Poligon", coords: [38.3933, 27.0850], status: "active", reportScore: 0, zones: [{name:"Park", offset:[0.0002,-0.0002]}] },
     { name: "Göztepe", coords: [38.3961, 27.0944], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
+    { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "Hatay", coords: [38.4017, 27.1028], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "İzmirspor", coords: [38.4017, 27.1106], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
     { name: "Üçyol", coords: [38.4058, 27.1211], status: "active", reportScore: 0, zones: [{name:"Giriş", offset:[0,0]}] },
