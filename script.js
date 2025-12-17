@@ -9,7 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:
 L.control.zoom({position: 'bottomright'}).addTo(map);
 var markersLayer = L.layerGroup().addTo(map);
 
-/* --- 2. OYUN STATE --- */
+/* --- 2. OYUN STATE (VARSAYILAN) --- */
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
 /* --- 3. İSTASYON VERİLERİ (COĞRAFİ SIRALI) --- */
@@ -42,7 +42,46 @@ const metroStations = [
 
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
-/* --- 4. RENDER FONKSİYONU --- */
+/* --- 4. VERİ KAYDETME & YÜKLEME SİSTEMİ (YENİ) --- */
+function saveData() {
+    localStorage.setItem('izmirMetro_gameState', JSON.stringify(gameState));
+    // Sadece değişen verileri (status ve score) kaydet
+    const stationData = metroStations.map(s => ({ name: s.name, status: s.status, reportScore: s.reportScore }));
+    localStorage.setItem('izmirMetro_stations', JSON.stringify(stationData));
+}
+
+function loadData() {
+    const savedState = localStorage.getItem('izmirMetro_gameState');
+    const savedStations = localStorage.getItem('izmirMetro_stations');
+
+    if (savedState) {
+        gameState = JSON.parse(savedState);
+    }
+    if (savedStations) {
+        const parsedStations = JSON.parse(savedStations);
+        // Kayıtlı verileri ana listeye eşle
+        parsedStations.forEach(savedS => {
+            const originalS = metroStations.find(s => s.name === savedS.name);
+            if (originalS) {
+                originalS.status = savedS.status;
+                originalS.reportScore = savedS.reportScore;
+            }
+        });
+    }
+    // Veriler yüklendikten sonra UI'ı güncelle
+    if(gameState.isLoggedIn) updateProfileUI();
+    renderStations();
+}
+
+// Tüm Verileri Sıfırla (Çıkış Yap Butonu İçin)
+window.resetData = function() {
+    if(confirm("Tüm ilerlemeniz ve veriler sıfırlanacak. Emin misiniz?")) {
+        localStorage.clear();
+        location.reload(); // Sayfayı yenile
+    }
+}
+
+/* --- 5. RENDER FONKSİYONU --- */
 function renderStations(searchTerm = "") {
     markersLayer.clearLayers();
     const listDiv = document.getElementById('station-list');
@@ -52,22 +91,14 @@ function renderStations(searchTerm = "") {
     document.getElementById('result-count').innerText = filtered.length;
 
     filtered.forEach(station => {
-        // --- RENK VE DURUM MANTIĞI (DÜZELTİLDİ) ---
-        // Burada veriyi zorluyoruz: Puan 3'ten büyükse 'inactive' (Kırmızı) OLMALI.
-        if (station.reportScore >= REPORT_THRESHOLD) { 
-            station.status = 'inactive'; 
-        } else if (station.reportScore > 0) { 
-            station.status = 'pending'; 
-        } else {
-            station.status = 'active';
-        }
+        // Renk Mantığını Garantiye Al
+        if (station.reportScore >= REPORT_THRESHOLD) { station.status = 'inactive'; } 
+        else if (station.reportScore > 0) { station.status = 'pending'; } 
+        else { station.status = 'active'; }
 
         let color = '#27ae60', statusText = 'Sorun Yok', statusClass = 'status-ok';
-        if (station.status === 'inactive') { 
-            color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err';
-        } else if (station.status === 'pending') { 
-            color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; 
-        }
+        if (station.status === 'inactive') { color = '#c0392b'; statusText = 'Arıza Var'; statusClass = 'status-err'; }
+        else if (station.status === 'pending') { color = '#f39c12'; statusText = `Doğrulama (${station.reportScore}/${REPORT_THRESHOLD})`; statusClass = 'status-pending'; }
 
         const marker = L.circleMarker(station.coords, {color: 'white', weight: 2, fillColor: color, fillOpacity: 1, radius: 9}).addTo(markersLayer);
         marker.bindTooltip(`<b>${station.name}</b><br>${statusText}`);
@@ -84,10 +115,12 @@ function renderStations(searchTerm = "") {
         listDiv.appendChild(card);
     });
 }
-renderStations();
+
+// SAYFA YÜKLENİNCE VERİLERİ ÇEK
+loadData();
 document.getElementById('station-search').addEventListener('input', (e) => renderStations(e.target.value));
 
-/* --- 5. AKSİYONLAR --- */
+/* --- 6. AKSİYONLAR --- */
 function triggerAction(stationOrName, type) {
     const name = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
     const s = metroStations.find(st => st.name === name);
@@ -97,7 +130,7 @@ function triggerAction(stationOrName, type) {
     else openVerifyModal(name);
 }
 
-/* --- 6. MODAL YÖNETİMİ --- */
+/* --- 7. MODAL & MANTIK --- */
 const reportModal = document.getElementById('reportModal');
 const verifyModal = document.getElementById('verifyModal');
 const loginModal = document.getElementById('loginModal');
@@ -142,6 +175,7 @@ document.getElementById('reportForm').addEventListener('submit', (e) => {
     const s = metroStations.find(st => st.name === currentStationName);
     s.reportScore++;
     addXp(50 + (hasPhoto?20:0)); gameState.totalReports++; gameState.badges.firstReport=true;
+    saveData(); // KAYDET
     updateUI(); renderStations(); closeAllModals(); alert("Bildirim Alındı!");
 });
 
@@ -155,8 +189,8 @@ window.submitVerification = (fixed) => {
     const s = metroStations.find(st => st.name === stationToVerify);
     if(fixed) { s.status = 'active'; s.reportScore = 0; addXp(30); }
     else { s.reportScore++; addXp(15); }
-    
     gameState.verifiedCount++; gameState.badges.verifier=true;
+    saveData(); // KAYDET
     updateUI(); renderStations(); closeAllModals(); alert("Teşekkürler!");
 }
 
@@ -165,24 +199,54 @@ function openProfileModal() { profileModal.style.display = 'flex'; updateUI(); }
 function closeAllModals() { reportModal.style.display='none'; verifyModal.style.display='none'; loginModal.style.display='none'; profileModal.style.display='none'; }
 window.closeReportModal = closeAllModals; window.closeVerifyModal = closeAllModals; window.closeLoginModal = closeAllModals; window.closeProfileModal = closeAllModals;
 
-/* --- 7. YARDIMCILAR --- */
+/* --- 8. YARDIMCILAR --- */
 function getAlternative(name) {
     const i = metroStations.findIndex(s => s.name === name);
     if(i>0 && metroStations[i-1].status==='active') return metroStations[i-1].name;
     if(i<metroStations.length-1 && metroStations[i+1].status==='active') return metroStations[i+1].name;
     return "Otobüs kullanın";
 }
-function addXp(amount) { gameState.xp += amount; if(calculateLevel() > gameState.level) { gameState.level++; alert("Seviye Atladın!"); } }
+function addXp(amount) { 
+    gameState.xp += amount; 
+    if(calculateLevel() > gameState.level) { gameState.level++; alert("Seviye Atladın!"); } 
+    saveData(); // Puan değişince kaydet
+}
 function calculateLevel() { return Math.floor(gameState.xp/100)+1; }
+function getNextLevelXp() { return gameState.level * 100; }
+function getAvatarUrl(name) { return `https://ui-avatars.com/api/?name=${name}&background=1e69de&color=fff&rounded=true&bold=true`; }
+
 function updateUI() {
     document.getElementById('top-user-name').innerText = gameState.username;
     document.getElementById('top-user-desc').innerText = `Seviye ${gameState.level}`;
+    const avatarUrl = getAvatarUrl(gameState.username);
+    document.getElementById('top-user-img').src = avatarUrl;
+    document.getElementById('modal-username').innerText = gameState.username;
+    document.getElementById('modal-avatar').src = avatarUrl;
+    
+    document.getElementById('modal-level').innerText = gameState.level;
     document.getElementById('stat-points').innerText = gameState.xp;
     document.getElementById('stat-reports').innerText = gameState.totalReports;
+    document.getElementById('stat-badges').innerText = Object.values(gameState.badges).filter(b => b).length;
+    
+    const nextXp = getNextLevelXp();
     const progress = ((gameState.xp % 100) / 100) * 100;
     document.getElementById('xp-bar').style.width = `${progress}%`;
-    document.getElementById('xp-text').innerText = `${gameState.xp}/${gameState.level*100}`;
+    document.getElementById('xp-text').innerText = `${gameState.xp}/${nextXp} XP`;
+    
+    // Rozetleri Güncelle
+    const updateBadge = (id, unlocked) => {
+        const el = document.getElementById(id);
+        if(unlocked) {
+            el.classList.remove('locked');
+            el.querySelector('.badge-status').className = 'fas fa-check-circle badge-status active';
+        }
+    };
+    updateBadge('badge-first-login', gameState.badges.firstLogin);
+    updateBadge('badge-first-report', gameState.badges.firstReport);
+    updateBadge('badge-verifier', gameState.badges.verifier);
 }
+// UI fonksiyonunu globale aç
+window.updateProfileUI = updateUI;
 
 window.handleProfileClick = () => gameState.isLoggedIn ? openProfileModal() : openLoginModal();
 window.performLogin = () => {
@@ -192,6 +256,7 @@ window.performLogin = () => {
         const names = ["Ali Can", "Ayşe Yılmaz", "Mehmet Öz"];
         gameState.username = names[Math.floor(Math.random()*names.length)];
         gameState.badges.firstLogin = true;
+        saveData(); // Login olunca kaydet
         updateUI(); closeAllModals(); alert("Giriş Başarılı!");
     }, 1000);
 }
@@ -204,7 +269,7 @@ document.getElementById('file-input').addEventListener('change', () => { hasPhot
 document.getElementById('sidebar-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('closed'));
 window.onclick = (e) => { if(e.target.classList.contains('modal')) closeAllModals(); };
 
-/* --- 8. TICKER --- */
+// Ticker
 setInterval(() => {
     const t = document.getElementById('ticker-text');
     const msgs = ["Sistem: Hatay bakımda", "Ali K. Konak doğruladı", "Can B. Üçyol raporladı"];
