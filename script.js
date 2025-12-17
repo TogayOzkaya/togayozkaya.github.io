@@ -175,4 +175,125 @@ function updateBadgeStatus(id, unlocked) {
         const el = document.getElementById(id);
         el.classList.remove('locked');
         const icon = el.querySelector('.badge-status');
-        icon.classList.replace('fa-
+        icon.classList.replace('fa-lock', 'fa-check-circle');
+        icon.classList.add('active');
+    }
+}
+
+// --- 7. RAPOR & DOĞRULAMA (BUG DÜZELTİLDİ) ---
+const reportModal = document.getElementById('reportModal');
+const verifyModal = document.getElementById('verifyModal');
+let currentStationName = null; let selectedZone = null; let hasPhoto = false; let stationToVerify = null; let miniMap = null;
+
+function triggerAction(stationOrName, actionType = null) {
+    const stationName = typeof stationOrName === 'string' ? stationOrName : stationOrName.name;
+    const station = metroStations.find(s => s.name === stationName);
+    if (!actionType) actionType = station.status === 'active' ? 'report' : 'verify';
+    if (!gameState.isLoggedIn) { openLoginModal(); return; }
+    if (actionType === 'report') openReportModal(stationName);
+    else openVerifyModal(stationName);
+}
+
+window.openReportModal = (name) => {
+    currentStationName = name;
+    document.getElementById('modal-station-name').innerText = name;
+    reportModal.style.display = 'flex';
+    selectedZone = null; hasPhoto = false;
+    document.getElementById('selected-zone-info').className = "selection-alert";
+    document.getElementById('selected-zone-info').innerText = "Lütfen haritadan seçim yapın";
+    document.getElementById('btn-submit-report').disabled = true;
+    document.getElementById('file-label').innerText = "Fotoğraf Ekle (İsteğe Bağlı)";
+
+    const station = metroStations.find(s => s.name === name);
+    const altBox = document.getElementById('alternative-route-box');
+    if(station.status !== 'active') {
+        altBox.style.display = 'flex';
+        document.getElementById('suggestion-text').innerText = `Alternatif: ${getAlternativeRoute(name)}`;
+    } else altBox.style.display = 'none';
+
+    setTimeout(() => {
+        if (miniMap) miniMap.remove();
+        miniMap = L.map('mini-map', { center: station.coords, zoom: 18, zoomControl: false, dragging: false, scrollWheelZoom: false });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '' }).addTo(miniMap);
+        const zones = station.zones || [{name: "Genel Giriş", offset: [0,0]}];
+        zones.forEach(zone => {
+            const zm = L.circleMarker([station.coords[0]+zone.offset[0], station.coords[1]+zone.offset[1]], { color: '#3498db', fillColor: '#3498db', fillOpacity: 0.8, radius: 12 }).addTo(miniMap);
+            zm.bindTooltip(zone.name, {permanent: true, direction: 'top', offset: [0, -10]});
+            zm.on('click', () => {
+                selectedZone = zone.name;
+                document.getElementById('selected-zone-info').className = "selection-alert selected";
+                document.getElementById('selected-zone-info').innerText = `Seçildi: ${zone.name}`;
+                document.getElementById('btn-submit-report').disabled = false;
+                miniMap.eachLayer(l => { if(l instanceof L.CircleMarker) l.setStyle({fillColor:'#3498db'}) });
+                zm.setStyle({fillColor:'#e74c3c'});
+            });
+        });
+    }, 200);
+}
+
+document.getElementById('reportForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const station = metroStations.find(s => s.name === currentStationName);
+    
+    // Raporlama Mantığı
+    station.reportScore += 1;
+    if(station.reportScore >= REPORT_THRESHOLD) station.status = 'inactive'; else station.status = 'pending';
+    
+    let points = 50 + (hasPhoto ? 20 : 0);
+    gameState.xp += points; gameState.totalReports++;
+    if(gameState.totalReports >= 1) gameState.badges.firstReport = true;
+    
+    alert(`✅ Bildirim Alındı!\n+${points} Puan`);
+    updateProfileUI(); renderStations(); closeReportModal();
+});
+
+// DOĞRULAMA (BUG BURADAYDI VE DÜZELTİLDİ)
+window.openVerifyModal = (name) => {
+    stationToVerify = name;
+    document.getElementById('verify-station-name').innerText = name;
+    verifyModal.style.display = 'flex';
+}
+
+window.submitVerification = (isFixed) => {
+    const s = metroStations.find(st => st.name === stationToVerify);
+    if(isFixed) {
+        s.status = 'active'; s.reportScore = 0; gameState.xp += 30;
+        alert("👏 Düzeldiğini bildirdin.\n+30 Puan");
+    } else {
+        s.reportScore++;
+        // DÜZELTME: Eşik kontrolü buraya eklendi!
+        if (s.reportScore >= REPORT_THRESHOLD) {
+            s.status = 'inactive'; // Artık kırmızı olacak
+        }
+        gameState.xp += 15;
+        alert("👍 Sorun devam ediyor.\n+15 Puan");
+    }
+    gameState.verifiedCount++; 
+    if(gameState.verifiedCount >= 1) gameState.badges.verifier = true;
+    updateProfileUI(); renderStations(); closeVerifyModal();
+}
+
+// Diğer Olaylar
+document.getElementById('file-input').addEventListener('change', function() { if(this.files[0]) { hasPhoto=true; document.getElementById('file-label').innerText="✅ Eklendi"; } });
+window.closeReportModal = () => { reportModal.style.display = 'none'; }
+window.closeVerifyModal = () => { verifyModal.style.display = 'none'; }
+const profileModal = document.getElementById('profileModal');
+window.handleProfileClick = () => { if(gameState.isLoggedIn) { profileModal.style.display = 'flex'; updateProfileUI(); } else openLoginModal(); }
+window.closeProfileModal = () => { profileModal.style.display = 'none'; }
+window.triggerListClick = (name) => { const s = metroStations.find(st => st.name === name); map.flyTo(s.coords, 15); setTimeout(() => triggerAction(s), 800); }
+document.getElementById('sidebar-toggle').addEventListener('click', () => { document.getElementById('sidebar').classList.toggle('closed'); setTimeout(() => map.invalidateSize(), 400); });
+window.onclick = (e) => { if(e.target==profileModal) closeProfileModal(); if(e.target==reportModal) closeReportModal(); if(e.target==verifyModal) closeVerifyModal(); if(e.target==loginModal) closeLoginModal(); }
+
+// Ticker & Rota
+function getAlternativeRoute(name) {
+    const idx = metroStations.findIndex(s => s.name === name);
+    if(idx > 0 && metroStations[idx-1].status === 'active') return metroStations[idx-1].name;
+    if(idx < metroStations.length-1 && metroStations[idx+1].status === 'active') return metroStations[idx+1].name;
+    return "Otobüs/Eshot";
+}
+const activities = ["Sistem: Hatay asansör bakımı.", "Ali K. Konak doğruladı.", "Zeynep T. Üçyol raporladı."];
+setInterval(() => {
+    const t = document.getElementById('ticker-text');
+    t.style.opacity = 0;
+    setTimeout(() => { t.innerText = activities[Math.floor(Math.random()*activities.length)]; t.style.opacity = 1; }, 500);
+}, 4000);
