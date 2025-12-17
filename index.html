@@ -25,21 +25,43 @@
         <main class="map-container">
             <button id="sidebar-toggle" class="btn-toggle"><i class="fas fa-bars"></i></button>
 
-            <div class="profile-card" onclick="openProfileModal()">
+            <div class="profile-card" id="top-profile-card" onclick="handleProfileClick()">
                 <div class="profile-info">
-                    <span class="user-name">Gönüllü Katılımcı</span>
-                    <span class="user-points">
-                        <i class="fas fa-star" style="color:#f1c40f;"></i> 
-                        Seviye <span id="mini-level">1</span>
-                    </span>
+                    <span class="user-name" id="top-user-name">Misafir</span>
+                    <span class="user-points" id="top-user-desc">Giriş Yapın</span>
                 </div>
                 <div class="profile-img">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profil">
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img" alt="Profil">
                 </div>
             </div>
 
             <div id="map"></div>
         </main>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-modal-design">
+            <div class="lm-left">
+                <div class="lm-welcome-text">
+                    <h2>Topluluğa Katıl</h2>
+                    <p>İzmir'i herkes için erişilebilir kılmak senin elinde.</p>
+                </div>
+            </div>
+            <div class="lm-right">
+                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
+                <h3>Giriş Yap</h3>
+                <p class="lm-subtext">Bildirim yapmak ve puan kazanmak için oturum açmalısın.</p>
+                
+                <button class="btn-google-login" onclick="performLogin()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="G">
+                    Google ile Devam Et
+                </button>
+                
+                <div class="lm-footer">
+                    <p>Tamamen ücretsiz ve güvenlidir.</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="profileModal" class="modal">
@@ -109,15 +131,15 @@
             <span class="close-btn" onclick="closeReportModal()">&times;</span>
             <div class="modal-header">
                 <h2 id="modal-station-name">İstasyon</h2>
-                <p>Harita üzerinden sorunlu asansörü/girişi seçiniz.</p>
+                <p>Görsel üzerinden sorunlu bölgeyi seçiniz.</p>
             </div>
             <div class="modal-body">
                 <div class="visual-container">
-                    <div id="mini-map"></div> <div class="mini-map-overlay">
+                    <div id="mini-map"></div>
+                    <div class="mini-map-overlay">
                         <i class="fas fa-mouse-pointer"></i> İşaretlemek için bir mavi noktaya tıklayın
                     </div>
                 </div>
-                
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Lütfen haritadan seçim yapın</div>
                     <form id="reportForm">
