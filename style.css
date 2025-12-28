@@ -25,18 +25,17 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 5px; }
 .brand h2 { font-size: 1.4rem; font-weight: 700; }
-/* MEVCUT KOD */
-.brand { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 5px; }
-
-/* YENİ EKLENECEK KOD (Logoyu ayarlar) */
-.site-logo {
-    width: 50px;        /* Genişlik */
-    height: 50px;       /* Yükseklik */
-    border-radius: 50%; /* Yuvarlak yapar */
-    object-fit: cover;  /* Resmi bozmadan sığdırır */
-    border: 2px solid var(--primary-color); /* Etrafına ince mavi çizgi */
-}
 .sidebar-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+/* --- LOGO AYARLARI --- */
+.site-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+}
+
 .search-ticker-area { background: var(--light-bg); padding: 15px; border-bottom: 1px solid var(--border-color); }
 .search-box { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; }
 .search-box input { border: none; flex: 1; outline: none; }
@@ -116,7 +115,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .pm-badge-card.locked { opacity: 0.7; grayscale: 100%; }
 .badge-icon { width: 40px; height: 40px; background: rgba(30,105,222,0.1); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-/* RAPOR MODAL TASARIMI (RENKLİ & BUTONLU) */
+/* RAPOR MODAL TASARIMI */
 .report-modal-design { width: 900px; max-width: 95%; height: 600px; display: flex; flex-direction: column; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-bottom: 1px solid #e0e0e0; background: white; }
 .suggestion-box { background: #fff3cd; color: #856404; padding: 15px 30px; border-bottom: 1px solid #ffeeba; display: flex; align-items: center; gap: 15px; }
