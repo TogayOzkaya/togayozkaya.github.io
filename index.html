@@ -17,34 +17,20 @@
         <div class="tutorial-card">
             <div class="tutorial-slides">
                 <div class="slide active">
-                    <div class="slide-icon">
-                        <i class="fas fa-hand-holding-heart"></i>
-                    </div>
-                    <h3>Hoşgeldiniz!</h3>
-                    <p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
+                    <div class="slide-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h3>Hoşgeldiniz!</h3><p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
                 </div>
                 <div class="slide">
-                    <div class="slide-icon">
-                        <i class="fas fa-map-marked-alt"></i>
-                    </div>
-                    <h3>Durumu Kontrol Edin</h3>
-                    <p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
+                    <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Durumu Kontrol Edin</h3><p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
                 </div>
                 <div class="slide">
-                    <div class="slide-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Topluluğa Katılın</h3>
-                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
+                    <div class="slide-icon"><i class="fas fa-users"></i></div>
+                    <h3>Topluluğa Katılın</h3><p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
                 </div>
             </div>
-            
             <div class="tutorial-footer">
-                <div class="dots-container">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+                <div class="dots-container"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
                 <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
                 <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Keşfetmeye Başla 🚀</button>
             </div>
@@ -52,16 +38,27 @@
     </div>
 
     <div class="container">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <div class="logo-box">
-                        <i class="fas fa-elevator"></i>
+        <aside class="sidebar closed" id="sidebar"> <div class="sidebar-header">
+                <div class="header-top-row">
+                    <div class="brand">
+                        <div class="logo-box"><i class="fas fa-elevator"></i></div>
+                        <h2>Erişilebilir<br>İzmir</h2>
                     </div>
                     
-                    <h2>Erişilebilir İzmir</h2>
+                    <div class="profile-card-mini" id="top-profile-card" onclick="handleProfileClick()">
+                        <div class="profile-text">
+                            <span class="p-name" id="top-user-name">Giriş</span>
+                            <span class="p-lvl" id="top-user-desc">Yap</span>
+                        </div>
+                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img">
+                    </div>
+
+                    <button class="btn-close-sidebar" onclick="toggleSidebar()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <p>Arıza bildirin, rotanızı planlayın.</p>
+                
+                <p class="app-desc">Arıza bildirin, rotanızı planlayın.</p>
             </div>
 
             <div class="search-ticker-area">
@@ -86,18 +83,9 @@
         </aside>
 
         <main class="map-container">
-            <button id="sidebar-toggle" class="btn-toggle"><i class="fas fa-bars"></i></button>
+            <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            
             <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-
-            <div class="profile-card" id="top-profile-card" onclick="handleProfileClick()">
-                <div class="profile-info">
-                    <span class="user-name" id="top-user-name">Misafir</span>
-                    <span class="user-points" id="top-user-desc">Giriş Yapın <i class="fas fa-chevron-right" style="font-size: 0.8em;"></i></span>
-                </div>
-                <div class="profile-img">
-                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="top-user-img">
-                </div>
-            </div>
 
             <div id="map"></div>
 
