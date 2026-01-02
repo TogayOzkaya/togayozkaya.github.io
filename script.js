@@ -194,7 +194,7 @@ window.submitVerification = (fixed) => {
 
 function updateUI() {
     document.getElementById('top-user-name').innerText = gameState.username;
-    document.getElementById('top-user-desc').innerHTML = `<i class="fas fa-star" style="color:#f1c40f;"></i> Seviye ${calculateLevel()}`;
+    document.getElementById('top-user-desc').innerText = `Seviye ${calculateLevel()}`;
     const avatarUrl = getAvatarUrl(gameState.username);
     document.getElementById('top-user-img').src = avatarUrl;
     document.getElementById('modal-username').innerText = gameState.username;
@@ -243,10 +243,22 @@ window.performLogin = () => {
 window.triggerListClick = (name) => {
     const s = metroStations.find(st => st.name === name);
     map.flyTo(s.coords, 15);
-    setTimeout(() => triggerAction(name), 800);
+    setTimeout(() => {
+        // Mobilde listeye tıklayınca haritayı görmek için sidebar'ı kapat
+        if(window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.add('closed');
+        }
+        triggerAction(name);
+    }, 800);
 }
 document.getElementById('file-input').addEventListener('change', function() { if(this.files[0]) { hasPhoto=true; document.getElementById('file-label').innerText = "✅ Fotoğraf Eklendi"; } });
-document.getElementById('sidebar-toggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('closed'));
+
+// --- YENİ SIDEBAR TOGGLE MANTIĞI ---
+window.toggleSidebar = () => {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('closed');
+}
+
 window.onclick = (e) => { if(e.target.classList.contains('modal')) closeAllModals(); };
 
 window.locateUser = () => {
@@ -289,7 +301,7 @@ const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 
-// --- DÜZELTME: Geliştirme sürecinde öğreticiyi HER SEFERİNDE göster ---
+// --- Geliştirme modu: Her seferinde açılır ---
 tutorialOverlay.style.display = 'flex'; 
 
 window.nextSlide = () => {
@@ -314,4 +326,9 @@ window.closeTutorial = () => {
         tutorialOverlay.style.display = 'none';
         localStorage.setItem('tutorialSeen', 'true');
     }, 400);
+}
+
+// Masaüstü için başlangıçta sidebar'ı aç (Mobilde kapalı kalır)
+if(window.innerWidth > 768) {
+    document.getElementById('sidebar').classList.remove('closed');
 }
