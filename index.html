@@ -6,21 +6,52 @@
     <title>Erişilebilir İzmir Metro Haritası</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e69de">
-    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
+    <div id="tutorial-overlay" class="tutorial-overlay">
+        <div class="tutorial-card">
+            <div class="tutorial-slides">
+                <div class="slide active">
+                    <div class="slide-icon"><i class="fas fa-universal-access"></i></div>
+                    <h3>Hoşgeldiniz!</h3>
+                    <p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3>Durumu Kontrol Edin</h3>
+                    <p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h3>Bildirim Yapın</h3>
+                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, sorunu seçin ve topluluğu bilgilendirin. Puan toplayıp seviye atlayın!</p>
+                </div>
+            </div>
+            
+            <div class="tutorial-footer">
+                <div class="dots-container">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <button id="next-slide-btn" onclick="nextSlide()">İleri</button>
+                <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Başla 🚀</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="brand">
-                    <img src="logo.png" alt="Logo" class="site-logo">
+                    <img src="logo.png" alt="Logo" class="site-logo" onerror="this.style.display='none';">
                     <h2>Erişilebilir İzmir</h2>
                 </div>
-                <p>Görünmeyen engellere, görünür çözümler.</p>
+                <p>Arıza bildirin, rotanızı planlayın.</p>
             </div>
 
             <div class="search-ticker-area">
@@ -74,54 +105,24 @@
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
             <div class="lm-left">
-                <div class="lm-welcome-text">
-                    <i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i>
-                    <h2>Topluluğa Katıl</h2>
-                    <p>İzmir'i herkes için erişilebilir kıl.</p>
-                </div>
+                <div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Topluluğa Katıl</h2><p>İzmir'i herkes için erişilebilir kıl.</p></div>
             </div>
             <div class="lm-right">
                 <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-                <h3>Giriş Yap</h3>
-                <p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p>
-                <button class="btn-google-login" onclick="performLogin()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
-                    <span>Google ile Devam Et</span>
-                </button>
+                <h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p>
+                <button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button>
             </div>
         </div>
     </div>
 
     <div id="profileModal" class="modal">
         <div class="modal-content profile-modal-design">
-            <div class="pm-header">
-                <span class="close-icon-light" onclick="closeProfileModal()">&times;</span>
-                <div class="pm-user-info">
-                    <img src="" class="pm-avatar" id="modal-avatar">
-                    <div class="pm-text">
-                        <h2 id="modal-username">Kullanıcı</h2>
-                        <p>Seviye <span id="modal-level">1</span></p>
-                    </div>
-                </div>
-            </div>
+            <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
             <div class="pm-body">
-                <div class="pm-stats-row">
-                    <div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div>
-                    <div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div>
-                    <div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div>
-                </div>
-                <div class="pm-progress-area">
-                    <div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div>
-                    <div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div>
-                </div>
-                <div class="pm-badges-grid">
-                    <div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div>
-                    <div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div>
-                    <div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div>
-                </div>
-                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;">
-                    <button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button>
-                </div>
+                <div class="pm-stats-row"><div class="pm-stat-box"><i class="fas fa-trophy" style="color:#f1c40f;"></i><h3 id="stat-points">0</h3><p>Puan</p></div><div class="pm-stat-box"><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i><h3 id="stat-reports">0</h3><p>Rapor</p></div><div class="pm-stat-box"><i class="fas fa-medal" style="color:#3498db;"></i><h3 id="stat-badges">0</h3><p>Rozet</p></div></div>
+                <div class="pm-progress-area"><div class="pm-prog-labels"><span>Seviye <span id="current-level-txt">1</span></span><span id="xp-text">0/100</span><span>Seviye <span id="next-level-txt">2</span></span></div><div class="pm-prog-bg"><div class="pm-prog-fill" id="xp-bar" style="width:0%;"></div></div></div>
+                <div class="pm-badges-grid"><div class="pm-badge-card locked" id="badge-first-login"><div class="badge-icon"><i class="fas fa-user-check"></i></div><div class="badge-info"><h5>Başlangıç</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-first-report"><div class="badge-icon"><i class="fas fa-bullhorn"></i></div><div class="badge-info"><h5>İlk Ses</h5></div><i class="fas fa-lock badge-status"></i></div><div class="pm-badge-card locked" id="badge-verifier"><div class="badge-icon"><i class="fas fa-clipboard-check"></i></div><div class="badge-info"><h5>Müfettiş</h5></div><i class="fas fa-lock badge-status"></i></div></div>
+                <div class="pm-footer-action" style="margin-top:20px; padding-top:15px; border-top:1px solid #eee; text-align:center;"><button onclick="resetData()" style="padding:10px 20px; background:white; border:1px solid #e74c3c; color:#e74c3c; border-radius:8px; cursor:pointer;">Çıkış Yap ve Sıfırla</button></div>
             </div>
         </div>
     </div>
@@ -134,32 +135,13 @@
                 <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
-                    
                     <form id="reportForm">
                         <div class="issue-types-grid">
-                            <label class="issue-option">
-                                <input type="radio" name="issue" value="elevator" checked>
-                                <div class="issue-box">
-                                    <i class="fas fa-elevator"></i>
-                                    <span>Asansör</span>
-                                </div>
-                            </label>
-                            
-                            <label class="issue-option">
-                                <input type="radio" name="issue" value="escalator">
-                                <div class="issue-box">
-                                    <i class="fas fa-people-carry"></i>
-                                    <span>Yürüyen Merdiven</span>
-                                </div>
-                            </label>
+                            <label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label>
+                            <label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label>
                         </div>
-
-                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()">
-                            <input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span>
-                        </div>
-                        
+                        <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
                         <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
-                        
                         <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
                     </form>
                 </div>
