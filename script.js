@@ -217,7 +217,11 @@ function updateUI() {
 
 function openLoginModal() { loginModal.style.display = 'flex'; }
 function openProfileModal() { profileModal.style.display = 'flex'; updateUI(); }
-function closeAllModals() { reportModal.style.display='none'; verifyModal.style.display='none'; loginModal.style.display='none'; profileModal.style.display='none'; }
+function closeAllModals() { 
+    reportModal.style.display='none'; verifyModal.style.display='none'; 
+    loginModal.style.display='none'; profileModal.style.display='none'; 
+    // Öğretici ekranını kapatmaz, o ayrı
+}
 window.closeReportModal = closeAllModals; window.closeVerifyModal = closeAllModals; window.closeLoginModal = closeAllModals; window.closeProfileModal = closeAllModals;
 window.handleProfileClick = () => gameState.isLoggedIn ? openProfileModal() : openLoginModal();
 
@@ -279,3 +283,41 @@ setInterval(() => {
     const msgs = ["Sistem: Hatay bakımda", "Ali K. Konak doğruladı", "Can B. Üçyol raporladı"];
     if(t) { t.style.opacity = 0; setTimeout(() => { t.innerText = msgs[Math.floor(Math.random()*msgs.length)]; t.style.opacity = 1; }, 500); }
 }, 4000);
+
+/* --- TUTORIAL (ÖĞRETİCİ) LOGIC --- */
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const tutorialOverlay = document.getElementById('tutorial-overlay');
+
+// Sayfa yüklendiğinde öğreticiyi göster (Eğer daha önce görülmediyse)
+if (!localStorage.getItem('tutorialSeen')) {
+    tutorialOverlay.style.display = 'flex';
+}
+
+window.nextSlide = () => {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide++;
+    
+    if(currentSlide < slides.length) {
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+    } else {
+        // Son slayttan sonra butonlar değişir, burada basitlik için direk buton kontrolü yaptık HTML'de
+    }
+    
+    // Son slayta geldiysek butonu değiştir
+    if(currentSlide === slides.length - 1) {
+        document.getElementById('next-slide-btn').style.display = 'none';
+        document.getElementById('finish-tutorial-btn').style.display = 'block';
+    }
+}
+
+window.closeTutorial = () => {
+    tutorialOverlay.style.opacity = '0';
+    setTimeout(() => {
+        tutorialOverlay.style.display = 'none';
+        localStorage.setItem('tutorialSeen', 'true');
+    }, 400);
+}
