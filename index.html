@@ -18,27 +18,19 @@
             <div class="tutorial-slides">
                 <div class="slide active">
                     <div class="slide-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                    <h3>Hoşgeldiniz!</h3>
-                    <p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
+                    <h3>Hoşgeldiniz!</h3><p>Erişilebilir İzmir, metro istasyonlarındaki asansör ve yürüyen merdiven arızalarını anlık takip etmenizi sağlar.</p>
                 </div>
                 <div class="slide">
                     <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <h3>Durumu Kontrol Edin</h3>
-                    <p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
+                    <h3>Durumu Kontrol Edin</h3><p>Haritadaki <span style="color:#27ae60; font-weight:bold;">Yeşil</span> noktalar sorunsuz, <span style="color:#c0392b; font-weight:bold;">Kırmızı</span> noktalar arızalı istasyonları gösterir.</p>
                 </div>
                 <div class="slide">
                     <div class="slide-icon"><i class="fas fa-users"></i></div>
-                    <h3>Topluluğa Katılın</h3>
-                    <p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
+                    <h3>Topluluğa Katılın</h3><p>Bir arıza mı gördünüz? İstasyona tıklayın, bildirim yapın ve diğer insanlara yardımcı olun. Puan toplayın!</p>
                 </div>
             </div>
-            
             <div class="tutorial-footer">
-                <div class="dots-container">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+                <div class="dots-container"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
                 <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
                 <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Keşfetmeye Başla 🚀</button>
             </div>
@@ -48,14 +40,15 @@
     <div class="container">
         <aside class="sidebar closed" id="sidebar">
             <div class="sidebar-header">
-                <div class="header-top-row">
-                    <div class="brand-group">
+                
+                <div class="header-top">
+                    <div class="brand-container">
                         <div class="logo-box">
                             <i class="fas fa-elevator"></i>
                         </div>
                         <h1 class="brand-title">Erişilebilir İzmir</h1>
                     </div>
-                    
+
                     <button class="btn-close-sidebar" onclick="toggleSidebar()">
                         <i class="fas fa-times"></i>
                     </button>
@@ -98,9 +91,7 @@
         <main class="map-container">
             <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-
             <div id="map"></div>
-
             <div class="map-legend">
                 <h4>Durum Göstergesi</h4>
                 <ul>
@@ -114,14 +105,8 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
-            <div class="lm-left">
-                <div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Topluluğa Katıl</h2><p>İzmir'i herkes için erişilebilir kıl.</p></div>
-            </div>
-            <div class="lm-right">
-                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-                <h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p>
-                <button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button>
-            </div>
+            <div class="lm-left"><div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Topluluğa Katıl</h2><p>İzmir'i herkes için erişilebilir kıl.</p></div></div>
+            <div class="lm-right"><span class="close-icon-dark" onclick="closeLoginModal()">&times;</span><h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p><button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button></div>
         </div>
     </div>
 
@@ -146,10 +131,7 @@
                 <div class="form-container">
                     <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
                     <form id="reportForm">
-                        <div class="issue-types-grid">
-                            <label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label>
-                            <label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label>
-                        </div>
+                        <div class="issue-types-grid"><label class="issue-option"><input type="radio" name="issue" value="elevator" checked><div class="issue-box"><i class="fas fa-elevator"></i><span>Asansör</span></div></label><label class="issue-option"><input type="radio" name="issue" value="escalator"><div class="issue-box"><i class="fas fa-people-carry"></i><span>Yürüyen Merdiven</span></div></label></div>
                         <div class="file-upload-wrapper" onclick="document.getElementById('file-input').click()"><input type="file" id="file-input" hidden><i class="fas fa-camera fa-2x"></i> <span id="file-label">Fotoğraf Ekle (+20)</span></div>
                         <textarea placeholder="Açıklama (Opsiyonel)..." rows="3"></textarea>
                         <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
