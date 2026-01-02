@@ -220,7 +220,6 @@ function openProfileModal() { profileModal.style.display = 'flex'; updateUI(); }
 function closeAllModals() { 
     reportModal.style.display='none'; verifyModal.style.display='none'; 
     loginModal.style.display='none'; profileModal.style.display='none'; 
-    // Öğretici ekranını elle kapatmayız, o kendi kapanır
 }
 window.closeReportModal = closeAllModals; window.closeVerifyModal = closeAllModals; window.closeLoginModal = closeAllModals; window.closeProfileModal = closeAllModals;
 window.handleProfileClick = () => gameState.isLoggedIn ? openProfileModal() : openLoginModal();
@@ -290,13 +289,10 @@ const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 
-// Sayfa yüklendiğinde öğreticiyi göster
-if (!localStorage.getItem('tutorialSeen')) {
-    tutorialOverlay.style.display = 'flex';
-} else {
-    // Test amaçlı her seferinde görmek istersen bu else bloğunu kaldırabilirsin
-    // tutorialOverlay.style.display = 'flex'; // Geliştirme aşamasında açık kalsın
-}
+// --- DÜZELTME: Geliştirme sürecinde öğreticiyi HER SEFERİNDE göster ---
+// Normalde burası şöyle olmalıydı: if (!localStorage.getItem('tutorialSeen'))
+// Ama test edebilmen için şartı kaldırdım:
+tutorialOverlay.style.display = 'flex'; 
 
 window.nextSlide = () => {
     slides[currentSlide].classList.remove('active');
