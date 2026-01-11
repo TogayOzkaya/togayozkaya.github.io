@@ -264,3 +264,114 @@ textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(
     .btn-gps { bottom: 25px; right: 20px; }
     .leaflet-control-zoom { display: none; }
 }
+
+/* --- DOĞRULAMA MODALI (VERIFY MODAL) DÜZENLEMESİ --- */
+
+/* Modal içeriğini genişlet ve ferahlat */
+.verify-modal-design {
+    width: 450px !important;
+    max-width: 90% !important;
+    padding: 30px;
+}
+
+/* Başlık ve İstasyon İsmi */
+#verify-station-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.vm-body p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+/* Buton Konteynırı - Sıkışıklığı önlemek için aralık ekledik */
+.vm-actions {
+    display: flex;
+    flex-direction: column; /* Mobilde ve masaüstünde daha okunaklı durur */
+    gap: 15px;
+}
+
+/* Butonların Yeni Modern Yapısı */
+.btn-verify-action {
+    display: flex;
+    align-items: center;
+    padding: 18px;
+    border-radius: 16px;
+    background: white;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+}
+
+.btn-verify-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* İkon Kutusu - Görseldeki o küçük ikonları büyütür ve renklendirir */
+.btn-verify-action .icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+/* Metin Alanı Hizalaması */
+.btn-verify-action .action-text {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-verify-action .action-text strong {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    display: block;
+}
+
+.btn-verify-action .action-text span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* Sorun Var Butonu (Hata Rengi) */
+.btn-still-broken .icon-box {
+    background: #fdedec;
+    color: var(--danger-color);
+}
+.btn-still-broken .action-text span {
+    color: var(--danger-color);
+}
+.btn-still-broken:hover {
+    border-color: var(--danger-color);
+}
+
+/* Düzelmiş Butonu (Başarı Rengi) */
+.btn-fixed .icon-box {
+    background: #e8f8f5;
+    color: var(--success-color);
+}
+.btn-fixed .action-text span {
+    color: var(--success-color);
+}
+.btn-fixed:hover {
+    border-color: var(--success-color);
+}
+
+/* Kapatma İkonu Hizalaması */
+.vm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
