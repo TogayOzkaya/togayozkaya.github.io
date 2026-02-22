@@ -150,6 +150,64 @@ textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(
     .form-container { flex: 1; overflow-y: auto; padding: 20px; }
     .map-legend { left: 10px; bottom: 85px; width: auto; max-width: 60%; transform: scale(0.9); transform-origin: bottom left; }
     .btn-gps { bottom: 25px; right: 20px; }
-    .btn-home { top: 15px; right: 15px; } /* Mobilde sağ üst köşe */
+    .btn-home { top: 15px; right: 15px; } 
     .leaflet-control-zoom { display: none; }
+}
+
+/* ========================================== */
+/* YENİ: BLOG OKUMA SAYFASI STİLLERİ          */
+/* ========================================== */
+
+/* Body ayarını eziyoruz ki blog sayfasında kaydırma yapılabilsin */
+body.blog-page {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.blog-post-container { 
+    max-width: 800px; 
+    margin: 40px auto 80px; 
+    padding: 0 5%; 
+}
+
+.back-link { 
+    display: inline-flex; align-items: center; gap: 8px; 
+    color: var(--primary-color); text-decoration: none; 
+    font-weight: 700; margin-bottom: 25px; transition: 0.2s; 
+}
+.back-link:hover { transform: translateX(-5px); color: var(--secondary-color); }
+
+.blog-post h1 { 
+    font-size: 2.5rem; color: var(--secondary-color); 
+    margin: 15px 0; line-height: 1.25; font-weight: 800; 
+}
+
+.blog-meta { 
+    color: var(--text-muted); font-size: 0.95rem; font-weight: 500; 
+    margin-bottom: 30px; display: flex; gap: 20px; 
+}
+
+.blog-post img { 
+    width: 100%; max-height: 450px; object-fit: cover; 
+    border-radius: 20px; margin-bottom: 40px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+}
+
+.blog-text { 
+    font-size: 1.15rem; line-height: 1.8; color: #444; 
+}
+
+.blog-text p { margin-bottom: 20px; }
+
+.blog-text h2 { 
+    color: var(--secondary-color); margin: 45px 0 20px; 
+    font-size: 1.8rem; font-weight: 800; 
+}
+
+@media (max-width: 768px) {
+    .blog-post-container { margin: 30px auto 60px; }
+    .blog-post h1 { font-size: 1.8rem; }
+    .blog-text { font-size: 1.05rem; line-height: 1.7; }
+    .blog-post img { max-height: 250px; border-radius: 12px; margin-bottom: 25px; }
+    .blog-meta { flex-direction: column; gap: 5px; }
 }
