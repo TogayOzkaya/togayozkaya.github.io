@@ -11,7 +11,6 @@ var markersLayer = L.layerGroup().addTo(map);
 
 let gameState = { isLoggedIn: false, username: "Misafir", xp: 0, level: 1, totalReports: 0, verifiedCount: 0, badges: {firstLogin:false, firstReport:false, verifier:false} };
 
-/* --- GÜNCELLENMİŞ İSTASYON VERİLERİ (ZAMAN DAMGALI VE GİRİŞLİ) --- */
 const metroStations = [
     { name: "Kaymakamlık", coords: [38.3950, 26.9911], status: "active", reportScore: 0, lastUpdated: "10 dk önce", zones: [{ name: "Kaymakamlık Kapısı", offset: [0,0] }] },
     { name: "100. Yıl C. Şehitlik", coords: [38.3958, 27.0003], status: "active", reportScore: 0, lastUpdated: "45 dk önce", zones: [{name:"Park Tarafı", offset:[0,0]}] },
@@ -41,7 +40,6 @@ const metroStations = [
 
 L.polyline(metroStations.map(s => s.coords), { color: '#e74c3c', weight: 6, opacity: 0.8 }).addTo(map);
 
-/* --- FONKSİYONLAR --- */
 function checkAndFixStatus(station) {
     let score = parseInt(station.reportScore) || 0;
     station.reportScore = score;
@@ -206,7 +204,6 @@ window.submitVerification = (fixed) => {
 }
 
 function updateUI() {
-    // Sidebar'daki profil bilgilerini güncelle
     const sidebarName = document.getElementById('sidebar-user-name');
     const sidebarDesc = document.getElementById('sidebar-user-desc');
     const sidebarImg = document.getElementById('sidebar-user-img');
@@ -215,7 +212,6 @@ function updateUI() {
     if (sidebarDesc) sidebarDesc.innerText = gameState.isLoggedIn ? `Seviye ${calculateLevel()}` : "Giriş Yap";
     if (sidebarImg) sidebarImg.src = getAvatarUrl(gameState.username);
 
-    // Modal içindeki profil bilgilerini güncelle
     document.getElementById('modal-username').innerText = gameState.username;
     document.getElementById('modal-avatar').src = getAvatarUrl(gameState.username);
     document.getElementById('modal-level').innerText = calculateLevel();
@@ -314,13 +310,25 @@ setInterval(() => {
     if(t) { t.style.opacity = 0; setTimeout(() => { t.innerText = msgs[Math.floor(Math.random()*msgs.length)]; t.style.opacity = 1; }, 500); }
 }, 4000);
 
+/* --- ÖĞRETİCİ (TUTORIAL) MANTIĞI --- */
 let currentSlide = 0;
 const slides = document.querySelectorAll('.slide');
 const dots = document.querySelectorAll('.dot');
 const tutorialOverlay = document.getElementById('tutorial-overlay');
 
-// --- DÜZELTME: Geliştirme sürecinde öğreticiyi HER SEFERİNDE göster ---
-tutorialOverlay.style.display = 'flex'; 
+window.showTutorialFromLanding = () => {
+    currentSlide = 0;
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    slides[0].classList.add('active');
+    dots[0].classList.add('active');
+    
+    document.getElementById('next-slide-btn').style.display = 'flex';
+    document.getElementById('finish-tutorial-btn').style.display = 'none';
+    
+    tutorialOverlay.style.display = 'flex'; 
+    tutorialOverlay.style.opacity = '1';
+}
 
 window.nextSlide = () => {
     slides[currentSlide].classList.remove('active');
@@ -342,10 +350,35 @@ window.closeTutorial = () => {
     tutorialOverlay.style.opacity = '0';
     setTimeout(() => {
         tutorialOverlay.style.display = 'none';
-        localStorage.setItem('tutorialSeen', 'true');
     }, 400);
 }
 
-if(window.innerWidth > 768) {
-    document.getElementById('sidebar').classList.remove('closed');
+window.closeTutorialAndEnterApp = () => {
+    closeTutorial();
+    enterApp();
+}
+
+/* --- YENİ: AÇILIŞ SAYFASINDAN UYGULAMAYA GEÇİŞ MANTIĞI --- */
+window.enterApp = () => {
+    // Açılış sayfasını gizle
+    document.getElementById('landing-view').style.display = 'none';
+    
+    // Uygulama ekranını göster
+    document.getElementById('app-view').style.display = 'flex';
+    
+    // Haritanın (Leaflet) gizli kalmış boyutu yüzünden bozulmasını engelle (ÇOK ÖNEMLİ!)
+    setTimeout(() => {
+        map.invalidateSize();
+        
+        // Masaüstü için sidebar'ı açık bırak
+        if(window.innerWidth > 768) {
+            document.getElementById('sidebar').classList.remove('closed');
+        }
+    }, 100);
+}
+
+window.exitApp = () => {
+    // Uygulamadan geri ana sayfaya dön
+    document.getElementById('app-view').style.display = 'none';
+    document.getElementById('landing-view').style.display = 'flex';
 }
