@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Erişilebilir İzmir Metro Haritası</title>
+    <title>Erişilebilir İzmir | Görünmeyeni Görünür Kılıyoruz</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e69de">
     
@@ -13,8 +13,141 @@
 </head>
 <body>
 
+    <div id="landing-view" class="landing-page">
+        <header class="landing-header">
+            <div class="brand-container">
+                <div class="logo-box"><i class="fas fa-elevator"></i></div>
+                <h1 class="brand-title">Erişilebilir İzmir</h1>
+            </div>
+            <button class="btn-primary" onclick="enterApp()">Uygulamaya Git <i class="fas fa-arrow-right"></i></button>
+        </header>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>Engelsiz bir İzmir için<br><span>görünmeyeni görünür</span> kılıyoruz.</h2>
+                <p>İzmir metrosundaki asansör ve yürüyen merdiven arızalarını anlık olarak haritadan takip edin, kendi bildirimlerinizi yaparak topluluğa katkı sağlayın.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary btn-large" onclick="enterApp()"><i class="fas fa-map-marked-alt"></i> Haritayı Aç</button>
+                    <button class="btn-secondary btn-large" onclick="showTutorialFromLanding()"><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="blog-section">
+            <h3 class="section-title">Güncel Yazılarımız</h3>
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1573385419999-5f2122c60c87?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="blog-content">
+                        <span class="blog-tag">Farkındalık</span>
+                        <h4>Erişilebilirlik Neden Sadece Bir Kelime Değil?</h4>
+                        <p>Şehir hayatında bağımsız hareket edebilmenin önemi ve karşılaşılan görünmez engeller üzerine bir inceleme.</p>
+                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1518092892973-2e061a9ba46c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="blog-content">
+                        <span class="blog-tag">Topluluk</span>
+                        <h4>Kitle Kaynaklı Veri ile Engelleri Aşmak</h4>
+                        <p>Bir kişinin yaptığı küçük bir arıza bildiriminin, onlarca kişinin hayatını nasıl kolaylaştırdığını keşfedin.</p>
+                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </article>
+                <article class="blog-card">
+                    <div class="blog-img" style="background-image: url('https://images.unsplash.com/photo-1596752763261-26ec03b7a5a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="blog-content">
+                        <span class="blog-tag">Rehber</span>
+                        <h4>Toplu Taşımada Alternatif Rotalar</h4>
+                        <p>Metro asansörleri arızalı olduğunda otobüs ve tramvay entegrasyonu ile hedefinize nasıl ulaşırsınız?</p>
+                        <a href="#" class="read-more">Devamını Oku <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <footer class="landing-footer">
+            <div class="brand-container" style="justify-content: center; margin-bottom: 15px;">
+                <div class="logo-box" style="width: 30px; height: 30px; font-size: 16px;"><i class="fas fa-elevator"></i></div>
+                <h2 class="brand-title" style="font-size: 1rem;">Erişilebilir İzmir</h2>
+            </div>
+            <p>Görünmeyeni görünür kılıyoruz.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="copyright">© 2024 Erişilebilir İzmir. Tüm Hakları Saklıdır.</div>
+        </footer>
+    </div>
+
+
+    <div id="app-view" style="display: none;">
+        
+        <div class="container">
+            <aside class="sidebar closed" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="header-top-section">
+                        <div class="brand-wrapper">
+                            <div class="logo-box"><i class="fas fa-elevator"></i></div>
+                            <div class="brand-text-group">
+                                <h1 class="brand-title">Erişilebilir İzmir</h1>
+                                <p class="brand-slogan">Görünmeyeni görünür kılıyoruz.</p>
+                            </div>
+                        </div>
+                        <button class="btn-close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+                    </div>
+
+                    <div class="profile-card-mini" id="sidebar-profile-card" onclick="handleProfileClick()">
+                        <div class="profile-text">
+                            <span class="p-name" id="sidebar-user-name">Misafir</span>
+                            <span class="p-lvl" id="sidebar-user-desc">Giriş Yap</span>
+                        </div>
+                        <div class="profile-avatar"><img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="sidebar-user-img"></div>
+                    </div>
+                </div>
+
+                <div class="search-ticker-area">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="station-search" placeholder="İstasyon ara...">
+                    </div>
+                    <div class="news-ticker">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <div class="ticker-wrapper"><div class="ticker-content" id="ticker-text">Sistem aktif... Veriler yükleniyor...</div></div>
+                    </div>
+                </div>
+                
+                <div class="list-header">
+                    <h3>İstasyonlar</h3>
+                    <span id="result-count" class="count-badge">24</span>
+                </div>
+                <div class="results-list" id="station-list"></div>
+            </aside>
+
+            <main class="map-container">
+                <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                
+                <button class="btn-home" onclick="exitApp()" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></button>
+                
+                <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
+                <div id="map"></div>
+                <div class="map-legend">
+                    <h4>Durum Göstergesi</h4>
+                    <ul>
+                        <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
+                        <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
+                        <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
+                    </ul>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <div id="tutorial-overlay" class="tutorial-overlay">
         <div class="tutorial-card">
+            <span class="close-icon-dark" onclick="closeTutorial()" style="position:absolute; top:15px; right:20px;">&times;</span>
             <div class="tutorial-slides">
                 <div class="slide active">
                     <div class="slide-icon"><i class="fas fa-hand-holding-heart"></i></div>
@@ -32,77 +165,9 @@
             <div class="tutorial-footer">
                 <div class="dots-container"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
                 <button id="next-slide-btn" onclick="nextSlide()">İleri <i class="fas fa-arrow-right"></i></button>
-                <button id="finish-tutorial-btn" onclick="closeTutorial()" style="display:none;">Keşfetmeye Başla 🚀</button>
+                <button id="finish-tutorial-btn" onclick="closeTutorialAndEnterApp()" style="display:none;">Uygulamaya Başla 🚀</button>
             </div>
         </div>
-    </div>
-
-    <div class="container">
-        <aside class="sidebar closed" id="sidebar">
-            <div class="sidebar-header">
-                
-                <div class="header-top-section">
-                    <div class="brand-wrapper">
-                        <div class="logo-box">
-                            <i class="fas fa-elevator"></i>
-                        </div>
-                        <div class="brand-text-group">
-                            <h1 class="brand-title">Görünmeyeni Göster</h1>
-                            <p class="brand-slogan">Herkes için erişilebilir İzmir</p>
-                        </div>
-                    </div>
-
-                    <button class="btn-close-sidebar" onclick="toggleSidebar()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <div class="profile-card-mini" id="sidebar-profile-card" onclick="handleProfileClick()">
-                    <div class="profile-text">
-                        <span class="p-name" id="sidebar-user-name">Misafir</span>
-                        <span class="p-lvl" id="sidebar-user-desc">Giriş Yap</span>
-                    </div>
-                    <div class="profile-avatar">
-                        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="sidebar-user-img">
-                    </div>
-                </div>
-                
-            </div>
-
-            <div class="search-ticker-area">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="station-search" placeholder="İstasyon ara...">
-                </div>
-                <div class="news-ticker">
-                    <i class="fas fa-broadcast-tower"></i>
-                    <div class="ticker-wrapper">
-                        <div class="ticker-content" id="ticker-text">Sistem aktif... Veriler yükleniyor...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="list-header">
-                <h3>İstasyonlar</h3>
-                <span id="result-count" class="count-badge">24</span>
-            </div>
-
-            <div class="results-list" id="station-list"></div>
-        </aside>
-
-        <main class="map-container">
-            <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-            <div id="map"></div>
-            <div class="map-legend">
-                <h4>Durum Göstergesi</h4>
-                <ul>
-                    <li><span class="legend-dot status-ok"></span> Sorun Yok</li>
-                    <li><span class="legend-dot status-err"></span> Arıza Bildirimi</li>
-                    <li><span class="legend-dot status-pending"></span> Doğrulama Bekliyor</li>
-                </ul>
-            </div>
-        </main>
     </div>
 
     <div id="loginModal" class="modal">
@@ -155,6 +220,5 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
-    <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
 </body>
 </html>
