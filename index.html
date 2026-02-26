@@ -19,7 +19,6 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* DÜZELTME: Noktalı arka plan tüm sayfaya (body) uygulandı */
         body { 
             background-color: var(--bg-light); 
             background-image: radial-gradient(#d1d5db 2px, transparent 2px);
@@ -28,7 +27,6 @@
             overflow-x: hidden; 
         }
         
-        /* HEADER */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
         .logo-box { width: 40px; height: 40px; background: linear-gradient(180deg, #22d3ee 0%, #4ade80 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -36,22 +34,11 @@
         .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
 
-        /* HERO BÖLÜMÜ */
-        .hero { 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            padding: 80px 5% 100px; 
-            /* background ayarları body'e taşındığı için buradan kaldırıldı */
-            min-height: 85vh; 
-            gap: 40px;
-        }
-        
+        .hero { display: flex; align-items: center; justify-content: space-between; padding: 80px 5% 100px; min-height: 85vh; gap: 40px; }
         .hero-text { flex: 1; text-align: left; max-width: 600px; }
         .hero-text h1 { font-size: 3.5rem; color: var(--secondary); margin-bottom: 25px; line-height: 1.15; }
         .hero-text h1 span { color: var(--primary); }
         .hero-text p { font-size: 1.2rem; color: #555; margin-bottom: 35px; line-height: 1.6; }
-        
         .hero-buttons { display: flex; gap: 15px; justify-content: flex-start; flex-wrap: wrap; }
         .btn-large { padding: 16px 32px; font-size: 1.1rem; border-radius: 14px; cursor: pointer; border: none; display: flex; align-items: center; gap: 10px; font-weight: 700; transition: 0.3s; text-decoration: none; }
         .btn-map { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(30,105,222,0.2); }
@@ -59,7 +46,21 @@
         .btn-tut { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .btn-tut:hover { background: var(--primary-light); transform: translateY(-3px); }
 
-        /* CSS ASANSÖR ANİMASYONU */
+        /* YENİ EKLENEN BİLGİ KUTUCUĞU CSS'i */
+        .community-note {
+            margin-top: 30px;
+            background: rgba(30, 105, 222, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.5;
+            display: inline-block;
+        }
+        .community-note b { color: var(--primary); }
+        .community-note i { color: var(--primary); margin-right: 5px; font-size: 1.1rem; }
+
         .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
         .visual-backdrop { position: absolute; width: 400px; height: 400px; background: linear-gradient(135deg, #eaf6ff 0%, #d4edff 100%); border-radius: 50%; z-index: 0; }
         .elevator-shaft { width: 140px; height: 350px; background: white; border: 4px solid var(--secondary); border-radius: 12px; position: relative; z-index: 1; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; overflow: visible; }
@@ -77,7 +78,6 @@
             80% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
             95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
         }
-
         @keyframes iconChange {
             0%, 34% { transform: scale(1); }
             35%, 40% { transform: scale(1.2) rotate(10deg); } 
@@ -99,8 +99,6 @@
             96%, 100% { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* BLOG BÖLÜMÜ */
-        /* DÜZELTME: background: white kaldırıldı, transparan yapıldı */
         .blog-section { padding: 80px 5%; } 
         .section-title { text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 50px; font-weight: 800; }
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
@@ -114,7 +112,6 @@
         .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; align-self: flex-start; }
         .read-more:hover { gap: 12px; transition: 0.2s; } 
 
-        /* FOOTER & SOSYAL MEDYA */
         footer { background: var(--secondary); color: white; padding: 60px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .footer-logo h2 { font-size: 1.5rem; }
@@ -124,7 +121,6 @@
         .social-links a:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30,105,222,0.4); }
         .copyright { color: #7f8c8d; font-size: 0.95rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; margin-top: 20px; }
 
-        /* TUTORIAL MODAL (POP-UP) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-card { background: white; width: 90%; max-width: 450px; padding: 40px 30px; border-radius: 20px; text-align: center; position: relative; animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -147,7 +143,6 @@
         .btn-modal { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-modal:hover { background: #1557b0; }
 
-        /* MOBİL UYUMLULUK */
         @media (max-width: 768px) {
             .hero { flex-direction: column; text-align: center; padding: 40px 5% 60px; min-height: auto; }
             .hero-text { text-align: center; }
@@ -155,11 +150,12 @@
             .hero-buttons { justify-content: center; }
             .btn-large { width: 100%; justify-content: center; }
             
+            .community-note { text-align: left; font-size: 0.9rem; } /* Mobil uyum */
+
             .hero-visual { margin-top: 30px; width: 100%; }
             .visual-backdrop { width: 250px; height: 250px; }
             .elevator-shaft { width: 100px; height: 250px; }
             .elevator-cabin { height: 65px; font-size: 25px; }
-            
             @keyframes elevatorJourney {
                 0%, 15% { transform: translateY(0); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
                 30% { transform: translateY(-165px); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
@@ -169,21 +165,10 @@
                 80% { transform: translateY(-165px); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
                 95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 10px rgba(39, 174, 96, 0.4); } 
             }
-
             .badge-error { top: -20px; right: auto; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
             .badge-fix { bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; padding: 5px 10px; }
-
-            @keyframes showBadgeError {
-                0%, 34% { opacity: 0; transform: translate(-50%, 10px); }
-                35%, 55% { opacity: 1; transform: translate(-50%, 0); } 
-                56%, 100% { opacity: 0; transform: translate(-50%, -10px); }
-            }
-            @keyframes showBadgeFix {
-                0%, 75% { opacity: 0; transform: translate(-50%, 10px); }
-                80%, 95% { opacity: 1; transform: translate(-50%, 0); } 
-                96%, 100% { opacity: 0; transform: translate(-50%, -10px); }
-            }
-
+            @keyframes showBadgeError { 0%, 34% { opacity: 0; transform: translate(-50%, 10px); } 35%, 55% { opacity: 1; transform: translate(-50%, 0); } 56%, 100% { opacity: 0; transform: translate(-50%, -10px); } }
+            @keyframes showBadgeFix { 0%, 75% { opacity: 0; transform: translate(-50%, 10px); } 80%, 95% { opacity: 1; transform: translate(-50%, 0); } 96%, 100% { opacity: 0; transform: translate(-50%, -10px); } }
             .brand-title { font-size: 1.2rem; }
             .btn-header span { display: none; } 
         }
@@ -205,10 +190,17 @@
         <div class="hero-text">
             <h1>Engelsiz bir İzmir için<br><span>görünmeyeni görünür</span> kılıyoruz.</h1>
             <p>İzmir metrosundaki asansör ve yürüyen merdiven arızalarını anlık olarak haritadan takip edin, kendi bildirimlerinizi yaparak topluluğa katkı sağlayın.</p>
+            
             <div class="hero-buttons">
                 <a href="harita.html" class="btn-large btn-map"><i class="fas fa-map-marked-alt"></i> Uygulamaya Git</a>
                 <button class="btn-large btn-tut" onclick="openTutorial()"><i class="fas fa-question-circle"></i> Nasıl Kullanılır?</button>
             </div>
+
+            <div class="community-note">
+                <i class="fas fa-hand-holding-heart"></i>
+                <b>Gücümüzü sizden alıyoruz:</b> Bu haritadaki veriler tamamen duyarlı kullanıcıların bildirimleriyle güncellenmektedir. İstasyonlarda gördüğünüz arızaları haritadan bildirerek engelsiz ulaşıma destek olun!
+            </div>
+
         </div>
 
         <div class="hero-visual">
@@ -264,7 +256,6 @@
             <h2>Erişilebilir İzmir</h2>
         </div>
         <p class="footer-slogan">Görünmeyeni görünür kılıyoruz.</p>
-        
         <div class="social-links">
             <a href="https://www.instagram.com/gorunmeyenigoster/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -272,38 +263,29 @@
             <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
             <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
         </div>
-        
         <div class="copyright">© 2026 Erişilebilir İzmir. Tüm hakları saklıdır.</div>
     </footer>
 
     <div class="modal-overlay" id="tutorialModal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeTutorial()">&times;</span>
-            
             <div class="slide active">
                 <div class="slide-icon"><i class="fas fa-map-marked-alt"></i></div>
                 <h2>Durumu Kontrol Edin</h2>
                 <p>Haritadaki <b style="color:var(--success);">Yeşil</b> istasyonlar sorunsuz çalıştığını, <b style="color:var(--danger);">Kırmızı</b> istasyonlar ise asansör veya yürüyen merdiven arızası olduğunu gösterir.</p>
             </div>
-            
             <div class="slide">
                 <div class="slide-icon"><i class="fas fa-bullhorn"></i></div>
                 <h2>Siz de Bildirin</h2>
                 <p>Gittiğiniz istasyonda bir arıza görürseniz, haritadan istasyonu seçip arızayı bildirin. Böylece yola çıkacak diğer insanlara yardım etmiş olursunuz.</p>
             </div>
-            
             <div class="slide">
                 <div class="slide-icon"><i class="fas fa-star"></i></div>
                 <h2>Puan Toplayın</h2>
                 <p>Yaptığınız her doğru bildirim ve doğrulama size puan kazandırır. Seviye atlayarak Erişilebilir İzmir topluluğunun güvenilir bir elçisi olun.</p>
             </div>
-
             <div class="modal-footer">
-                <div class="dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
+                <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
                 <button class="btn-modal" id="nextBtn" onclick="nextSlide()">İleri</button>
             </div>
         </div>
@@ -316,34 +298,15 @@
         const modal = document.getElementById('tutorialModal');
         const nextBtn = document.getElementById('nextBtn');
 
-        function openTutorial() {
-            modal.style.display = 'flex';
-            currentSlide = 0;
-            updateUI();
-        }
-
-        function closeTutorial() {
-            modal.style.display = 'none';
-        }
-
+        function openTutorial() { modal.style.display = 'flex'; currentSlide = 0; updateUI(); }
+        function closeTutorial() { modal.style.display = 'none'; }
         function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                updateUI();
-            } else {
-                window.location.href = 'harita.html';
-            }
+            if (currentSlide < slides.length - 1) { currentSlide++; updateUI(); } 
+            else { window.location.href = 'harita.html'; }
         }
-
         function updateUI() {
-            slides.forEach((s, index) => {
-                s.classList.remove('active');
-                dots[index].classList.remove('active');
-            });
-            
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
-
+            slides.forEach((s, index) => { s.classList.remove('active'); dots[index].classList.remove('active'); });
+            slides[currentSlide].classList.add('active'); dots[currentSlide].classList.add('active');
             if (currentSlide === slides.length - 1) {
                 nextBtn.innerText = "Haritayı Aç 🚀";
                 nextBtn.style.backgroundColor = "var(--success)";
