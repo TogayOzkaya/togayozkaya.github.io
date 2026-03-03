@@ -9,7 +9,8 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -58,8 +59,7 @@
         <main class="map-container">
             <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <a href="index.html" class="btn-home" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></a>
-            <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
-            <div id="map"></div>
+            <div id="map" style="width: 100%; height: 100%; position: absolute; top:0; left:0; z-index:1;"></div>
             <div class="map-legend">
                 <h4>Durum Göstergesi</h4>
                 <ul>
@@ -161,21 +161,17 @@
                 <h2 id="modal-station-name">İstasyon</h2>
                 <span class="close-btn" onclick="closeReportModal()">&times;</span>
             </div>
-            
             <div class="modal-body">
                 <div class="visual-container">
                     <div id="mini-map"></div>
                     <div class="mini-map-overlay">Haritadan Seç 👇</div>
                 </div>
-                
                 <div class="form-container">
                     <div class="form-friendly-header">
                         <h3>Bir Engeli Daha Kaldıralım! 🦸‍♂️</h3>
                         <p>Bildirimin topluluğumuza büyük güç katıyor.</p>
                     </div>
-
                     <div id="selected-zone-info" class="selection-alert">Lütfen sol taraftaki haritadan sorunlu noktayı seçin 📍</div>
-                    
                     <form id="reportForm">
                         <div class="single-issue">
                             <div class="selected-issue">
@@ -183,14 +179,12 @@
                                 <span>Asansör / Rampa Çalışmıyor</span>
                             </div>
                         </div>
-                        
                         <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
                             <input type="file" id="file-input" hidden accept="image/*" capture="environment">
                             <i class="fas fa-camera fa-2x" id="upload-icon"></i> 
                             <span id="file-label">Kamerayı Aç & Fotoğraf Çek 📸</span>
                             <small id="file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Güvenilir bir topluluk için kanıt eklemeliyiz. 😊</small>
                         </div>
-
                         <textarea placeholder="Detay eklemek ister misin? (Örn: Rampa çok dik, asansörün kapısı kapanmıyor...)"></textarea>
                         <button type="submit" class="btn-submit" id="btn-submit-report">Topluluğa Bildir 🚀</button>
                     </form>
@@ -208,14 +202,12 @@
             <div class="vm-body">
                 <h2 id="verify-station-name" style="margin-bottom: 5px; color: var(--primary-color); font-weight: 800;">İstasyon</h2>
                 <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.95rem;">Topluluğa rehberlik etmek için güncel durumu onayla.</p>
-                
                 <div class="file-upload-wrapper required-upload" id="verify-upload-wrapper" onclick="document.getElementById('verify-file-input').click()">
                     <input type="file" id="verify-file-input" hidden accept="image/*" capture="environment">
                     <i class="fas fa-camera fa-2x" id="verify-upload-icon"></i> 
                     <span id="verify-file-label">Kanıt Fotoğrafı Çek 📸</span>
                     <small id="verify-file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Doğrulama için durumu göstermelisin. 😊</small>
                 </div>
-
                 <div class="vm-actions">
                     <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false, event)">
                         <div class="icon-box"><i class="fas fa-times"></i></div>
@@ -231,7 +223,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=5"></script>
 
 </body>
 </html>
