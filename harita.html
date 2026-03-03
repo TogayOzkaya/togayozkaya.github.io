@@ -57,9 +57,7 @@
 
         <main class="map-container">
             <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            
             <a href="index.html" class="btn-home" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></a>
-            
             <button id="gps-btn" class="btn-gps" onclick="locateUser()"><i class="fas fa-location-arrow"></i></button>
             <div id="map"></div>
             <div class="map-legend">
@@ -75,10 +73,50 @@
 
     <div id="loginModal" class="modal">
         <div class="modal-content login-modal-design">
-            <div class="lm-left"><div class="lm-welcome-text"><i class="fas fa-universal-access fa-3x" style="margin-bottom:20px; opacity:0.8;"></i><h2>Visi Topluluğuna Katıl</h2><p>Şehri herkes için erişilebilir kıl.</p></div></div>
-            <div class="lm-right"><span class="close-icon-dark" onclick="closeLoginModal()">&times;</span><h3>Giriş Yap</h3><p class="lm-subtext">Katkı sağlamak için oturum açmalısın.</p><button class="btn-google-login" onclick="performLogin()"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;"><span>Google ile Devam Et</span></button></div>
+            
+            <div class="lm-left">
+                <div class="interactive-blobs" id="blob-container">
+                    <div class="blob blob-purple">
+                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="blob blob-black">
+                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
+                    </div>
+                    <div class="blob blob-yellow">
+                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="blob blob-orange">
+                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
+                        <div class="mouth"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lm-right">
+                <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
+                <h3>Tekrar Merhaba!</h3>
+                <p class="lm-subtext">Lütfen bilgilerini gir.</p>
+                
+                <div class="login-form">
+                    <input type="email" placeholder="E-posta Adresi" id="email-input">
+                    <input type="password" placeholder="Parola" id="password-input">
+                    
+                    <button class="btn-login-mail" onclick="performLogin()">Giriş Yap</button>
+                    
+                    <div class="divider">veya</div>
+                    
+                    <button class="btn-google-login" onclick="performLogin()">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
+                        <span>Google ile Giriş Yap</span>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
+
     <div id="profileModal" class="modal">
         <div class="modal-content profile-modal-design">
             <div class="pm-header"><span class="close-icon-light" onclick="closeProfileModal()">&times;</span><div class="pm-user-info"><img src="" class="pm-avatar" id="modal-avatar"><div class="pm-text"><h2 id="modal-username">Kullanıcı</h2><p>Seviye <span id="modal-level">1</span></p></div></div></div>
@@ -124,5 +162,63 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
     <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginModal = document.getElementById('loginModal');
+            const blobContainer = document.getElementById('blob-container');
+            const passwordInput = document.getElementById('password-input');
+            const eyes = document.querySelectorAll('.eye');
+
+            // 1. Farenin Ekrandaki Konumunu Gözlerle Takip Etme
+            document.addEventListener('mousemove', (e) => {
+                // Eğer Giriş Yap modalı açık değilse veya parola alanına tıklanmışsa gözleri oynatma
+                if (loginModal.style.display !== 'flex') return;
+                if (document.activeElement === passwordInput) return;
+
+                eyes.forEach(eye => {
+                    const rect = eye.getBoundingClientRect();
+                    // Gözün tam ortasını bul
+                    const eyeCenterX = rect.left + rect.width / 2;
+                    const eyeCenterY = rect.top + rect.height / 2;
+                    
+                    // Fare ile göz arasındaki açıyı hesapla
+                    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+                    
+                    // Göz bebeğinin (pupil) hareket edebileceği maksimum mesafe (Yarıçap)
+                    const maxDistance = 4;
+                    
+                    // X ve Y eksenindeki hareketi hesapla
+                    const moveX = Math.cos(angle) * maxDistance;
+                    const moveY = Math.sin(angle) * maxDistance;
+                    
+                    // Göz bebeğini (pupil) hareket ettir
+                    const pupil = eye.querySelector('.pupil');
+                    if(pupil) {
+                        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    }
+                });
+            });
+
+            // 2. Parola Alanına Tıklanınca Kafalarını Çevirme ve Şaşırma Efekti
+            if (passwordInput) {
+                passwordInput.addEventListener('focus', () => {
+                    // Parola yazmaya başlanınca "blindfolded" (gözü kapalı/şaşkın) sınıfını ekle
+                    blobContainer.classList.add('blindfolded');
+                });
+
+                passwordInput.addEventListener('blur', () => {
+                    // Başka yere tıklanınca normale dön
+                    blobContainer.classList.remove('blindfolded');
+                    // Gözleri anında ortaya almak için
+                    eyes.forEach(eye => {
+                        const pupil = eye.querySelector('.pupil');
+                        if(pupil) pupil.style.transform = `translate(0px, 0px)`;
+                    });
+                });
+            }
+        });
+    </script>
+
 </body>
 </html>
