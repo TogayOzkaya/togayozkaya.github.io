@@ -164,7 +164,6 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .shake-animation { animation: shake 0.4s ease-in-out; border-color: var(--danger-color) !important; background: #fef2f2 !important; color: var(--danger-color) !important; }
 textarea { width: 100%; padding: 18px; border: 2px solid #e2e8f0; border-radius: 16px; resize: none; margin-bottom: 20px; font-size: 0.95rem; outline: none; background: #f8fafc; height: 90px; color: var(--text-dark); }
 .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary-color) 0%, #3a7bd5 100%); color: white; border-radius: 16px; font-weight: 800; font-size: 1.15rem; border: none; cursor: pointer; transition: 0.3s; }
-.btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(30, 105, 222, 0.3); }
 
 /* DOĞRULAMA MODALI */
 .verify-modal-design { width: 500px; text-align: center; border-radius: 20px; padding: 10px; }
@@ -173,8 +172,6 @@ textarea { width: 100%; padding: 18px; border: 2px solid #e2e8f0; border-radius:
 .vm-body { padding: 25px; display: flex; flex-direction: column; }
 .vm-actions { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
 .btn-verify-action { display: flex; align-items: center; padding: 15px 20px; border: 2px solid #e2e8f0; border-radius: 16px; background: #f8fafc; text-align: left; cursor: pointer; transition: 0.3s; }
-.btn-still-broken:hover { border-color: #fca5a5; background: #fef2f2; }
-.btn-fixed:hover { border-color: #86efac; background: #f0fdf4; }
 .btn-verify-action .icon-box { width: 45px; height: 45px; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-right: 20px; }
 .btn-still-broken .icon-box { color: var(--danger-color); }
 .btn-fixed .icon-box { color: var(--success-color); }
