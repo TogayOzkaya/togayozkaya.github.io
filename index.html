@@ -19,10 +19,7 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* DÜZELTME: Yumuşak kaydırma tüm HTML sayfasına tanımlandı */
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body { 
             background-color: var(--bg-light); 
@@ -32,13 +29,20 @@
             overflow-x: hidden; 
         }
         
+        /* HEADER BÖLÜMÜ GÜNCELLENDİ */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-        
         .logo-img { height: 48px; width: auto; object-fit: contain; }
         .brand-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
-        .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
+        
+        /* YENİ ÜST MENÜ BUTONLARI (Giriş Yap / Kayıt Ol) */
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .nav-link { color: var(--secondary); font-weight: 600; text-decoration: none; transition: 0.2s; font-size: 0.95rem; }
+        .nav-link:hover { color: var(--primary); }
+        .btn-outline { border: 2px solid var(--primary); color: var(--primary); padding: 8px 20px; border-radius: 30px; font-weight: 600; text-decoration: none; transition: 0.3s; font-size: 0.95rem; }
+        .btn-outline:hover { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(30,105,222,0.2); }
+        .btn-header { background: var(--primary); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; border: 2px solid var(--primary); }
+        .btn-header:hover { background: #1557b0; border-color: #1557b0; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(30,105,222,0.3); }
 
         .hero { display: flex; flex-direction: column; padding: 80px 5% 40px; min-height: 85vh; }
         .hero-content { display: flex; align-items: center; justify-content: space-between; gap: 40px; width: 100%; }
@@ -71,12 +75,7 @@
             80% { transform: translateY(-230px); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
             95%, 100% { transform: translateY(0); background: var(--success); box-shadow: 0 0 15px rgba(39, 174, 96, 0.4); } 
         }
-
-        @keyframes iconChange {
-            0%, 34% { transform: scale(1); }
-            35%, 40% { transform: scale(1.2) rotate(10deg); } 
-            41%, 100% { transform: scale(1); }
-        }
+        @keyframes iconChange { 0%, 34% { transform: scale(1); } 35%, 40% { transform: scale(1.2) rotate(10deg); } 41%, 100% { transform: scale(1); } }
 
         .floating-badge { position: absolute; background: white; padding: 8px 15px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); opacity: 0; transition: 0.3s; z-index: 10; white-space: nowrap; }
         .badge-error { top: 10%; right: -70px; color: var(--danger); animation: showBadgeError 10s infinite; border: 2px solid var(--danger); }
@@ -85,20 +84,7 @@
         @keyframes showBadgeError { 0%, 34% { opacity: 0; transform: translateY(10px); } 35%, 55% { opacity: 1; transform: translateY(0); } 56%, 100% { opacity: 0; transform: translateY(-10px); } }
         @keyframes showBadgeFix { 0%, 75% { opacity: 0; transform: translateY(10px); } 80%, 95% { opacity: 1; transform: translateY(0); } 96%, 100% { opacity: 0; transform: translateY(-10px); } }
 
-        .community-banner {
-            margin-top: 80px;
-            background: linear-gradient(135deg, var(--primary) 0%, #3a7bd5 100%);
-            border-radius: 16px;
-            padding: 30px 40px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            box-shadow: 0 10px 30px rgba(30,105,222,0.25);
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
+        .community-banner { margin-top: 80px; background: linear-gradient(135deg, var(--primary) 0%, #3a7bd5 100%); border-radius: 16px; padding: 30px 40px; color: white; display: flex; align-items: center; gap: 30px; box-shadow: 0 10px 30px rgba(30,105,222,0.25); width: 100%; position: relative; overflow: hidden; }
         .community-banner::before { content: '\f4c4'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: -20px; bottom: -30px; font-size: 150px; opacity: 0.05; }
         .cb-icon { font-size: 2.5rem; background: rgba(255,255,255,0.2); width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0; }
         .cb-text h3 { font-size: 1.6rem; margin-bottom: 8px; font-weight: 800; }
@@ -157,6 +143,10 @@
             .hero h1 { font-size: 2.2rem; }
             .hero-buttons { justify-content: center; }
             .btn-large { width: 100%; justify-content: center; }
+            
+            /* Mobilde üst menüyü sadeleştirmek için giriş/kayıt gizlenir, sadece harita butonu kalır */
+            .nav-link, .btn-outline { display: none; }
+            
             .community-banner { flex-direction: column; text-align: center; padding: 25px 20px; margin-top: 50px; }
             .cb-text h3 { font-size: 1.4rem; }
             .hero-visual { margin-top: 30px; width: 100%; }
@@ -188,9 +178,15 @@
             <img src="visi-logo.png" alt="Visi" class="logo-img">
             <h1 class="brand-title">Visi</h1>
         </a>
-        <a href="harita.html" class="btn-header">
-            <span>Haritayı Aç</span> <i class="fas fa-arrow-right"></i>
-        </a>
+        
+        <div class="header-actions">
+            <a href="harita.html" class="nav-link">Giriş Yap</a>
+            <a href="harita.html" class="btn-outline">Kayıt Ol</a>
+            
+            <a href="harita.html" class="btn-header">
+                <span>Haritayı Aç</span> <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
     </header>
 
     <section class="hero">
@@ -332,7 +328,6 @@
             }
         }
 
-        /* YENİ EKLENEN YUMUŞAK KAYDIRMA SCRİPTİ (Garantili Çalışması İçin) */
         document.getElementById('discoverBtn').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('blog').scrollIntoView({
