@@ -129,32 +129,48 @@
 
     <div id="reportModal" class="modal">
         <div class="modal-content report-modal-design">
-            <div class="modal-header"><h2 id="modal-station-name">İstasyon</h2><span class="close-btn" onclick="closeReportModal()">&times;</span></div>
-            <div id="alternative-route-box" class="suggestion-box" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div><strong>Sorun olabilir.</strong> <span id="suggestion-text"></span></div></div>
+            <div class="modal-header">
+                <h2 id="modal-station-name">İstasyon</h2>
+                <span class="close-btn" onclick="closeReportModal()">&times;</span>
+            </div>
+            
+            <div id="alternative-route-box" class="suggestion-box" style="display:none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div><strong>Dikkat!</strong> <span id="suggestion-text"></span></div>
+            </div>
+            
             <div class="modal-body">
-                <div class="visual-container"><div id="mini-map"></div><div class="mini-map-overlay">Seçim Yapın</div></div>
+                <div class="visual-container">
+                    <div id="mini-map"></div>
+                    <div class="mini-map-overlay">Haritadan Seç 👇</div>
+                </div>
                 
                 <div class="form-container">
-                    <div id="selected-zone-info" class="selection-alert">Seçim Yapılmadı</div>
+                    <div class="form-friendly-header">
+                        <h3>Bir Engeli Daha Kaldıralım! 🦸‍♂️</h3>
+                        <p>Bildirimin topluluğumuza büyük güç katıyor.</p>
+                    </div>
+
+                    <div id="selected-zone-info" class="selection-alert">Lütfen sol taraftaki haritadan sorunlu noktayı seçin 📍</div>
                     
                     <form id="reportForm">
                         <div class="single-issue">
                             <div class="selected-issue">
                                 <i class="fas fa-wheelchair"></i>
-                                <span>Asansör / Rampa Arızası</span>
+                                <span>Asansör / Rampa Çalışmıyor</span>
                             </div>
                         </div>
                         
                         <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
-                            <input type="file" id="file-input" hidden accept="image/*">
+                            <input type="file" id="file-input" hidden accept="image/*" capture="environment">
                             <i class="fas fa-camera fa-2x" id="upload-icon"></i> 
-                            <span id="file-label">Fotoğraf Ekle (Zorunlu)</span>
-                            <small id="file-warning" style="color: var(--danger-color); font-weight: 600; margin-top: 5px;">* Teyit için fotoğraf yüklemeniz gereklidir.</small>
+                            <span id="file-label">Kamerayı Aç & Fotoğraf Çek 📸</span>
+                            <small id="file-warning" style="color: var(--text-muted); font-weight: 500; margin-top: 5px;">Güvenilir bir topluluk için kanıt eklemeliyiz. 😊</small>
                         </div>
 
-                        <textarea placeholder="Açıklama (Opsiyonel)..."></textarea>
+                        <textarea placeholder="Detay eklemek ister misin? (Örn: Rampa çok dik, asansörün kapısı kapanmıyor...)"></textarea>
                         
-                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Bildirimi Gönder</button>
+                        <button type="submit" class="btn-submit" disabled id="btn-submit-report">Topluluğa Bildir 🚀</button>
                     </form>
                 </div>
             </div>
@@ -163,12 +179,13 @@
 
     <div id="verifyModal" class="modal">
         <div class="modal-content verify-modal-design">
-            <div class="vm-header"><h3>Doğrulama</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
+            <div class="vm-header"><h3>Durum Doğrulaması</h3><span class="close-icon-dark" onclick="closeVerifyModal()">&times;</span></div>
             <div class="vm-body">
-                <h2 id="verify-station-name">İstasyon</h2><p>Durum nedir?</p>
+                <h2 id="verify-station-name" style="margin-bottom: 10px; color: var(--secondary-color);">İstasyon</h2>
+                <p style="margin-bottom: 25px; color: var(--text-muted);">Sence bu arıza hala devam ediyor mu?</p>
                 <div class="vm-actions">
-                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)"><div class="icon-box"><i class="fas fa-times"></i></div><div class="action-text"><strong>Sorun Var</strong><span>+15 Puan</span></div></button>
-                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)"><div class="icon-box"><i class="fas fa-check"></i></div><div class="action-text"><strong>Düzelmiş</strong><span>+30 Puan</span></div></button>
+                    <button class="btn-verify-action btn-still-broken" onclick="submitVerification(false)"><div class="icon-box"><i class="fas fa-times"></i></div><div class="action-text"><strong>Evet, Hala Bozuk</strong><span style="color: var(--danger-color);">+15 Puan</span></div></button>
+                    <button class="btn-verify-action btn-fixed" onclick="submitVerification(true)"><div class="icon-box"><i class="fas fa-check"></i></div><div class="action-text"><strong>Hayır, Düzelmiş!</strong><span style="color: var(--success-color);">+30 Puan</span></div></button>
                 </div>
             </div>
         </div>
@@ -232,11 +249,10 @@
                 });
             });
 
-            /* FOTOĞRAF ZORUNLULUĞU KONTROLÜ (YENİ EKLENDİ) */
+            /* FOTOĞRAF KONTROLÜ VE EĞLENCELİ BİLDİRİM */
             const reportForm = document.getElementById('reportForm');
             const fileInput = document.getElementById('file-input');
             
-            // Fotoğraf seçildiğinde arayüzü yeşil yap
             fileInput.addEventListener('change', function() {
                 const label = document.getElementById('file-label');
                 const warning = document.getElementById('file-warning');
@@ -244,32 +260,35 @@
                 const icon = document.getElementById('upload-icon');
                 
                 if(this.files && this.files.length > 0) {
-                    label.innerText = "Fotoğraf Eklendi: " + this.files[0].name;
+                    label.innerText = "Harika! Fotoğraf Eklendi 📸"; // Samimi başarılı mesajı
                     label.style.color = "var(--success-color)";
                     icon.style.color = "var(--success-color)";
                     warning.style.display = "none";
                     wrapper.style.borderColor = "var(--success-color)";
-                    wrapper.style.backgroundColor = "#e8f8f5";
+                    wrapper.style.backgroundColor = "#f0fdf4";
+                    wrapper.classList.remove('shake-animation'); // Varsa hata titremesini temizle
                 }
             });
 
-            // Gönder butonuna basıldığında fotoğraf kontrolü yap
             if(reportForm) {
                 reportForm.addEventListener('submit', function(e) {
                     if (!fileInput.files || fileInput.files.length === 0) {
-                        e.preventDefault(); // Formun gönderilmesini durdurur
-                        e.stopImmediatePropagation(); // Sistemin hata vermesini engeller
+                        e.preventDefault(); 
+                        e.stopImmediatePropagation(); 
                         
                         const wrapper = document.getElementById('upload-wrapper');
-                        wrapper.style.borderColor = 'var(--danger-color)';
-                        wrapper.style.backgroundColor = '#fdedec';
+                        const warning = document.getElementById('file-warning');
                         
-                        // Titreme animasyonunu tetikle
+                        // Uyarı rengini ve metnini daha dikkat çekici yap
+                        warning.style.color = "var(--danger-color)";
+                        warning.innerText = "Lütfen önce bir fotoğraf ekle! 📸";
+                        
+                        // Titreme animasyonu
                         wrapper.classList.remove('shake-animation');
-                        void wrapper.offsetWidth; // Animasyonu sıfırlamak için ufak bir hile
+                        void wrapper.offsetWidth;
                         wrapper.classList.add('shake-animation');
                     }
-                }, true); // true parametresi, bu kontrolün her şeyden önce çalışmasını sağlar
+                }, true);
             }
         });
     </script>
