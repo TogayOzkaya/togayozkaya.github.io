@@ -1,4 +1,3 @@
-/* GLOBAL DEĞİŞKENLER VE FONKSİYONLAR */
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 
 window.toggleSidebar = function() {
@@ -31,7 +30,6 @@ window.resetData = function() {
 window.performLogin = function(e) {
     if(e) e.preventDefault();
     const isSignup = document.getElementById('tab-signup').classList.contains('active');
-    
     if(isSignup) {
         const terms = document.getElementById('terms-check');
         if(!terms.checked) {
@@ -39,14 +37,11 @@ window.performLogin = function(e) {
             return;
         }
     }
-
     localStorage.setItem('visi_logged_in', 'true');
     window.isUserLoggedIn = true;
-    
     document.getElementById('sidebar-user-name').innerText = "Togay Özkay";
     document.getElementById('sidebar-user-desc').innerText = "Seviye 1";
     document.getElementById('sidebar-user-img').src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-    
     window.closeLoginModal();
     alert(isSignup ? "Kayıt Başarılı! Visi topluluğuna hoş geldin. 🚀" : "Giriş Başarılı! Tekrar hoş geldin. 👋");
 };
@@ -69,7 +64,6 @@ window.switchAuthTab = function(tab) {
     }
 };
 
-/* DOM YÜKLENDİĞİNDE ÇALIŞACAK KODLAR */
 document.addEventListener('DOMContentLoaded', () => {
 
     if (window.isUserLoggedIn && document.getElementById('sidebar-user-name')) {
@@ -82,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('sidebar').classList.add('closed');
     }
 
-    /* GÖZ ANİMASYONLARI */
     const loginModal = document.getElementById('loginModal');
     const blobContainer = document.getElementById('blob-container');
     const passwordInputs = document.querySelectorAll('.password-input');
@@ -111,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* HARİTA VE İSTASYON VERİLERİ (Doğru Koordinatlar) */
     const mapElement = document.getElementById('map');
     let miniMap = null;
     let miniMapMarker = null;
 
     if (mapElement) {
+        // İzmir Metro Durakları Milimetrik Koordinatları
         const stations = [
             { name: "Evka 3", lat: 38.4660, lng: 27.2268, status: "ok" },
             { name: "Ege Üniversitesi", lat: 38.4593, lng: 27.2272, status: "ok" },
@@ -144,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "Kaymakamlık", lat: 38.3886, lng: 26.9934, status: "ok" }
         ];
 
-        const map = L.map('map', { zoomControl: false }).setView([38.4237, 27.1428], 12);
+        const map = L.map('map', { zoomControl: false }).setView([38.4237, 27.1428], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -185,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if(window.innerWidth <= 768) document.getElementById('sidebar').classList.add('closed');
         };
 
-        // BİLDİRİM MODALINI AÇMA VE MİNİ HARİTAYI YÜKLEME
         window.openReportModal = function(stationName) {
             if(!window.isUserLoggedIn) {
                 alert("Durum bildirebilmek için lütfen önce giriş yapın.");
@@ -197,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const station = stations.find(s => s.name === stationName);
 
-            // Mini Haritayı Güvenli Şekilde Başlat
             setTimeout(() => {
                 if (!miniMap && document.getElementById('mini-map')) {
                     miniMap = L.map('mini-map', { zoomControl: false }).setView([38.4237, 27.1428], 15);
@@ -219,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 250);
 
-            // Formu Sıfırla
             if (miniMapMarker && miniMap) { miniMap.removeLayer(miniMapMarker); miniMapMarker = null; }
             const infoBox = document.getElementById('selected-zone-info');
             if(infoBox) {
@@ -229,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // BİLDİRİM GÖNDERME İŞLEMİ
         const reportForm = document.getElementById('reportForm');
         const fileInput = document.getElementById('file-input');
         
@@ -274,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // ARAMA MOTORU
         const searchInput = document.getElementById('station-search');
         if (searchInput) {
             searchInput.addEventListener('keyup', function(e) {
@@ -290,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* DOĞRULAMA (VERIFY) EKRANI FOTOĞRAF KONTROLÜ */
     const verifyFileInput = document.getElementById('verify-file-input');
     if(verifyFileInput) {
         verifyFileInput.addEventListener('change', function() {
