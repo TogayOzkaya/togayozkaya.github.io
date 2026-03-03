@@ -156,8 +156,19 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; }
 .form-friendly-header p { font-size: 0.95rem; color: var(--text-muted); }
 .selection-alert { padding: 15px; background: #fffbeb; border: 2px dashed #fcd34d; margin-bottom: 20px; border-radius: 12px; text-align: center; color: #b45309; font-size: 0.95rem; font-weight: 600; }
 .selection-alert.selected { background: #f0fdf4; color: #15803d; border-color: #86efac; border-style: solid; }
-.selected-issue { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 18px 20px; border-radius: 16px; background: linear-gradient(135deg, var(--primary-light) 0%, #e0e7ff 100%); color: var(--primary-color); margin-bottom: 20px; font-weight: 800; font-size: 1.1rem; }
-.file-upload-wrapper { width: 100%; padding: 30px 20px; border: 2px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; text-align: center; cursor: pointer; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
+
+/* GERİ EKLENEN TIKLANABİLİR ASANSÖR/RAMPA SEÇİM KUTULARI */
+.issue-types-grid { display: flex; gap: 15px; margin-bottom: 25px; }
+.issue-option { flex: 1; cursor: pointer; position: relative; }
+.issue-option input { display: none; }
+.issue-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px 10px; border: 2px solid #e2e8f0; border-radius: 16px; background: #f8fafc; color: #64748b; transition: all 0.3s ease; height: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.issue-box i { font-size: 2.2rem; transition: transform 0.3s; color: #94a3b8; }
+.issue-box span { font-weight: 800; font-size: 0.95rem; letter-spacing: 0.5px; }
+.issue-option:hover .issue-box { border-color: #cbd5e1; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+.issue-option input:checked + .issue-box { border-color: var(--primary-color); background: var(--primary-light); color: var(--primary-color); box-shadow: 0 8px 20px rgba(30, 105, 222, 0.15); transform: translateY(-3px); }
+.issue-option input:checked + .issue-box i { color: var(--primary-color); transform: scale(1.1); }
+
+.file-upload-wrapper { width: 100%; padding: 25px 20px; border: 2px dashed #cbd5e1; border-radius: 16px; background: #f8fafc; text-align: center; cursor: pointer; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
 .file-upload-wrapper:hover { border-color: var(--primary-color); background: var(--primary-light); }
 .file-upload-wrapper #file-label, .file-upload-wrapper #verify-file-label { font-weight: 800; font-size: 1.05rem; color: var(--secondary-color); }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 25%, 75% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
