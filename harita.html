@@ -76,40 +76,48 @@
             
             <div class="lm-left">
                 <div class="interactive-blobs" id="blob-container">
-                    <div class="blob blob-purple">
-                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
-                        <div class="mouth"></div>
-                    </div>
-                    <div class="blob blob-black">
-                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
-                    </div>
-                    <div class="blob blob-yellow">
-                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
-                        <div class="mouth"></div>
-                    </div>
-                    <div class="blob blob-orange">
-                        <div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div>
-                        <div class="mouth"></div>
-                    </div>
+                    <div class="blob blob-purple"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
+                    <div class="blob blob-black"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div></div>
+                    <div class="blob blob-yellow"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
+                    <div class="blob blob-orange"><div class="eyes"><div class="eye"><div class="pupil"></div></div><div class="eye"><div class="pupil"></div></div></div><div class="mouth"></div></div>
                 </div>
             </div>
 
             <div class="lm-right">
                 <span class="close-icon-dark" onclick="closeLoginModal()">&times;</span>
-                <h3>Tekrar Merhaba!</h3>
-                <p class="lm-subtext">Lütfen bilgilerini gir.</p>
                 
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Giriş Yap</button>
+                    <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Kayıt Ol</button>
+                </div>
+
                 <div class="login-form">
-                    <input type="email" placeholder="E-posta Adresi" id="email-input">
-                    <input type="password" placeholder="Parola" id="password-input">
-                    
-                    <button class="btn-login-mail" onclick="performLogin()">Giriş Yap</button>
+                    <div id="form-login-content">
+                        <p class="lm-subtext">Tekrar merhaba, lütfen bilgilerini gir.</p>
+                        <input type="email" placeholder="E-posta Adresi">
+                        <input type="password" class="password-input" placeholder="Parola">
+                        <button class="btn-login-mail" onclick="performLogin()">Giriş Yap</button>
+                    </div>
+
+                    <div id="form-signup-content" style="display: none;">
+                        <p class="lm-subtext">Topluluğa katıl ve engelleri birlikte aşalım.</p>
+                        <input type="text" placeholder="Adınız Soyadınız">
+                        <input type="email" placeholder="E-posta Adresi">
+                        <input type="password" class="password-input" placeholder="Parola Belirle">
+                        
+                        <label class="terms-box">
+                            <input type="checkbox" id="terms-check">
+                            <span>Platformda doğru ve güvenilir bildirimler yapacağımı, <strong>yanıltıcı bilgi vermem durumunda hesabımın kalıcı olarak kapatılacağını</strong> kabul ediyorum.</span>
+                        </label>
+
+                        <button class="btn-login-mail" onclick="performLogin()">Kayıt Ol</button>
+                    </div>
                     
                     <div class="divider">veya</div>
                     
                     <button class="btn-google-login" onclick="performLogin()">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
-                        <span>Google ile Giriş Yap</span>
+                        <span id="google-btn-text">Google ile Giriş Yap</span>
                     </button>
                 </div>
             </div>
@@ -164,35 +172,52 @@
     <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.log(e)));}</script>
     
     <script>
+        // 1. Sekme (Tab) Değiştirme Fonksiyonu
+        function switchAuthTab(tab) {
+            const loginContent = document.getElementById('form-login-content');
+            const signupContent = document.getElementById('form-signup-content');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const googleBtnText = document.getElementById('google-btn-text');
+
+            if(tab === 'login') {
+                loginContent.style.display = 'block';
+                signupContent.style.display = 'none';
+                tabLogin.classList.add('active');
+                tabSignup.classList.remove('active');
+                googleBtnText.innerText = "Google ile Giriş Yap";
+            } else {
+                loginContent.style.display = 'none';
+                signupContent.style.display = 'block';
+                tabSignup.classList.add('active');
+                tabLogin.classList.remove('active');
+                googleBtnText.innerText = "Google ile Kayıt Ol";
+            }
+        }
+
+        // 2. Karakterlerin Göz Takip ve Şaşırma Animasyon Kodları
         document.addEventListener('DOMContentLoaded', () => {
             const loginModal = document.getElementById('loginModal');
             const blobContainer = document.getElementById('blob-container');
-            const passwordInput = document.getElementById('password-input');
+            const passwordInputs = document.querySelectorAll('.password-input'); // İki parola alanını da seçer
             const eyes = document.querySelectorAll('.eye');
 
-            // 1. Farenin Ekrandaki Konumunu Gözlerle Takip Etme
+            // Gözlerin Fareyi Takip Etmesi
             document.addEventListener('mousemove', (e) => {
-                // Eğer Giriş Yap modalı açık değilse veya parola alanına tıklanmışsa gözleri oynatma
                 if (loginModal.style.display !== 'flex') return;
-                if (document.activeElement === passwordInput) return;
+                
+                // Eğer odaklanılan eleman bir parola alanıysa gözleri oynatma (çünkü yukarı bakıyor olacaklar)
+                if (document.activeElement.classList.contains('password-input')) return;
 
                 eyes.forEach(eye => {
                     const rect = eye.getBoundingClientRect();
-                    // Gözün tam ortasını bul
                     const eyeCenterX = rect.left + rect.width / 2;
                     const eyeCenterY = rect.top + rect.height / 2;
-                    
-                    // Fare ile göz arasındaki açıyı hesapla
                     const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-                    
-                    // Göz bebeğinin (pupil) hareket edebileceği maksimum mesafe (Yarıçap)
                     const maxDistance = 4;
-                    
-                    // X ve Y eksenindeki hareketi hesapla
                     const moveX = Math.cos(angle) * maxDistance;
                     const moveY = Math.sin(angle) * maxDistance;
                     
-                    // Göz bebeğini (pupil) hareket ettir
                     const pupil = eye.querySelector('.pupil');
                     if(pupil) {
                         pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
@@ -200,23 +225,20 @@
                 });
             });
 
-            // 2. Parola Alanına Tıklanınca Kafalarını Çevirme ve Şaşırma Efekti
-            if (passwordInput) {
-                passwordInput.addEventListener('focus', () => {
-                    // Parola yazmaya başlanınca "blindfolded" (gözü kapalı/şaşkın) sınıfını ekle
+            // Parola Alanlarına Tıklanınca Şaşırma Efekti
+            passwordInputs.forEach(input => {
+                input.addEventListener('focus', () => {
                     blobContainer.classList.add('blindfolded');
                 });
 
-                passwordInput.addEventListener('blur', () => {
-                    // Başka yere tıklanınca normale dön
+                input.addEventListener('blur', () => {
                     blobContainer.classList.remove('blindfolded');
-                    // Gözleri anında ortaya almak için
                     eyes.forEach(eye => {
                         const pupil = eye.querySelector('.pupil');
                         if(pupil) pupil.style.transform = `translate(0px, 0px)`;
                     });
                 });
-            }
+            });
         });
     </script>
 
