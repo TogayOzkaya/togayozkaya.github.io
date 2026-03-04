@@ -4,7 +4,8 @@
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 
 window.toggleSidebar = function() {
-    document.getElementById('sidebar').classList.toggle('closed');
+    const sidebar = document.getElementById('sidebar');
+    if(sidebar) sidebar.classList.toggle('closed');
 };
 
 window.handleProfileClick = function() {
@@ -36,7 +37,7 @@ window.performLogin = function(e) {
     
     if(isSignup) {
         const terms = document.getElementById('terms-check');
-        if(!terms.checked) {
+        if(terms && !terms.checked) {
             alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz.");
             return;
         }
@@ -72,7 +73,7 @@ window.switchAuthTab = function(tab) {
 };
 
 /* ==================================================
-   SAYFA YÜKLENDİĞİNDE ÇALIŞACAK SİSTEM
+   SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ANA SİSTEM
    ================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -116,11 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================
-       ANA HARİTA KURULUMU (ANINDA YÜKLENECEK)
+       ANA HARİTA KURULUMU (BEYAZ EKRAN ÇÖZÜMÜ)
        ========================================== */
     const mapElement = document.getElementById('map');
     
-    // Eğer harita kutusu varsa (harita.html sayfasındaysak) haritayı anında çiz!
     if (mapElement) {
         const stations = [
             { name: "Evka 3", lat: 38.4660, lng: 27.2268, status: "ok" },
@@ -149,16 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "Kaymakamlık", lat: 38.3886, lng: 26.9934, status: "ok" }
         ];
 
-        // 1. Ana Haritayı Başlat
+        // 1. HARİTAYI ANINDA OLUŞTUR (Gecikme yok)
         window.mainMap = L.map('map', { zoomControl: false }).setView([38.4237, 27.1428], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(window.mainMap);
         L.control.zoom({ position: 'bottomright' }).addTo(window.mainMap);
 
-        // 2. Kırmızı Çizgiyi Çiz
         const lineCoords = stations.map(s => [s.lat, s.lng]);
         L.polyline(lineCoords, { color: '#e74c3c', weight: 4, opacity: 0.7 }).addTo(window.mainMap);
 
-        // 3. Durak İkonları
         const getIcon = (status) => {
             let color = status === 'ok' ? '#27ae60' : (status === 'error' ? '#c0392b' : '#f39c12');
             return L.divIcon({
@@ -171,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const stationListElement = document.getElementById('station-list');
         if(document.getElementById('result-count')) document.getElementById('result-count').innerText = stations.length;
 
-        // 4. İstasyonları haritaya ve listeye ekle
         stations.forEach(station => {
             const marker = L.marker([station.lat, station.lng], { icon: getIcon(station.status) }).addTo(window.mainMap);
             marker.bindPopup(`<div style="text-align:center; padding: 5px;"><h4 style="margin:0 0 10px 0;">${station.name}</h4><button onclick="openReportModal('${station.name}', ${station.lat}, ${station.lng})" style="background:#1e69de; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold;">Durum Bildir</button></div>`);
@@ -189,11 +186,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 5. Listeden haritaya yakınlaşma fonksiyonu
         window.focusStation = function(lat, lng) {
             window.mainMap.setView([lat, lng], 16, { animate: true, duration: 1 });
             if(window.innerWidth <= 768) document.getElementById('sidebar').classList.add('closed');
         };
+
+        // 2. BEYAZ EKRAN KESİN ÇÖZÜMÜ: Sayfa yüklendikten yarım saniye sonra haritaya "kendini toparla" diyoruz.
+        setTimeout(() => {
+            if(window.mainMap) {
+                window.mainMap.invalidateSize();
+            }
+        }, 500);
 
         /* ==========================================
            MİNİ HARİTA (BİLDİRİM EKRANINDAKİ) YÖNETİMİ
@@ -211,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modal-station-name').innerText = stationName;
             document.getElementById('reportModal').style.display = 'flex'; 
 
-            // Mini haritayı sadece modal açıldıktan *sonra* yükle ki beyaz ekran vermesin!
+            // Mini haritayı sadece modal açıldıktan *sonra* yükle
             setTimeout(() => {
                 if (!window.miniMap && document.getElementById('mini-map')) {
                     window.miniMap = L.map('mini-map', { zoomControl: false }).setView([lat || 38.4237, lng || 27.1428], 16);
@@ -228,14 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // Haritanın boyutunu yenile ve istasyona git
                 if(window.miniMap) {
                     window.miniMap.invalidateSize(); 
                     if (lat && lng) window.miniMap.setView([lat, lng], 18);
                 }
             }, 250); 
 
-            // Formu her açışta sıfırla
             if (window.miniMapMarker && window.miniMap) { window.miniMap.removeLayer(window.miniMapMarker); window.miniMapMarker = null; }
             const infoBox = document.getElementById('selected-zone-info');
             if(infoBox) {
@@ -245,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Arama Kutusu Filtreleme
         const searchInput = document.getElementById('station-search');
         if (searchInput) {
             searchInput.addEventListener('keyup', function(e) {
