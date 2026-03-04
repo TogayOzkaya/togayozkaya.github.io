@@ -9,7 +9,8 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=999">
+    
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -59,7 +60,7 @@
             <button id="sidebar-toggle" class="btn-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <a href="index.html" class="btn-home" title="Ana Sayfaya Dön"><i class="fas fa-home"></i></a>
             
-            <div id="map"></div>
+            <div id="map" style="width: 100%; height: 100%; position: absolute; top:0; left:0; z-index:1;"></div>
             
             <div class="map-legend">
                 <h4>Durum Göstergesi</h4>
@@ -165,7 +166,6 @@
             <div class="modal-body">
                 <div class="visual-container">
                     <div id="mini-map"></div>
-                    <div class="mini-map-overlay">Haritadan Seç 👇</div>
                 </div>
                 <div class="form-container">
                     <div class="form-friendly-header">
@@ -174,16 +174,6 @@
                     </div>
                     
                     <form id="reportForm">
-                        <div class="elevator-location-selector">
-                            <label><i class="fas fa-wheelchair" style="color:var(--primary-color);"></i> Hangi noktada sorun var?</label>
-                            <select id="elevator-location" required>
-                                <option value="" disabled selected>Lütfen bir seçenek belirleyin...</option>
-                                <option value="zemin">Dış Giriş (Zemin) Asansörü</option>
-                                <option value="peron">Gişe - Peron Asansörü</option>
-                                <option value="rampa">Engelli Rampası</option>
-                                <option value="diger">Diğer / Belirtilmemiş</option>
-                            </select>
-                        </div>
                         
                         <div class="issue-types-grid">
                             <label class="issue-option">
@@ -196,7 +186,7 @@
                             </label>
                         </div>
                         
-                        <div id="selected-zone-info" class="selection-alert">Lütfen haritadan sorunlu noktaya tıklayın 📍</div>
+                        <div id="selected-zone-info" class="selection-alert">Lütfen haritadaki mavi asansör pinlerinden birini seçin 👇</div>
 
                         <div class="file-upload-wrapper required-upload" id="upload-wrapper" onclick="document.getElementById('file-input').click()">
                             <input type="file" id="file-input" hidden accept="image/*" capture="environment">
@@ -242,7 +232,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js?v=999"></script>
+    <script src="script.js?v=12"></script>
 
 </body>
 </html>
