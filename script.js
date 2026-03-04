@@ -3,7 +3,7 @@
    ================================================== */
 window.isUserLoggedIn = localStorage.getItem('visi_logged_in') === 'true';
 
-// Sayfa yüklendiğinde ve giriş yapıldığında kullanıcı arayüzünü günceller
+// Kullanıcı Arayüzü Güncelleyici
 window.updateUserInfo = function() {
     const userNameEl = document.getElementById('sidebar-user-name');
     const userDescEl = document.getElementById('sidebar-user-desc');
@@ -25,7 +25,6 @@ window.toggleSidebar = function() {
     if(sb) sb.classList.toggle('closed');
 };
 
-// Profil sekmesine tıklandığında çalışacak kesin kod
 window.handleProfileClick = function() {
     if (window.isUserLoggedIn) {
         document.getElementById('profileModal').style.display = 'flex';
@@ -34,7 +33,6 @@ window.handleProfileClick = function() {
     }
 };
 
-// Modalları güvenli şekilde kapatma
 window.closeModals = function() {
     ['loginModal', 'profileModal', 'reportModal', 'verifyModal'].forEach(id => {
         const modal = document.getElementById(id);
@@ -101,7 +99,7 @@ window.switchAuthTab = function(tab) {
    ================================================== */
 window.addEventListener('load', function() {
     
-    // Kullanıcı adını ve resmini yükle
+    // Kullanıcı adını güncelle
     window.updateUserInfo();
 
     if(window.innerWidth <= 768 && document.getElementById('sidebar')) {
@@ -109,47 +107,51 @@ window.addEventListener('load', function() {
     }
 
     /* ==========================================
-       İZMİR METROSU NOKTA ATIŞI KOORDİNATLARI (DÜZELTİLDİ)
+       SENİN GÖNDERDİĞİN NOKTA ATIŞI KOORDİNATLAR!
        ========================================== */
     window.metroStations = [
-        { name: "Evka 3", lat: 38.4660, lng: 27.2268, status: "ok" },
-        { name: "Ege Üniversitesi", lat: 38.4593, lng: 27.2272, status: "ok" },
-        { name: "Bornova", lat: 38.4578, lng: 27.2136, status: "ok" },
-        { name: "Bölge", lat: 38.4539, lng: 27.2023, status: "ok" },
-        { name: "Sanayi", lat: 38.4468, lng: 27.1895, status: "ok" },
-        { name: "Stadyum", lat: 38.4419, lng: 27.1772, status: "error" },
-        { name: "Halkapınar", lat: 38.4343, lng: 27.1706, status: "ok" },
-        { name: "Hilal", lat: 38.4287, lng: 27.1517, status: "ok" },
-        { name: "Basmane", lat: 38.4227, lng: 27.1420, status: "ok" },
-        { name: "Çankaya", lat: 38.4235, lng: 27.1352, status: "ok" },
-        { name: "Konak", lat: 38.4186, lng: 27.1293, status: "pending" },
-        { name: "Üçyol", lat: 38.4109, lng: 27.1172, status: "ok" },
-        { name: "İzmirspor", lat: 38.4026, lng: 27.1066, status: "ok" },
-        { name: "Hatay", lat: 38.3986, lng: 27.0988, status: "error" },
-        { name: "Göztepe", lat: 38.3962, lng: 27.0886, status: "ok" },
-        { name: "Poligon", lat: 38.3927, lng: 27.0805, status: "ok" },
-        { name: "Fahrettin Altay", lat: 38.3891, lng: 27.0694, status: "ok" },
-        { name: "Balçova", lat: 38.3888, lng: 27.0583, status: "ok" },
-        { name: "Çağdaş", lat: 38.3881, lng: 27.0478, status: "ok" },
-        { name: "Dokuz Eylül Üniversitesi", lat: 38.3867, lng: 27.0360, status: "error" },
-        { name: "Güzel Sanatlar", lat: 38.3860, lng: 27.0238, status: "ok" },
-        { name: "Narlıdere İtfaiye", lat: 38.3870, lng: 27.0125, status: "ok" },
-        { name: "100. Yıl Cumhuriyet Şehitlik", lat: 38.3912, lng: 27.0020, status: "pending" },
-        { name: "Kaymakamlık", lat: 38.3950, lng: 26.9914, status: "ok" } // KAYMAKAMLIĞIN TAM KOORDİNATI
+        { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok" },
+        { name: "Ege Üniversitesi", lat: 38.4615, lng: 27.2210, status: "ok" },
+        { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok" },
+        { name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok" },
+        { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok" },
+        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error" },
+        { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok" },
+        { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok" },
+        { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok" },
+        { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok" },
+        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending" },
+        { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok" },
+        { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok" },
+        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error" },
+        { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok" },
+        { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok" },
+        { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok" },
+        { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok" },
+        { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok" },
+        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error" },
+        { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok" },
+        { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok" },
+        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending" },
+        { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok" }
     ];
 
-    /* ANA HARİTA KURULUMU */
+    /* ANA HARİTA KURULUMU VE BEYAZ EKRAN ÇÖZÜMÜ */
     try {
         const mapElement = document.getElementById('map');
         if (mapElement && !window.mainMap) {
             
-            window.mainMap = L.map('map', { zoomControl: false }).setView([38.4237, 27.1428], 12);
+            // Haritayı merkeze (Konak/Çankaya civarı) odaklı başlat
+            window.mainMap = L.map('map', { zoomControl: false }).setView([38.4237, 27.1428], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(window.mainMap);
             L.control.zoom({ position: 'bottomright' }).addTo(window.mainMap);
 
-            // Harita boyutunu garantiye al
-            setTimeout(() => { if(window.mainMap) window.mainMap.invalidateSize(); }, 500);
+            // BEYAZ EKRANI ENGELLEYEN SİHİRLİ DOKUNUŞ: Haritaya boyutunu hesaplamasını emrediyoruz.
+            setTimeout(() => { 
+                if(window.mainMap) window.mainMap.invalidateSize(); 
+            }, 100);
 
+            // İstasyonları birbirine bağlayan kırmızı hat
             const lineCoords = window.metroStations.map(s => [s.lat, s.lng]);
             L.polyline(lineCoords, { color: '#e74c3c', weight: 4, opacity: 0.7 }).addTo(window.mainMap);
 
@@ -165,9 +167,17 @@ window.addEventListener('load', function() {
             const stationListElement = document.getElementById('station-list');
             if(document.getElementById('result-count')) document.getElementById('result-count').innerText = window.metroStations.length;
 
+            // Pinleri ve sol listeyi oluştur
             window.metroStations.forEach(station => {
                 const marker = L.marker([station.lat, station.lng], { icon: getIcon(station.status) }).addTo(window.mainMap);
-                marker.bindPopup(`<div style="text-align:center; padding: 5px;"><h4 style="margin:0 0 10px 0;">${station.name}</h4><button onclick="openReportModal('${station.name}', ${station.lat}, ${station.lng})" style="background:#1e69de; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold;">Durum Bildir</button></div>`);
+                marker.bindPopup(`
+                    <div style="text-align:center; padding: 5px;">
+                        <h4 style="margin:0 0 10px 0; color:#2c3e50;">${station.name}</h4>
+                        <button onclick="openReportModal('${station.name}', ${station.lat}, ${station.lng})" style="background:#1e69de; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold;">
+                            Durum Bildir
+                        </button>
+                    </div>
+                `);
 
                 if(stationListElement) {
                     let statusBadge = station.status === 'ok' ? '<span class="status-badge status-ok"><i class="fas fa-check-circle"></i> Sorun Yok</span>' : (station.status === 'error' ? '<span class="status-badge status-err"><i class="fas fa-exclamation-circle"></i> Arıza Bildirildi</span>' : '<span class="status-badge status-pending"><i class="fas fa-clock"></i> Doğrulanıyor</span>');
@@ -177,11 +187,14 @@ window.addEventListener('load', function() {
                                 <div class="card-header"><i class="fas fa-subway" style="color:var(--primary-color)"></i> ${station.name}</div>
                                 ${statusBadge}
                             </div>
-                            <div class="card-actions"><button class="btn-icon-action" onclick="event.stopPropagation(); openReportModal('${station.name}', ${station.lat}, ${station.lng})"><i class="fas fa-bullhorn"></i></button></div>
+                            <div class="card-actions">
+                                <button class="btn-icon-action" onclick="event.stopPropagation(); openReportModal('${station.name}', ${station.lat}, ${station.lng})"><i class="fas fa-bullhorn"></i></button>
+                            </div>
                         </div>`;
                 }
             });
 
+            // Arama Çubuğu Sistemi
             const searchInput = document.getElementById('station-search');
             if (searchInput) {
                 searchInput.addEventListener('keyup', function(e) {
@@ -198,6 +211,7 @@ window.addEventListener('load', function() {
         }
     } catch(err) { console.error("Harita Hatası:", err); }
 
+    // Listeden tıklanınca haritayı o durağa odaklar
     window.focusStation = function(lat, lng) {
         if(window.mainMap) window.mainMap.setView([lat, lng], 16, { animate: true, duration: 1 });
         if(window.innerWidth <= 768) {
@@ -219,6 +233,7 @@ window.addEventListener('load', function() {
         document.getElementById('modal-station-name').innerText = stationName;
         document.getElementById('reportModal').style.display = 'flex'; 
 
+        // Mini harita açıldığında çökmemesi için yükleme ayarı
         setTimeout(() => {
             try {
                 if (!window.miniMap && document.getElementById('mini-map')) {
@@ -240,11 +255,12 @@ window.addEventListener('load', function() {
                 }
                 if(window.miniMap) {
                     window.miniMap.invalidateSize(); 
-                    if (lat && lng) window.miniMap.setView([lat, lng], 18);
+                    if (lat && lng) window.miniMap.setView([lat, lng], 17);
                 }
             } catch(err) { console.log("Mini map error", err); }
-        }, 300); 
+        }, 250); 
 
+        // Formu her seferinde sıfırla
         if (window.miniMapMarker && window.miniMap) { window.miniMap.removeLayer(window.miniMapMarker); window.miniMapMarker = null; }
         const infoBox = document.getElementById('selected-zone-info');
         if(infoBox) {
@@ -255,7 +271,7 @@ window.addEventListener('load', function() {
     };
 
     /* ==========================================
-       FORMLARIN KONTROLÜ (Açık Uyarı Mesajları Eklendi)
+       FORMLARIN KONTROLÜ VE UYARILAR
        ========================================== */
     try {
         const reportForm = document.getElementById('reportForm');
@@ -284,14 +300,12 @@ window.addEventListener('load', function() {
                 
                 const locationSelect = document.getElementById('elevator-location');
                 if(locationSelect && locationSelect.value === "") {
-                    // DİKKAT: Eksiklik varsa artık net bir uyarı verecek
-                    alert("⚠️ Lütfen önce asansör tipini veya rampayı seçiniz.");
+                    alert("⚠️ Lütfen önce 'Hangi noktada sorun var?' sorusunu cevaplayıp asansör tipini seçin.");
                     return;
                 }
 
                 if (!window.miniMapMarker) {
-                    // DİKKAT: Harita seçilmediyse net uyarı
-                    alert("⚠️ Lütfen soldaki küçük haritaya tıklayarak arızanın tam konumunu işaretleyin.");
+                    alert("⚠️ Lütfen soldaki küçük haritaya tıklayarak arızanın olduğu yeri işaretleyin.");
                     const infoBox = document.getElementById('selected-zone-info');
                     if(infoBox) {
                         infoBox.style.borderColor = "var(--danger-color)"; 
@@ -303,7 +317,6 @@ window.addEventListener('load', function() {
                 }
 
                 if (!fileInput.files || fileInput.files.length === 0) {
-                    // DİKKAT: Fotoğraf yoksa net uyarı
                     alert("⚠️ Lütfen arızayı kanıtlayan bir fotoğraf ekleyin (Kamerayı Aç butonuna tıklayın).");
                     const wrapper = document.getElementById('upload-wrapper');
                     const warning = document.getElementById('file-warning');
@@ -318,6 +331,7 @@ window.addEventListener('load', function() {
             });
         }
 
+        // Doğrulama Formu Fotoğraf Kontrolü
         const verifyFileInput = document.getElementById('verify-file-input');
         if(verifyFileInput) {
             verifyFileInput.addEventListener('change', function() {
