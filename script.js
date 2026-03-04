@@ -8,11 +8,12 @@ window.updateUserInfo = function() {
     const userNameEl = document.getElementById('sidebar-user-name');
     const userDescEl = document.getElementById('sidebar-user-desc');
     const userImgEl = document.getElementById('sidebar-user-img');
-    const modalUserName = document.getElementById('modal-username'); // Profil içindeki başlık
+    const modalUserName = document.getElementById('modal-username'); 
     
     if (window.isUserLoggedIn) {
         // Hafızadan kullanıcının formda yazdığı gerçek adını çek
-        const storedName = localStorage.getItem('visi_user_name') || "Kullanıcı";
+        let storedName = localStorage.getItem('visi_user_name');
+        if (!storedName) storedName = "Kullanıcı";
         
         if(userNameEl) userNameEl.innerText = storedName;
         if(userDescEl) userDescEl.innerText = "Seviye 1";
@@ -52,31 +53,29 @@ window.closeVerifyModal = window.closeModals;
 
 window.resetData = function() {
     localStorage.setItem('visi_logged_in', 'false');
-    localStorage.removeItem('visi_user_name'); // Çıkışta ismi de hafızadan sil
+    localStorage.removeItem('visi_user_name'); // Çıkışta ismi de hafızadan tamamen sil
     window.isUserLoggedIn = false;
     window.updateUserInfo();
     window.closeModals();
     alert("Hesabınızdan başarıyla çıkış yapıldı.");
 };
 
-window.performLogin = function(e) {
+// GİRİŞ VE KAYIT İŞLEMLERİ (DİNAMİK İSİM YAKALAYICI)
+window.performLogin = function(e, loginType) {
     if(e) e.preventDefault();
     
-    // Tıklanan buton "Google ile Giriş Yap" butonu mu?
-    const isGoogleBtn = e && e.currentTarget && e.currentTarget.classList.contains('btn-google-login');
     const tabSignup = document.getElementById('tab-signup');
     const isSignup = tabSignup && tabSignup.classList.contains('active');
     
     let userName = "Kullanıcı";
 
-    // İSİM ALMA MANTIĞI
-    if (isGoogleBtn) {
+    if (loginType === 'google') {
         // Google butonu için demo isim girişi
-        let googleName = prompt("Google üzerinden bağlanılacak ismi girin:", "Ali Yılmaz");
-        if (!googleName) return; // İptal ederse durdur
+        let googleName = prompt("Google hesabı ile bağlanıyorsunuz. Lütfen isminizi girin:", "Ali Yılmaz");
+        if (!googleName) return; // İptal ederse işlemi durdur
         userName = googleName;
     } else if (isSignup) {
-        // Kayıt formundan ismi çek
+        // Kayıt formundan Ad-Soyad çek
         const terms = document.getElementById('terms-check');
         if(terms && !terms.checked) {
             alert("Devam etmek için güvenlik sözleşmesini kabul etmelisiniz.");
@@ -90,10 +89,10 @@ window.performLogin = function(e) {
             return;
         }
     } else {
-        // Giriş formundan sadece mail varsa, mailin başını isim yap
+        // Normal Giriş Yap formundan ismi veya maili çek
         const savedName = localStorage.getItem('visi_user_name');
         if (savedName) {
-            userName = savedName; // Varsa eski ismi kullan
+            userName = savedName; 
         } else {
             const emailInput = document.querySelector('#form-login-content input[type="email"]');
             if(emailInput && emailInput.value.trim() !== "") {
@@ -106,7 +105,7 @@ window.performLogin = function(e) {
         }
     }
 
-    // KAYIT: Sisteme ismini kaydet! Artık sabit bir isim yok.
+    // Sisteme özel ismini kaydet!
     localStorage.setItem('visi_logged_in', 'true');
     localStorage.setItem('visi_user_name', userName);
     window.isUserLoggedIn = true;
@@ -114,7 +113,7 @@ window.performLogin = function(e) {
     window.updateUserInfo(); // Arayüzü anında yeni isimle yenile
     window.closeModals();
     
-    alert(`Sisteme başarıyla giriş yaptın, hoş geldin ${userName}! 🚀`);
+    alert(isSignup ? `Kayıt Başarılı! Visi topluluğuna hoş geldin ${userName}. 🚀` : `Giriş Başarılı! Tekrar hoş geldin ${userName}. 👋`);
 };
 
 window.switchAuthTab = function(tab) {
@@ -140,118 +139,157 @@ window.switchAuthTab = function(tab) {
 };
 
 /* ==================================================
-   HARİTA VE İSTASYON VERİLERİ (Bölge Pinleri Dahil)
+   SAYFA YÜKLENDİĞİNDE ÇALIŞACAK ANA SİSTEM
    ================================================== */
-window.metroStations = [
-    { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş Asansörü", offset: [0, 0]}] },
-    { name: "Ege Üniversitesi", lat: 38.4615, lng: 27.2210, status: "ok", verifyCount: 0, zones: [{name: "Kampüs Girişi", offset: [0, 0]}] },
-    { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok", verifyCount: 0, zones: [{name: "Meydan Çıkışı", offset: [0, 0]}, {name: "Hastane Tarafı", offset: [0.0002, 0.0002]}] },
-    { name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok", verifyCount: 0, zones: [{name: "Kuzey-Batı Girişi (Fes Spa)", offset: [0.0008, -0.0010]}, {name: "Güney-Batı Girişi (Yaya Yolu)", offset: [-0.0005, -0.0008]}, {name: "Kuzey-Doğu Peron", offset: [0.0003, 0.0008]}, {name: "Güney-Doğu Üni. Cad.", offset: [-0.0002, 0.0003]}] },
-    { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
-    { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error", verifyCount: 5, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
-    { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok", verifyCount: 0, zones: [{name: "Otobüs Aktarma", offset: [0, 0]}, {name: "Tramvay Tarafı", offset: [0.0002, 0.0002]}] },
-    { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok", verifyCount: 0, zones: [{name: "İZBAN Aktarma", offset: [0, 0]}] },
-    { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok", verifyCount: 0, zones: [{name: "Gar Girişi", offset: [0, 0]}, {name: "Fuar Kapısı", offset: [-0.0002, 0]}] },
-    { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok", verifyCount: 0, zones: [{name: "Hilton Tarafı", offset: [0, 0]}, {name: "Bit Pazarı", offset: [-0.0002, 0.0002]}] },
-    { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending", verifyCount: 2, zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
-    { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok", verifyCount: 0, zones: [{name: "Betonyol Çıkışı", offset: [0.0002, 0]}, {name: "Park Girişi", offset: [-0.0002, 0]}] },
-    { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok", verifyCount: 0, zones: [{name: "Devlet Hastanesi", offset: [0,0]}] },
-    { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error", verifyCount: 5, zones: [{name: "Renkli Durağı", offset: [0,0]}] },
-    { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok", verifyCount: 0, zones: [{name: "Sahil Tarafı", offset: [0,0]}, {name: "Cadde Tarafı", offset: [0.0002, 0.0002]}] },
-    { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok", verifyCount: 0, zones: [{name: "Denizciler Parkı", offset: [0.0002, -0.0002]}] },
-    { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok", verifyCount: 0, zones: [{name: "AVM Girişi", offset: [0.0003, -0.0003]}, {name: "Pazar Yeri", offset: [-0.0003, 0.0003]}] },
-    { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok", verifyCount: 0, zones: [{name: "Teleferik Yönü", offset: [0,0]}] },
-    { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok", verifyCount: 0, zones: [{name: "Cadde Girişi", offset: [0,0]}] },
-    { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error", verifyCount: 5, zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
-    { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok", verifyCount: 0, zones: [{name: "Fakülte Kapısı", offset: [0,0]}] },
-    { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok", verifyCount: 0, zones: [{name: "İtfaiye Girişi", offset: [0,0]}] },
-    { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending", verifyCount: 4, zones: [{name: "Park Tarafı", offset: [0,0]}] },
-    { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok", verifyCount: 0, zones: [{name: "Kaymakamlık Asansörü", offset: [0, -0.0008]}] }
-];
-
-window.mainMapMarkers = []; 
-window.currentReportingStation = null; 
-window.currentVerifyingStation = null;
-
-window.getIcon = function(status) {
-    let color = status === 'ok' ? '#27ae60' : (status === 'error' ? '#c0392b' : '#f39c12');
-    return L.divIcon({
-        className: 'custom-station-icon',
-        html: `<div style="background-color: ${color}; width: 18px; height: 18px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5); transition: 0.3s;"></div>`,
-        iconSize: [18, 18], iconAnchor: [9, 9]
-    });
-};
-
-window.renderStations = function() {
-    const stationListElement = document.getElementById('station-list');
-    if(stationListElement) stationListElement.innerHTML = '';
+window.addEventListener('load', function() {
     
-    window.mainMapMarkers.forEach(m => { if(window.mainMap) window.mainMap.removeLayer(m); });
-    window.mainMapMarkers = [];
+    window.updateUserInfo();
 
-    window.metroStations.forEach(station => {
-        if(window.mainMap) {
-            const marker = L.marker([station.lat, station.lng], { icon: window.getIcon(station.status) }).addTo(window.mainMap);
-            window.mainMapMarkers.push(marker);
+    if(window.innerWidth <= 768 && document.getElementById('sidebar')) {
+        document.getElementById('sidebar').classList.add('closed');
+    }
 
-            let btnAction = station.status === 'ok' ? `openReportModal('${station.name}')` : `openVerifyModal('${station.name}')`;
-            let btnText = station.status === 'ok' ? "Durum Bildir" : "Durumu Doğrula";
-            let btnColor = station.status === 'ok' ? "#1e69de" : "#f39c12";
-            if (station.status === 'error') btnColor = "#c0392b";
+    /* GÖZ ANİMASYONLARI (GÜNCELLENDİ) */
+    try {
+        const loginModal = document.getElementById('loginModal');
+        const blobContainer = document.getElementById('blob-container');
+        const passwordInputs = document.querySelectorAll('.password-input');
+        const eyes = document.querySelectorAll('.eye');
 
-            marker.bindPopup(`
-                <div style="text-align:center; padding: 5px;">
-                    <h4 style="margin:0 0 10px 0; color:#2c3e50;">${station.name}</h4>
-                    <button onclick="${btnAction}" style="background:${btnColor}; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold;">
-                        ${btnText}
-                    </button>
-                </div>
-            `);
+        if (loginModal && blobContainer) {
+            document.addEventListener('mousemove', (e) => {
+                if (loginModal.style.display !== 'flex' || document.activeElement.classList.contains('password-input')) return;
+                eyes.forEach(eye => {
+                    const rect = eye.getBoundingClientRect();
+                    const angle = Math.atan2(e.clientY - (rect.top + rect.height/2), e.clientX - (rect.left + rect.width/2));
+                    const pupil = eye.querySelector('.pupil');
+                    if(pupil) pupil.style.transform = `translate(${Math.cos(angle) * 4}px, ${Math.sin(angle) * 4}px)`;
+                });
+            });
+
+            passwordInputs.forEach(input => {
+                input.addEventListener('focus', () => blobContainer.classList.add('blindfolded'));
+                input.addEventListener('blur', () => {
+                    blobContainer.classList.remove('blindfolded');
+                    eyes.forEach(eye => {
+                        const pupil = eye.querySelector('.pupil');
+                        if(pupil) pupil.style.transform = `translate(0px, 0px)`;
+                    });
+                });
+            });
         }
+    } catch(err) {}
 
-        if(stationListElement) {
-            let statusBadge = '';
-            let btnIcon = '';
-            let btnBg = '';
+    /* ==========================================
+       DETAYLI İSTASYON VE ASANSÖR (ZONE) VERİTABANI
+       ========================================== */
+    window.metroStations = [
+        { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş Asansörü", offset: [0, 0]}] },
+        { name: "Ege Üniversitesi", lat: 38.4615, lng: 27.2210, status: "ok", verifyCount: 0, zones: [{name: "Kampüs Girişi", offset: [0, 0]}] },
+        { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok", verifyCount: 0, zones: [{name: "Meydan Çıkışı", offset: [0, 0]}, {name: "Hastane Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok", verifyCount: 0, zones: [{name: "Kuzey-Batı Girişi (Fes Spa)", offset: [0.0008, -0.0010]}, {name: "Güney-Batı Girişi (Yaya Yolu)", offset: [-0.0005, -0.0008]}, {name: "Kuzey-Doğu Peron", offset: [0.0003, 0.0008]}, {name: "Güney-Doğu Üni. Cad.", offset: [-0.0002, 0.0003]}] },
+        { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok", verifyCount: 0, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
+        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error", verifyCount: 5, zones: [{name: "Ana Giriş", offset: [0, 0]}] },
+        { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok", verifyCount: 0, zones: [{name: "Otobüs Aktarma", offset: [0, 0]}, {name: "Tramvay Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok", verifyCount: 0, zones: [{name: "İZBAN Aktarma", offset: [0, 0]}] },
+        { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok", verifyCount: 0, zones: [{name: "Gar Girişi", offset: [0, 0]}, {name: "Fuar Kapısı", offset: [-0.0002, 0]}] },
+        { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok", verifyCount: 0, zones: [{name: "Hilton Tarafı", offset: [0, 0]}, {name: "Bit Pazarı", offset: [-0.0002, 0.0002]}] },
+        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending", verifyCount: 2, zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
+        { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok", verifyCount: 0, zones: [{name: "Betonyol Çıkışı", offset: [0.0002, 0]}, {name: "Park Girişi", offset: [-0.0002, 0]}] },
+        { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok", verifyCount: 0, zones: [{name: "Devlet Hastanesi", offset: [0,0]}] },
+        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error", verifyCount: 5, zones: [{name: "Renkli Durağı", offset: [0,0]}] },
+        { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok", verifyCount: 0, zones: [{name: "Sahil Tarafı", offset: [0,0]}, {name: "Cadde Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok", verifyCount: 0, zones: [{name: "Denizciler Parkı", offset: [0.0002, -0.0002]}] },
+        { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok", verifyCount: 0, zones: [{name: "AVM Girişi", offset: [0.0003, -0.0003]}, {name: "Pazar Yeri", offset: [-0.0003, 0.0003]}] },
+        { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok", verifyCount: 0, zones: [{name: "Teleferik Yönü", offset: [0,0]}] },
+        { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok", verifyCount: 0, zones: [{name: "Cadde Girişi", offset: [0,0]}] },
+        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error", verifyCount: 5, zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
+        { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok", verifyCount: 0, zones: [{name: "Fakülte Kapısı", offset: [0,0]}] },
+        { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok", verifyCount: 0, zones: [{name: "İtfaiye Girişi", offset: [0,0]}] },
+        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending", verifyCount: 4, zones: [{name: "Park Tarafı", offset: [0,0]}] },
+        { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok", verifyCount: 0, zones: [{name: "Kaymakamlık Asansörü", offset: [0, -0.0008]}] }
+    ];
 
-            if(station.status === 'ok') {
-                statusBadge = '<span class="status-badge status-ok"><i class="fas fa-check-circle"></i> Sorun Yok</span>';
-                btnIcon = 'fa-bullhorn';
-                btnBg = 'var(--primary-color)';
-            } else if(station.status === 'error') {
-                statusBadge = '<span class="status-badge status-err"><i class="fas fa-exclamation-circle"></i> Arızalı (Doğrulandı)</span>';
-                btnIcon = 'fa-check-double';
-                btnBg = 'var(--danger-color)';
-            } else {
-                statusBadge = `<span class="status-badge status-pending"><i class="fas fa-clock"></i> Doğrulanıyor (${station.verifyCount}/5)</span>`;
-                btnIcon = 'fa-check-double';
-                btnBg = 'var(--warning-color)';
+    window.mainMapMarkers = []; 
+    window.currentReportingStation = null; 
+    window.currentVerifyingStation = null;
+
+    window.getIcon = function(status) {
+        let color = status === 'ok' ? '#27ae60' : (status === 'error' ? '#c0392b' : '#f39c12');
+        return L.divIcon({
+            className: 'custom-station-icon',
+            html: `<div style="background-color: ${color}; width: 18px; height: 18px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5); transition: 0.3s;"></div>`,
+            iconSize: [18, 18], iconAnchor: [9, 9]
+        });
+    };
+
+    window.renderStations = function() {
+        const stationListElement = document.getElementById('station-list');
+        if(stationListElement) stationListElement.innerHTML = '';
+        
+        window.mainMapMarkers.forEach(m => { if(window.mainMap) window.mainMap.removeLayer(m); });
+        window.mainMapMarkers = [];
+
+        window.metroStations.forEach(station => {
+            if(window.mainMap) {
+                const marker = L.marker([station.lat, station.lng], { icon: window.getIcon(station.status) }).addTo(window.mainMap);
+                window.mainMapMarkers.push(marker);
+
+                let btnAction = station.status === 'ok' ? `openReportModal('${station.name}')` : `openVerifyModal('${station.name}')`;
+                let btnText = station.status === 'ok' ? "Durum Bildir" : "Durumu Doğrula";
+                let btnColor = station.status === 'ok' ? "#1e69de" : "#f39c12";
+                if (station.status === 'error') btnColor = "#c0392b";
+
+                marker.bindPopup(`
+                    <div style="text-align:center; padding: 5px;">
+                        <h4 style="margin:0 0 10px 0; color:#2c3e50;">${station.name}</h4>
+                        <button onclick="${btnAction}" style="background:${btnColor}; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; width:100%; font-weight:bold;">
+                            ${btnText}
+                        </button>
+                    </div>
+                `);
             }
 
-            let act = station.status === 'ok' ? `openReportModal('${station.name}')` : `openVerifyModal('${station.name}')`;
+            if(stationListElement) {
+                let statusBadge = '';
+                let btnIcon = '';
+                let btnBg = '';
 
-            stationListElement.innerHTML += `
-                <div class="station-card" onclick="focusStation(${station.lat}, ${station.lng})">
-                    <div class="card-info">
-                        <div class="card-header"><i class="fas fa-subway" style="color:var(--primary-color)"></i> ${station.name}</div>
-                        ${statusBadge}
-                    </div>
-                    <div class="card-actions">
-                        <button class="btn-icon-action" style="background:${btnBg}" onclick="event.stopPropagation(); ${act}"><i class="fas ${btnIcon}"></i></button>
-                    </div>
-                </div>`;
+                if(station.status === 'ok') {
+                    statusBadge = '<span class="status-badge status-ok"><i class="fas fa-check-circle"></i> Sorun Yok</span>';
+                    btnIcon = 'fa-bullhorn';
+                    btnBg = 'var(--primary-color)';
+                } else if(station.status === 'error') {
+                    statusBadge = '<span class="status-badge status-err"><i class="fas fa-exclamation-circle"></i> Arızalı (Doğrulandı)</span>';
+                    btnIcon = 'fa-check-double';
+                    btnBg = 'var(--danger-color)';
+                } else {
+                    statusBadge = `<span class="status-badge status-pending"><i class="fas fa-clock"></i> Doğrulanıyor (${station.verifyCount}/5)</span>`;
+                    btnIcon = 'fa-check-double';
+                    btnBg = 'var(--warning-color)';
+                }
+
+                let act = station.status === 'ok' ? `openReportModal('${station.name}')` : `openVerifyModal('${station.name}')`;
+
+                stationListElement.innerHTML += `
+                    <div class="station-card" onclick="focusStation(${station.lat}, ${station.lng})">
+                        <div class="card-info">
+                            <div class="card-header"><i class="fas fa-subway" style="color:var(--primary-color)"></i> ${station.name}</div>
+                            ${statusBadge}
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-icon-action" style="background:${btnBg}" onclick="event.stopPropagation(); ${act}"><i class="fas ${btnIcon}"></i></button>
+                        </div>
+                    </div>`;
+            }
+        });
+
+        if(document.getElementById('result-count')) {
+            document.getElementById('result-count').innerText = window.metroStations.length;
         }
-    });
+    };
 
-    if(document.getElementById('result-count')) {
-        document.getElementById('result-count').innerText = window.metroStations.length;
-    }
-};
-
-window.addEventListener('load', function() {
-    window.updateUserInfo();
-    if(window.innerWidth <= 768 && document.getElementById('sidebar')) document.getElementById('sidebar').classList.add('closed');
-
+    /* ANA HARİTAYI BAŞLAT */
     try {
         const mapElement = document.getElementById('map');
         if (mapElement && !window.mainMap) {
@@ -290,6 +328,9 @@ window.addEventListener('load', function() {
         }
     };
 
+    /* ==========================================
+       BİLDİRİM (REPORT) EKRANI VE MİNİ HARİTA
+       ========================================== */
     window.selectedZoneName = null; 
     let zoneMarkersGroup = null; 
 
@@ -364,6 +405,9 @@ window.addEventListener('load', function() {
         }
     };
 
+    /* ==========================================
+       DOĞRULAMA (VERIFY) EKRANINI AÇMA
+       ========================================== */
     window.openVerifyModal = function(stationName) {
         if(!window.isUserLoggedIn) {
             alert("Doğrulama yapabilmek için lütfen önce giriş yapın.");
@@ -375,6 +419,9 @@ window.addEventListener('load', function() {
         document.getElementById('verifyModal').style.display = 'flex';
     };
 
+    /* ==========================================
+       BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ
+       ========================================== */
     try {
         const reportForm = document.getElementById('reportForm');
         const fileInput = document.getElementById('file-input');
