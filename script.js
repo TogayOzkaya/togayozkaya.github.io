@@ -105,33 +105,47 @@ window.addEventListener('load', function() {
     }
 
     /* ==========================================
-       SENİN GÖNDERDİĞİN ÖZEL VERİ TABANI (ZONELER DAHİL)
+       DETAYLI İSTASYON VE ASANSÖR (ZONE) VERİTABANI
+       Resimlerdeki gerçek harita pozisyonlarına göre!
        ========================================== */
     window.metroStations = [
-        { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok", zones: [{name: "Kaymakamlık Kapısı", offset: [0,0]}] },
-        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending", zones: [{name: "Park Tarafı", offset: [0,0]}] },
-        { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok", zones: [{name: "İtfaiye Girişi", offset: [0,0]}] },
-        { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok", zones: [{name: "Fakülte Kapısı", offset: [0,0]}] },
-        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error", zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
-        { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok", zones: [{name: "Cadde Girişi", offset: [0,0]}] },
-        { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok", zones: [{name: "Teleferik Yönü", offset: [0,0]}] },
-        { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok", zones: [{name: "AVM Girişi", offset: [0.0003, -0.0003]}, {name: "Pazar Yeri", offset: [-0.0003, 0.0003]}] },
-        { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok", zones: [{name: "Denizciler Parkı", offset: [0.0002, -0.0002]}] },
-        { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok", zones: [{name: "Sahil Tarafı", offset: [0,0]}, {name: "Cadde Tarafı", offset: [0.0002, 0.0002]}] },
-        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error", zones: [{name: "Renkli Durağı", offset: [0,0]}] },
-        { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok", zones: [{name: "Devlet Hastanesi", offset: [0,0]}] },
-        { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok", zones: [{name: "Betonyol Çıkışı", offset: [0.0002, 0]}, {name: "Park Girişi", offset: [-0.0002, 0]}] },
-        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending", zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
-        { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok", zones: [{name: "Hilton Tarafı", offset: [0, 0]}, {name: "Bit Pazarı", offset: [-0.0002, 0.0002]}] },
-        { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok", zones: [{name: "Gar Girişi", offset: [0, 0]}, {name: "Fuar Kapısı", offset: [-0.0002, 0]}] },
-        { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok", zones: [{name: "İZBAN Aktarma", offset: [0, 0]}] },
-        { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok", zones: [{name: "Otobüs Aktarma", offset: [0, 0]}, {name: "Tramvay Tarafı", offset: [0.0002, 0.0002]}] },
-        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error", zones: [{name: "Ana Giriş", offset: [0, 0]}] },
-        { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok", zones: [{name: "Ana Giriş", offset: [0, 0]}] },
-        { name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok", zones: [{name: "Üniversite Tarafı", offset: [0, 0]}] },
-        { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok", zones: [{name: "Meydan Çıkışı", offset: [0, 0]}, {name: "Hastane Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", zones: [{name: "Ana Giriş Asansörü", offset: [0, 0]}] },
         { name: "Ege Üniversitesi", lat: 38.4615, lng: 27.2210, status: "ok", zones: [{name: "Kampüs Girişi", offset: [0, 0]}] },
-        { name: "Evka-3", lat: 38.4650, lng: 27.2286, status: "ok", zones: [{name: "Ana Giriş", offset: [0, 0]}] }
+        { name: "Bornova", lat: 38.4583, lng: 27.2125, status: "ok", zones: [{name: "Meydan Çıkışı", offset: [0, 0]}, {name: "Hastane Tarafı", offset: [0.0002, 0.0002]}] },
+        
+        // BÖLGE İSTASYONUNDAKİ 4 ASANSÖR (Senin resmine göre özel ayarlandı)
+        { 
+            name: "Bölge", lat: 38.4547, lng: 27.2011, status: "ok", 
+            zones: [
+                {name: "Kuzey-Batı Girişi (Fes Spa Tarafı)", offset: [0.0008, -0.0010]},
+                {name: "Güney-Batı Girişi (Yaya Yolu Tarafı)", offset: [-0.0005, -0.0008]},
+                {name: "Kuzey-Doğu Peron İçi", offset: [0.0003, 0.0008]},
+                {name: "Güney-Doğu Üni. Caddesi", offset: [-0.0002, 0.0003]}
+            ] 
+        },
+
+        { name: "Sanayi", lat: 38.4483, lng: 27.1903, status: "ok", zones: [{name: "Ana Giriş", offset: [0, 0]}] },
+        { name: "Stadyum", lat: 38.4425, lng: 27.1806, status: "error", zones: [{name: "Ana Giriş", offset: [0, 0]}] },
+        { name: "Halkapınar", lat: 38.4344, lng: 27.1686, status: "ok", zones: [{name: "Otobüs Aktarma", offset: [0, 0]}, {name: "Tramvay Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Hilal", lat: 38.4269, lng: 27.1550, status: "ok", zones: [{name: "İZBAN Aktarma", offset: [0, 0]}] },
+        { name: "Basmane", lat: 38.4228, lng: 27.1447, status: "ok", zones: [{name: "Gar Girişi", offset: [0, 0]}, {name: "Fuar Kapısı", offset: [-0.0002, 0]}] },
+        { name: "Çankaya", lat: 38.4225, lng: 27.1361, status: "ok", zones: [{name: "Hilton Tarafı", offset: [0, 0]}, {name: "Bit Pazarı", offset: [-0.0002, 0.0002]}] },
+        { name: "Konak", lat: 38.4169, lng: 27.1281, status: "pending", zones: [{name: "Vapur İskelesi", offset: [0.0002, -0.0002]}, {name: "Kemeraltı", offset: [-0.0002, 0.0002]}, {name: "YKM Önü", offset: [0, 0]}] },
+        { name: "Üçyol", lat: 38.4058, lng: 27.1211, status: "ok", zones: [{name: "Betonyol Çıkışı", offset: [0.0002, 0]}, {name: "Park Girişi", offset: [-0.0002, 0]}] },
+        { name: "İzmirspor", lat: 38.4017, lng: 27.1106, status: "ok", zones: [{name: "Devlet Hastanesi", offset: [0,0]}] },
+        { name: "Hatay", lat: 38.4017, lng: 27.1028, status: "error", zones: [{name: "Renkli Durağı", offset: [0,0]}] },
+        { name: "Göztepe", lat: 38.3961, lng: 27.0944, status: "ok", zones: [{name: "Sahil Tarafı", offset: [0,0]}, {name: "Cadde Tarafı", offset: [0.0002, 0.0002]}] },
+        { name: "Poligon", lat: 38.3933, lng: 27.0850, status: "ok", zones: [{name: "Denizciler Parkı", offset: [0.0002, -0.0002]}] },
+        { name: "Fahrettin Altay", lat: 38.3969, lng: 27.0700, status: "ok", zones: [{name: "AVM Girişi", offset: [0.0003, -0.0003]}, {name: "Pazar Yeri", offset: [-0.0003, 0.0003]}] },
+        { name: "Balçova", lat: 38.3958, lng: 27.0569, status: "ok", zones: [{name: "Teleferik Yönü", offset: [0,0]}] },
+        { name: "Çağdaş", lat: 38.3944, lng: 27.0453, status: "ok", zones: [{name: "Cadde Girişi", offset: [0,0]}] },
+        { name: "DEÜ Hastanesi", lat: 38.3944, lng: 27.0386, status: "error", zones: [{name: "Poliklinik Girişi", offset: [0.0002, 0.0002]}, {name: "Acil Tarafı", offset: [-0.0002, -0.0002]}] },
+        { name: "Güzel Sanatlar", lat: 38.3925, lng: 27.0236, status: "ok", zones: [{name: "Fakülte Kapısı", offset: [0,0]}] },
+        { name: "Narlıdere (İtfaiye)", lat: 38.3936, lng: 27.0150, status: "ok", zones: [{name: "İtfaiye Girişi", offset: [0,0]}] },
+        { name: "100. Yıl C. Şehitlik", lat: 38.3958, lng: 27.0003, status: "pending", zones: [{name: "Park Tarafı", offset: [0,0]}] },
+        
+        // KAYMAKAMLIĞIN SOLDAKİ ASANSÖRÜ (Resmindeki ofset baz alındı)
+        { name: "Kaymakamlık", lat: 38.3950, lng: 26.9911, status: "ok", zones: [{name: "Kaymakamlık Asansörü", offset: [0, -0.0008]}] }
     ];
 
     /* ANA HARİTA KURULUMU */
@@ -209,10 +223,10 @@ window.addEventListener('load', function() {
     };
 
     /* ==========================================
-       YENİ: MİNİ HARİTA VE ASANSÖR (ZONE) PİNLERİ
+       YENİ MİNİ HARİTA (SADECE HAZIR ASANSÖRLER SEÇİLEBİLİR)
        ========================================== */
-    window.selectedZoneName = null; // Seçilen asansörü hafızada tutar
-    let zoneMarkersGroup = null; // Haritadaki pinleri gruplar
+    window.selectedZoneName = null; 
+    let zoneMarkersGroup = null; 
 
     window.openReportModal = function(stationName) {
         if(!window.isUserLoggedIn) {
@@ -224,7 +238,7 @@ window.addEventListener('load', function() {
         const station = window.metroStations.find(s => s.name === stationName);
         if(!station) return;
 
-        window.selectedZoneName = null; // Seçimi sıfırla
+        window.selectedZoneName = null; 
         document.getElementById('modal-station-name').innerText = stationName;
         document.getElementById('reportModal').style.display = 'flex'; 
 
@@ -244,30 +258,36 @@ window.addEventListener('load', function() {
                     zoneMarkersGroup = L.layerGroup().addTo(window.miniMap);
                     
                     window.miniMap.invalidateSize(); 
-                    window.miniMap.setView([station.lat, station.lng], 18); // İstasyonu yaklaştır
+                    window.miniMap.setView([station.lat, station.lng], 18);
 
-                    // SADECE BU İSTASYONDAKİ ASANSÖR PİNLERİNİ ÇİZ
+                    // BU İSTASYONDAKİ ASANSÖR PİNLERİNİ HARİTAYA EKLE
                     if(station.zones && station.zones.length > 0) {
                         station.zones.forEach(zone => {
                             const zLat = station.lat + zone.offset[0];
                             const zLng = station.lng + zone.offset[1];
                             
-                            // Pin Tasarımı
+                            // Asansör Pini Tasarımı
                             const elIcon = L.divIcon({
                                 className: 'elevator-pin',
-                                html: '<i class="fas fa-wheelchair" style="color:white; background:var(--primary-color); padding:6px; border-radius:50%; border:2px solid white; font-size:16px; box-shadow: 0 2px 10px rgba(0,0,0,0.4);"></i>',
-                                iconSize: [32, 32],
-                                iconAnchor: [16, 16]
+                                html: '<div class="pin-bg" style="background:var(--primary-color); border:2px solid white; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s;"><i class="fas fa-wheelchair" style="color:white; font-size:18px;"></i></div>',
+                                iconSize: [36, 36],
+                                iconAnchor: [18, 18]
                             });
 
                             const zMarker = L.marker([zLat, zLng], { icon: elIcon }).addTo(zoneMarkersGroup);
                             
-                            // Kullanıcı pine tıkladığında
+                            // Kullanıcı bir asansöre tıkladığında
                             zMarker.on('click', () => {
                                 window.selectedZoneName = zone.name;
+                                
+                                // Tüm pinleri maviye çevir
+                                document.querySelectorAll('.pin-bg').forEach(el => el.style.background = 'var(--primary-color)');
+                                // Seçilen pini yeşile çevir (Görsel doğrulama)
+                                zMarker._icon.querySelector('.pin-bg').style.background = 'var(--success-color)';
+
                                 const infoBox = document.getElementById('selected-zone-info');
                                 if(infoBox) {
-                                    infoBox.innerHTML = `📍 Seçilen Asansör: <strong>${zone.name}</strong>`;
+                                    infoBox.innerHTML = `📍 Seçilen: <strong>${zone.name}</strong>`;
                                     infoBox.classList.add('selected');
                                     infoBox.style.borderColor = "var(--success-color)"; 
                                     infoBox.style.color = "var(--success-color)"; 
@@ -278,11 +298,11 @@ window.addEventListener('load', function() {
                     }
                 }
             } catch(err) { console.log("Mini map error", err); }
-        }, 250); 
+        }, 300); 
 
         const infoBox = document.getElementById('selected-zone-info');
         if(infoBox) {
-            infoBox.innerText = "Lütfen haritadaki mavi asansör pinlerinden birini seçin 👇";
+            infoBox.innerText = "Lütfen haritadaki asansör pinlerinden birini seçin 👇";
             infoBox.classList.remove('selected');
             infoBox.style.borderColor = ""; infoBox.style.color = ""; infoBox.style.backgroundColor = "";
         }
@@ -316,9 +336,9 @@ window.addEventListener('load', function() {
             reportForm.addEventListener('submit', function(e) {
                 e.preventDefault(); 
                 
-                // YENİ KONTROL: Kullanıcı özel pin seçti mi?
+                // YENİ: Haritadaki PİN seçilmiş mi?
                 if (!window.selectedZoneName) {
-                    alert("⚠️ Lütfen soldaki haritadan arızalı asansörün (mavi pin) üzerine tıklayın.");
+                    alert("⚠️ Lütfen sol taraftaki haritadan arızalı asansörün (mavi pin) üzerine tıklayarak seçiminizi yapın.");
                     const infoBox = document.getElementById('selected-zone-info');
                     if(infoBox) {
                         infoBox.style.borderColor = "var(--danger-color)"; 
