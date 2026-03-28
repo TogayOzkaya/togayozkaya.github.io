@@ -311,3 +311,96 @@ textarea { width: 100%; padding: 15px; border: 2px solid #e2e8f0; border-radius:
 .blog-content p { margin-bottom: 20px; }
 .blog-content blockquote { border-left: 5px solid var(--primary-color); background: var(--primary-light); padding: 15px 20px; margin: 30px 0; font-style: italic; color: var(--secondary-color); border-radius: 0 8px 8px 0; }
 @media (max-width: 768px) { .blog-page-container { padding: 20px 15px; } .blog-title { font-size: 1.8rem; } .blog-content { font-size: 1rem; } }
+
+/* ========================================================= */
+/* ANA SAYFA BLOG KARTLARI (Kusursuz Hizalama)               */
+/* ========================================================= */
+.blog-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blog-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    width: 350px;
+    display: flex;
+    flex-direction: column; /* İçeriği dikey hizalar */
+    border: 1px solid #eee;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-10px);
+}
+
+.blog-image {
+    width: 100%;
+    height: 220px; /* Tüm resimleri aynı boyuta sabitler */
+    object-fit: cover;
+    display: block;
+}
+
+.blog-card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Kartın alt kısmını doldurur */
+    align-items: flex-start;
+}
+
+.blog-tag {
+    background-color: #eaf6ff;
+    color: #1e69de;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 15px; /* Başlıkla etiket arasına boşluk koyar */
+}
+
+.blog-card-content h3 {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.blog-card-content p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0;
+    margin-bottom: 20px;
+    flex: 1; /* Paragrafın kalan boşluğu doldurmasını sağlar */
+}
+
+.read-more {
+    color: #1e69de;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto; /* Yazıyı Oku butonunu daima en alta sabitler */
+}
+
+.read-more:hover {
+    color: #1557b0;
+}
+
+/* Mobil uyumluluk */
+@media (max-width: 768px) {
+    .blog-card {
+        width: 100%;
+        max-width: 400px;
+    }
+}
