@@ -5,7 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü | Erişilebilir İzmir</title>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü | Visi Blog</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=14">
+</head>
+<body style="background-color: #f1f5f9;">
+
+    <div class="blog-page-container">
+        
+        <nav class="blog-nav">
+            <a href="index.html" class="btn-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</a>
+            <a href="harita.html" class="btn-map">Haritayı Aç <i class="fas fa-arrow-right"></i></a>
+        </nav>
+
+        <article>
+            <span class="blog-category">Topluluk</span>
+            <h1 class="blog-title">Dijital Erişilebilirlik: Kodların Şehri Herkes İçin Özgürleştirme Gücü</h1>
+            
+            <div class="blog-meta">
+                <span><i class="far fa-calendar-alt"></i> 22 Şubat 2026</span>
+                <span><i class="far fa-user"></i> Yazar: Togay Yalçın Özkaya - Eren Oral</span>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Dijital Erişilebilirlik" class="blog-hero-image">
+
+            <div class="blog-content">
+                <h3>Giriş: Fiziksel Engellerden Dijital Köprülere</h3>
+                <p>Fiziksel dünyadaki bir basamak, tekerlekli sandalye kullanan Mert Demir için ne kadar aşılmaz bir bariyerse, yanlış kurgulanmış bir web sitesi veya uygulama da dijital dünyada aynı ölçüde dışlayıcıdır. Dijital erişilebilirlik, teknolojinin sadece bir kesim için değil, toplumun tamamı için "algılanabilir" ve "kullanılabilir" olması demektir. İstatistiklere göre, dünya çapındaki web sitelerinin %97'si hala temel erişilebilirlik hataları barındırmakta ve bu durum milyonlarca engelli bireyin bilgiye erişimini engellemektedir. "Görünmeyeni Göster" projesi, tam da bu dijital uçurumu kapatmak ve kodların gücüyle fiziksel dünyadaki asansör krizlerini çözmek için yola çıktı. Bu yazıda, projemizin teknik mutfağına girerek dijital standartların kentsel özgürlüğe nasıl dönüştüğünü inceleyeceğiz.</p>
+
+                <h3>WCAG 2.1 ve Erişilebilirliğin Dört Altın Kuralı (POUR)</h3>
+                <p>Bir web projesinin gerçekten erişilebilir olması için uluslararası kabul görmüş WCAG 2.1 (Web İçeriği Erişilebilirlik Yönergeleri) standartlarına uyum sağlaması gerekir. Bu standartlar, projemizin teknik omurgasını oluşturan "POUR" prensiplerine dayanır:</p>
+                <ul>
+                    <li><strong>Algılanabilirlik:</strong> Kullanıcılar içeriği duyularıyla algılayabilmelidir. "Görünmeyeni Göster" arayüzünde kullandığımız yüksek kontrastlı renkler (Koyu Mavi ve Orman Yeşili), az gören bireylerin metinleri rahatça okumasını sağlar.</li>
+                    <li><strong>Kullanılabilirlik:</strong> Arayüz bileşenleri her türlü donanımla (sadece klavye veya ekran okuyucular) kontrol edilebilmelidir.</li>
+                    <li><strong>Anlaşılabilirlik:</strong> İçerik ve operasyonlar karmaşık olmamalıdır. Uygulamamızın minimalist yapısı, Mert'in en az bilişsel yükle asansör durumuna ulaşmasını sağlar.</li>
+                    <li><strong>Sağlamlık (Robust):</strong> İçerik, gelişen teknolojilere ve farklı tarayıcılara uyum sağlayacak kadar güçlü kodlanmalıdır.</li>
+                </ul>
+
+                <h3>Kodun Anatomisi: HTML5, CSS3 ve JavaScript Entegrasyonu</h3>
+                <p>Projemizin teknik altyapısı, anlamsal (semantic) web teknolojileri üzerine inşa edilmiştir. GitHub üzerinde geliştirdiğimiz index.html dosyasında, sadece div etiketleri kullanmak yerine nav, main, section gibi anlamsal etiketleri tercih ediyoruz. Bu tercih, ekran okuyucu kullanan bir görme engelli kullanıcının sayfa yapısını zihninde bir "navigasyon ağacı" gibi canlandırmasına olanak tanır. CSS3 tarafında, projemiz için belirlenen yüksek kontrastlı palet (Primary Blue #0A2D69), WCAG 2.1 AA seviyesindeki 4.5:1 kontrast oranını karşılayarak okuma kolaylığı sunar. JavaScript tarafında ise script.js ve sv.js dosyalarımız, İzmir metrosundaki asansör verilerini dinamik olarak işler. Bu dosyalar, asansörün "Aktif" veya "Pasif" durumunu anlık olarak kullanıcı arayüzüne (UI) yansıtarak, verinin özgürlüğe dönüşmesini sağlar.</p>
+
+                <blockquote>"Erişilebilir kodlama, sadece bir teknik gereklilik değil, kapsayıcı bir geleceğin temel taşıdır."</blockquote>
+
+                <h3>Mobilite ve PWA: manifest.json Dosyasının Kritik Rolü</h3>
+                <p>"Görünmeyeni Göster" sadece bir web sitesi değil, bir PWA (Progressive Web App) olarak kurgulanmıştır. Teknik yapımızda yer alan manifest.json dosyası, projemizin bir mobil uygulama gibi davranmasını sağlar. Mert istasyona girmeden hemen önce telefonundan uygulamayı açtığında, bu dosya sayesinde hızlı yüklenen, tam ekran çalışan ve kullanıcıyı "erişilebilirlik odağında" tutan bir deneyim yaşar. Mobil uyumlu (Mobile-first) tasarım yaklaşımımız, kentsel hareketliliğin sokakta yaşandığı gerçeğiyle tam uyum içerisindedir. Her bir kod satırı, Mert'in bir sonraki durağa güvenle varması için bir basamak görevi görür.</p>
+
+                <h3>Kullanıcı Deneyimi (UX) ve Psikolojik Bağımsızlık</h3>
+                <p>Erişilebilir kodlama, kullanıcı üzerinde doğrudan psikolojik bir etkiye sahiptir. "Öğrenilmiş çaresizlik" yaşayan ve bir yere gitmeden önce "Acaba asansör çalışıyor mu?" stresiyle boğuşan bireyler için, doğru çalışan bir arayüz "bağımsızlık" demektir. Projemizde uyguladığımız minimalist UX prensipleri, kullanıcının hedefe (asansör bilgisine) en fazla üç dokunuşla ulaşmasını hedefler. Hata mesajlarının bile erişilebilir olması (örneğin sadece kırmızı renk yerine bir ikon ve açıklama metni ile sunulması), her seviyeden kullanıcının sistemi sorunsuzca kullanmasını sağlar. Bu teknik hassasiyet, projemizin "insan odaklı" teknoloji vizyonunun en somut kanıtıdır.</p>
+                
+                <h3>Veri Güvenliği ve Şeffaflık</h3>
+                <p>Kullanıcılarımızın bildirdiği "sorunlu rampa" veya "arızalı asansör" verileri, teknik altyapımızda güvenli bir şekilde depolanır ve anonimleştirilerek İzmir Kent Konseyi ile paylaşılır. Bu veri akışı, sadece bir uygulama içi özellik değil, yerel yönetimlerin yatırım planlarını etkileyebilecek bir "karar destek mekanizması"dır. Şeffaf ve açık kaynaklı (Open Source) yaklaşımımız, projemizin diğer belediyeler veya geliştiriciler tarafından ölçeklenebilir ve geliştirilebilir olmasını sağlar. Teknoloji paylaşıldıkça engeller azalır; biz bu yüzden kodlarımızı herkesin erişimine açıyoruz.</p>
+
+                <h3>Sonuç: Geleceğin Şehirleri Kodlarla İnşa Ediliyor</h3>
+                <p>Sonuç olarak, "Görünmeyeni Göster" projesi, dijital erişilebilirliğin sadece bir "yazılım özelliği" değil, kentsel bir hak arama aracı olduğunu kanıtlamaktadır. WCAG 2.1 standartlarına sadık kalarak kurguladığımız her algoritma, Mert Demir gibi binlerce İzmirlinin adil bir şehir hayatı deneyimlemesi için vardır.</p>
+            </div>
+        </article>
+    </div>
+
+</body>
+</html>all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="blog-page">
