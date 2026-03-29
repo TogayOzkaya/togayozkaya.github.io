@@ -10,6 +10,7 @@
     <style>
         :root {
             --primary: #1e69de;
+            --primary-light: #eaf6ff;
             --secondary: #2c3e50;
             --bg-light: #f8f9fa;
             --success: #27ae60;
@@ -58,7 +59,7 @@
 
         .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
         .visual-backdrop { position: absolute; width: 400px; height: 400px; background: linear-gradient(135deg, #eaf6ff 0%, #d4edff 100%); border-radius: 50%; z-index: 0; }
-        .elevator-shaft { width: 140px; height: 350px; background: white; border: 4px solid var(--secondary); border-radius: 12px; position: relative; z-index: 1; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; overflow: ble; }
+        .elevator-shaft { width: 140px; height: 350px; background: white; border: 4px solid var(--secondary); border-radius: 12px; position: relative; z-index: 1; padding: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
         .elevator-shaft::before { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 33%; left: 0; }
         .elevator-shaft::after { content: ''; position: absolute; width: 100%; height: 2px; background: #eee; top: 66%; left: 0; }
         .elevator-cabin { width: 100%; height: 90px; background: var(--success); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; font-size: 35px; position: relative; z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: elevatorJourney 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
@@ -94,22 +95,32 @@
         .scroll-indicator i { font-size: 2rem; animation: bounce 2s infinite; }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
 
+        /* ========================================= */
+        /* DÜZELTİLMİŞ BLOG KARTLARI KISMI           */
+        /* ========================================= */
         .blog-section { padding: 80px 5%; scroll-margin-top: 80px; } 
         .section-title { text-align: center; font-size: 2.2rem; color: var(--secondary); margin-bottom: 50px; font-weight: 800; }
-        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .blog-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f0f0f0; display: flex; flex-direction: column; }
-        .blog-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); border-color: var(--primary-light); }
-        .blog-img { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: #ddd; }
-        .blog-content { padding: 30px; display: flex; flex-direction: column; flex: 1; }
-        .blog-tag { align-self: flex-start; background: #eaf6ff; color: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .blog-content h3 { font-size: 1.3rem; color: var(--secondary); margin-bottom: 12px; line-height: 1.4; font-weight: 700; }
-        .blog-content p { color: #666; font-size: 1rem; line-height: 1.6; margin-bottom: 25px; flex: 1; }
-        .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.05rem; align-self: flex-start; }
-        .read-more:hover { gap: 12px; transition: 0.2s; } 
+        
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+        
+        .blog-card { background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; display: flex; flex-direction: column; border: 1px solid #eee; transition: transform 0.3s ease; height: 100%; }
+        .blog-card:hover { transform: translateY(-8px); box-shadow: 0 12px 25px rgba(0,0,0,0.1); }
+        
+        .blog-image { width: 100%; height: 220px; object-fit: cover; display: block; border-bottom: 1px solid #eee; }
+        
+        .blog-card-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+        
+        .blog-tag { align-self: flex-start; background-color: var(--primary-light); color: var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; margin-bottom: 15px; text-transform: uppercase; }
+        
+        .blog-card-content h3 { font-size: 1.25rem; color: var(--secondary); font-weight: 800; line-height: 1.4; margin: 0 0 12px 0; }
+        .blog-card-content p { color: #666; font-size: 0.95rem; line-height: 1.6; margin: 0 0 20px 0; flex-grow: 1; }
+        
+        .read-more { color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; margin-top: auto; transition: 0.2s ease; }
+        .read-more:hover { gap: 12px; color: #1557b0; }
 
+        /* FOOTER KISMI */
         footer { background: var(--secondary); color: white; padding: 60px 5% 30px; text-align: center; }
         .footer-logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
-        .footer-logo-img { height: 40px; width: auto; object-fit: contain; }
         .footer-slogan { color: #bdc3c7; margin-bottom: 30px; font-size: 1.1rem; }
         .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
         .social-links a { display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 1.5rem; text-decoration: none; transition: 0.3s; }
@@ -172,7 +183,6 @@
 
     <header>
         <a href="#" class="brand">
-            <img src="visi-logo.png" alt="Vizi" class="logo-img">
             <h1 class="brand-title">Vizi</h1>
         </a>
         
@@ -226,7 +236,7 @@
         <div class="blog-grid">
             
            <div class="blog-card">
-            <img src="eriselebilirlik.png" alt="Erişilebilirlik Farkındalığı" class="blog-hero-image">
+            <img src="eriselebilirlik.png" alt="Erişilebilirlik Farkındalığı" class="blog-image">
             
             <div class="blog-card-content">
                 <span class="blog-tag">FARKINDALIK</span>
@@ -237,7 +247,7 @@
         </div>
 
         <div class="blog-card">
-            <img src="dijital.png" alt="Dijital Erişilebilirlik" class="blog-hero-image">
+            <img src="dijital.png" alt="Dijital Erişilebilirlik" class="blog-image">
             
             <div class="blog-card-content">
                 <span class="blog-tag">TOPLULUK</span>
@@ -248,15 +258,15 @@
         </div>
 
         <div class="blog-card">
-           <img src="engel.png" alt="Şehirde Engelleri Aşmak" class="blog-hero-image">
-            
+           <img src="engel.png" alt="Şehirde Engelleri Aşmak" class="blog-image">
+           
             <div class="blog-card-content">
                 <span class="blog-tag">YAŞAM</span>
                 <h3>İzmir Sokaklarında Görünmez Bir Duvara Çarpmak: Mert'in Yolculuğu</h3>
                 <p>Mert için Bornova'dan çıkıp Konak'taki kampüsüne gitmek, bir ulaşım rutini değil, yüksek riskli bir strateji oyunudur.</p>
                 <a href="blog3.html" class="read-more">Yazıyı Oku <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
+            </div>
+        </div>
 
         </div>
     </section>
