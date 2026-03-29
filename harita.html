@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css?v=13">
+    <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body class="map-page">
 
@@ -19,9 +19,9 @@
             <div class="sidebar-header">
                 <div class="header-top-section">
                     <a href="index.html" class="brand-wrapper">
-                        <img src="Visi-logo.png" alt="Visi Logo" style="height: 48px; width: auto; object-fit: contain;">
+                        <img src="vizi-logo.png" alt="Vizi Logo" style="height: 48px; width: auto; object-fit: contain;">
                         <div class="brand-text-group">
-                            <h1 class="brand-title">Visi</h1>
+                            <h1 class="brand-title">Vizi</h1>
                             <p class="brand-slogan">Görünmeyeni görünür kılıyoruz.</p>
                         </div>
                     </a>
@@ -94,21 +94,21 @@
                         <p class="lm-subtext">Tekrar merhaba, lütfen bilgilerini gir.</p>
                         <input type="email" placeholder="E-posta Adresi">
                         <input type="password" class="password-input" placeholder="Parola">
-                        <button class="btn-login-mail" onclick="performLogin(event)">Giriş Yap</button>
+                        <button class="btn-login-mail" onclick="performLogin(event, 'login')">Giriş Yap</button>
                     </div>
                     <div id="form-signup-content" style="display: none;">
                         <p class="lm-subtext">Topluluğa katıl ve engelleri birlikte aşalım.</p>
-                        <input type="text" placeholder="Adınız Soyadınız">
+                        <input type="text" id="signup-name" placeholder="Adınız Soyadınız">
                         <input type="email" placeholder="E-posta Adresi">
                         <input type="password" class="password-input" placeholder="Parola Belirle">
                         <label class="terms-box">
                             <input type="checkbox" id="terms-check">
                             <span>Platformda doğru ve güvenilir bildirimler yapacağımı, <strong>yanıltıcı bilgi vermem durumunda hesabımın kalıcı olarak kapatılacağını</strong> kabul ediyorum.</span>
                         </label>
-                        <button class="btn-login-mail" onclick="performLogin(event)">Kayıt Ol</button>
+                        <button class="btn-login-mail" onclick="performLogin(event, 'signup')">Kayıt Ol</button>
                     </div>
                     <div class="divider">veya</div>
-                    <button class="btn-google-login" onclick="performLogin(event)">
+                    <button class="btn-google-login" onclick="performLogin(event, 'google')">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" style="width:24px;">
                         <span id="google-btn-text">Google ile Giriş Yap</span>
                     </button>
@@ -231,7 +231,8 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js?v=13"></script>
+    
+    <script src="script.js?v=20"></script>
 
 </body>
 </html>
