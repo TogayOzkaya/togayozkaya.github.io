@@ -297,9 +297,10 @@
         };
     </script>
 
-    <script type="module">
+<script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-      import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+      // YENİ: onAuthStateChanged fonksiyonunu ekledik
+      import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
       import { getFirestore, collection, getDocs, doc, setDoc, onSnapshot, updateDoc, getDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
       const firebaseConfig = {
@@ -317,7 +318,6 @@
       const provider = new GoogleAuthProvider();
       const db = getFirestore(app);
 
-      // --- İSTASYON GÜNCELLEME KÖPRÜSÜ ---
       window.dbUpdateStation = async function(stationName, dataToUpdate) {
           try {
               const stationRef = doc(db, "stations", stationName);
@@ -327,10 +327,12 @@
           }
       };
 
-      // --- YENİ: KULLANICI PUAN GÜNCELLEME KÖPRÜSÜ ---
       window.dbUpdateUserPoints = async function(pointsToAdd, type) {
           const user = auth.currentUser;
-          if (!user) return;
+          if (!user) {
+              console.warn("Firebase kullanıcısı bulunamadı. Sadece Google ile giriş yapanlar puan kazanabilir!");
+              return;
+          }
           
           const userRef = doc(db, "users", user.uid);
           let updateData = { points: increment(pointsToAdd) };
@@ -339,11 +341,11 @@
           if (type === 'verify') updateData.verificationsCount = increment(1);
 
           try {
-              await updateDoc(userRef, updateData);
+              // YENİ: updateDoc yerine setDoc(merge: true) kullanıyoruz. Kullanıcı dökümanı yoksa çökmez, kendisi yaratır!
+              await setDoc(userRef, updateData, { merge: true });
           } catch(e) { console.error("Puan güncellenemedi:", e); }
       };
 
-      // --- YENİ: KULLANICI VERİSİNİ BAŞLAT/GETİR ---
       async function syncUserProfile(user) {
           const userRef = doc(db, "users", user.uid);
           const userSnap = await getDoc(userRef);
@@ -359,8 +361,6 @@
               };
               await setDoc(userRef, initialData);
               localStorage.setItem('visi_user_data', JSON.stringify(initialData));
-          } else {
-              localStorage.setItem('visi_user_data', JSON.stringify(userSnap.data()));
           }
 
           onSnapshot(userRef, (docSnap) => {
@@ -371,6 +371,13 @@
           });
       }
 
+      // YENİ: Sayfa yenilendiğinde kullanıcının kopmamasını sağlayan dinleyici!
+      onAuthStateChanged(auth, (user) => {
+          if (user) {
+              syncUserProfile(user);
+          }
+      });
+
       async function initDatabase() {
           const stationsCollection = collection(db, "stations");
           const snapshot = await getDocs(stationsCollection);
@@ -380,10 +387,8 @@
               for (let station of window.metroStations) {
                   await setDoc(doc(db, "stations", station.name), station);
               }
-              console.log("Tüm istasyonlar veritabanına eklendi!");
           }
 
-          // CANLI HARİTA VE KAYAN YAZI (TICKER) DİNLEYİCİSİ
           onSnapshot(stationsCollection, (querySnapshot) => {
               const liveStations = [];
               querySnapshot.forEach((doc) => {
@@ -393,9 +398,7 @@
               if(liveStations.length > 0) {
                   liveStations.sort((a, b) => a.name.localeCompare(b.name));
                   window.metroStations = liveStations; 
-                  if(typeof window.renderStations === 'function') {
-                      window.renderStations(); 
-                  }
+                  if(typeof window.renderStations === 'function') window.renderStations(); 
 
                   const problemStations = liveStations.filter(s => s.status !== 'ok');
                   const tickerEl = document.getElementById('ticker-text');
@@ -407,7 +410,6 @@
                               let reporter = s.lastReporter ? s.lastReporter : 'Bir Yol Arkadaşımız';
                               return `⚠️ ${s.name} İstasyonu: ${statusText} (Son İşlem: ${reporter})`;
                           });
-                          
                           tickerEl.innerText = " ••• " + messages.join(" ••• ") + " ••• ";
                           tickerEl.style.color = "var(--danger-color)"; 
                       } else {
@@ -433,7 +435,7 @@
               localStorage.setItem('visi_user_name', user.displayName);
               window.isUserLoggedIn = true;
               
-              await syncUserProfile(user); // Puan verilerini çek ve dinle
+              await syncUserProfile(user); 
               
               if(typeof window.updateUserInfo === 'function') window.updateUserInfo();
               if(typeof window.closeModals === 'function') window.closeModals();
