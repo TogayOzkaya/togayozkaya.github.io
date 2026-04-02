@@ -344,7 +344,7 @@
               console.log("Tüm istasyonlar veritabanına eklendi!");
           }
 
-          // CANLI HARİTA DİNLEYİCİSİ: Birisi arıza bildirdiğinde veya sildiğinde herkesin haritasını ANINDA günceller!
+// CANLI HARİTA VE KAYAN YAZI (TICKER) DİNLEYİCİSİ
           onSnapshot(stationsCollection, (querySnapshot) => {
               const liveStations = [];
               querySnapshot.forEach((doc) => {
@@ -352,15 +352,37 @@
               });
               
               if(liveStations.length > 0) {
-                  // İstasyonları isim sırasına göre diz ve haritayı canlı verilerle yeniden çiz
+                  // 1. Haritayı Güncelle
                   liveStations.sort((a, b) => a.name.localeCompare(b.name));
                   window.metroStations = liveStations; 
                   if(typeof window.renderStations === 'function') {
                       window.renderStations(); 
                   }
+
+                  // 2. KAYAN YAZIYI (TICKER) GÜNCELLE
+                  const problemStations = liveStations.filter(s => s.status !== 'ok');
+                  const tickerEl = document.getElementById('ticker-text');
+                  
+                  if (tickerEl) {
+                      if (problemStations.length > 0) {
+                          // Eğer arızalı istasyonlar varsa, mesajları oluştur
+                          let messages = problemStations.map(s => {
+                              let statusText = s.status === 'error' ? 'Arızalı 🚨' : 'Doğrulama Bekliyor 🚧';
+                              let reporter = s.lastReporter ? s.lastReporter : 'Bir Yol Arkadaşımız';
+                              return `⚠️ ${s.name} İstasyonu: ${statusText} (Son İşlem: ${reporter})`;
+                          });
+                          
+                          // Döngü sürekli aksın diye metni aralarına boşluk koyarak birleştir
+                          tickerEl.innerText = " ••• " + messages.join(" ••• ") + " ••• ";
+                          tickerEl.style.color = "var(--danger-color)"; // Arıza varken yazıyı kırmızı/turuncu yap
+                      } else {
+                          // Hiç arıza yoksa
+                          tickerEl.innerText = "✅ Anlık olarak tüm istasyonlarımız sorunsuz çalışmaktadır. Vizi topluluğu iyi yolculuklar diler! 🚄";
+                          tickerEl.style.color = "var(--success-color)";
+                      }
+                  }
               }
           });
-      }
 
       // Sayfa yüklendikten hemen sonra veritabanını dinlemeye başla
       window.addEventListener('load', () => {
