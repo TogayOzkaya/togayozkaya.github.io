@@ -388,6 +388,9 @@ window.addEventListener('load', function() {
         document.getElementById('verifyModal').style.display = 'flex';
     };
 
+    /* ==========================================
+       BİLDİRİM VE DOĞRULAMA FORMLARININ İŞLENMESİ (İSİM KAYITLI)
+       ========================================== */
     try {
         const reportForm = document.getElementById('reportForm');
         const fileInput = document.getElementById('file-input');
@@ -434,11 +437,15 @@ window.addEventListener('load', function() {
                 
                 alert(`✅ Harika! '${window.selectedZoneName}' için bildirimin topluluğa iletildi ve puan kazandın! 🚀`);
                 
-                // === YENİ: VERİTABANI GÜNCELLEMESİ (BİLDİRİM) ===
+                // YENİ: Bildiren kişinin adını al
+                let currentUserName = localStorage.getItem('visi_user_name') || "Yol Arkadaşımız";
+
+                // === VERİTABANI GÜNCELLEMESİ (BİLDİRİM) ===
                 if(window.dbUpdateStation) {
                     window.dbUpdateStation(window.currentReportingStation, {
                         status: "pending",
-                        verifyCount: 1
+                        verifyCount: 1,
+                        lastReporter: currentUserName // Veritabanına ismi de kaydediyoruz!
                     });
                 }
                 
@@ -480,13 +487,17 @@ window.addEventListener('load', function() {
             const stationIndex = window.metroStations.findIndex(s => s.name === window.currentVerifyingStation);
             const station = window.metroStations[stationIndex];
             
-            // === YENİ: VERİTABANI GÜNCELLEMESİ (DOĞRULAMA) ===
+            // YENİ: Doğrulayan kişinin adını al
+            let currentUserName = localStorage.getItem('visi_user_name') || "Yol Arkadaşımız";
+
+            // === VERİTABANI GÜNCELLEMESİ (DOĞRULAMA) ===
             if (isFixed) {
                 alert("✅ Harika! Düzeldiğini doğruladın ve +30 Puan kazandın! 🎉");
                 if(window.dbUpdateStation) {
                     window.dbUpdateStation(window.currentVerifyingStation, {
                         status: "ok",
-                        verifyCount: 0
+                        verifyCount: 0,
+                        lastReporter: currentUserName // Düzelten kişinin adını da kaydediyoruz!
                     });
                 }
             } else {
@@ -496,7 +507,8 @@ window.addEventListener('load', function() {
                     let newStatus = newCount >= 5 ? "error" : "pending";
                     window.dbUpdateStation(window.currentVerifyingStation, {
                         status: newStatus,
-                        verifyCount: newCount
+                        verifyCount: newCount,
+                        lastReporter: currentUserName // Doğrulayan kişinin adını kaydediyoruz!
                     });
                 }
             }
