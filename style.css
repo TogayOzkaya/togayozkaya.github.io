@@ -1,0 +1,280 @@
+/* Renk Değişkenleri */
+:root {
+    --white: #FFFFFF;
+    --alabaster-grey: #E5E5E5;
+    --black: #000000;
+    --prussian-blue: #14213D;
+    --orange: #FCA311;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--black);
+    line-height: 1.6;
+}
+
+/* Navigasyon */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--alabaster-grey);
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--prussian-blue);
+    letter-spacing: 2px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--prussian-blue);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--orange);
+}
+
+.btn-quote {
+    background-color: var(--orange);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.btn-quote:hover {
+    background-color: var(--prussian-blue);
+    color: var(--white);
+}
+
+/* Hero / Showreel */
+.hero {
+    width: 100%;
+    height: 80vh;
+    background-color: var(--alabaster-grey);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(20, 33, 61, 0.4);
+    cursor: pointer;
+}
+
+.play-button {
+    background-color: var(--orange);
+    color: var(--white);
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: transform 0.2s;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+}
+
+/* Portfolyo Grid */
+.portfolio-section {
+    padding: 80px 50px;
+    background-color: var(--white);
+}
+
+.portfolio-section h2, .workflow-section h2 {
+    color: var(--prussian-blue);
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.portfolio-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.img-placeholder {
+    width: 100%;
+    height: 300px;
+    background-color: var(--alabaster-grey);
+    transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover .img-placeholder {
+    transform: translateY(-5px);
+}
+
+.item-details {
+    margin-top: 15px;
+}
+
+.item-details h3 {
+    color: var(--prussian-blue);
+    font-size: 1.2rem;
+}
+
+.item-details p {
+    color: var(--black);
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Teknoloji & İş Akışı */
+.workflow-section {
+    padding: 80px 50px;
+    background-color: var(--alabaster-grey);
+}
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.tech-item {
+    background-color: var(--white);
+    padding: 15px 25px;
+    border-left: 4px solid var(--orange);
+    color: var(--prussian-blue);
+    font-weight: 500;
+}
+
+/* Quiz / Teklif Formu */
+.quiz-section {
+    padding: 80px 50px;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+}
+
+.quiz-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--alabaster-grey);
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.quiz-container h2 {
+    color: var(--prussian-blue);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.quiz-step {
+    display: none;
+}
+
+.quiz-step.active {
+    display: block;
+    animation: fadeIn 0.4s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.options label {
+    display: block;
+    background-color: var(--white);
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.options label:hover {
+    border-color: var(--orange);
+}
+
+.inputs input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--white);
+    background-color: var(--white);
+}
+
+.inputs input:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+
+button.next-btn, button.submit-btn {
+    background-color: var(--orange);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    float: right;
+    margin-top: 20px;
+}
+
+button.prev-btn {
+    background-color: var(--prussian-blue);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    float: left;
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--prussian-blue);
+    color: var(--white);
+    text-align: center;
+    padding: 30px;
+}
