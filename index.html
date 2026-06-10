@@ -3,121 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vizi Medya | Minimalist Medya Prodüksiyonu</title>
+    <title>Vizi Medya | Sinematik Prodüksiyon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="logo">VİZİ MEDYA</div>
+    <header id="navbar">
+        <div class="logo">VİZİ</div>
         <nav>
             <ul>
                 <li><a href="#showreel">Showreel</a></li>
                 <li><a href="#portfolio">İşlerimiz</a></li>
-                <li><a href="#workflow">İş Akışı & Ekipman</a></li>
+                <li><a href="#workflow">Ekipman</a></li>
                 <li><a href="#quote" class="btn-quote">Teklif Al</a></li>
             </ul>
         </nav>
     </header>
 
     <section id="showreel" class="hero">
-        <div class="video-container">
-            <video id="hero-video" poster="showreel-poster.jpg" preload="none">
+        <div class="video-wrapper">
+            <video id="hero-video" poster="showreel-bg.jpg" preload="none">
                 <source src="vizi-showreel.mp4" type="video/mp4">
             </video>
-            <div class="play-overlay" id="play-btn">
-                <button class="play-button">▶ OYNAT</button>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content fade-up">
+                <h1>Görsel<br>Hikayeler.</h1>
+                <p>Minimalist yaklaşım, sinematik kalite.</p>
+            </div>
+
+            <div class="play-btn-container" id="play-btn">
+                <div class="pulse-ring"></div>
+                <button class="play-button">▶</button>
             </div>
         </div>
     </section>
 
-    <section id="portfolio" class="portfolio-section">
-        <h2>Seçili İşler</h2>
+    <section id="portfolio" class="portfolio-section reveal">
+        <div class="section-header">
+            <h2>Seçili İşler</h2>
+            <div class="line"></div>
+        </div>
         <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <div class="img-placeholder"></div>
-                <div class="item-details">
+            
+            <div class="portfolio-item large">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
                     <h3>Görünmeyeni Gör</h3>
                     <p>Kentsel Erişilebilirlik Video Projesi</p>
                 </div>
             </div>
+
             <div class="portfolio-item">
-                <div class="img-placeholder"></div>
-                <div class="item-details">
-                    <h3>Urla Açık Hava Konseri</h3>
-                    <p>Çok Kameralı Kayıt & Ses Senkronizasyonu</p>
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
                 </div>
-            </div>
-            <div class="portfolio-item">
-                <div class="img-placeholder"></div>
-                <div class="item-details">
+                <div class="item-info">
                     <h3>BMW iX</h3>
                     <p>Otomotiv Dinamik Çekimi</p>
                 </div>
             </div>
+
             <div class="portfolio-item">
-                <div class="img-placeholder"></div>
-                <div class="item-details">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>Urla Açık Hava</h3>
+                    <p>Çok Kameralı Konser Kaydı</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item large-horizontal">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
                     <h3>Mezuniyet Töreni</h3>
-                    <p>Geniş Çaplı Etkinlik Prodüksiyonu</p>
+                    <p>Etkinlik Prodüksiyonu & Ses Senkronizasyonu</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="workflow" class="workflow-section reveal">
+        <div class="workflow-content">
+            <h2>Sınırları Zorlayan Ekipmanlar</h2>
+            <p>Fikrinizi gerçeğe dönüştürmek için endüstri standardı donanım ve yazılımlar kullanıyoruz.</p>
+            <div class="tech-cards">
+                <div class="tech-card">
+                    <h4>Sony FX30</h4>
+                    <span>Sinematik 4K Çözünürlük</span>
+                </div>
+                <div class="tech-card">
+                    <h4>DJI Neo 2</h4>
+                    <span>Dinamik Hava Görüntüleme</span>
+                </div>
+                <div class="tech-card">
+                    <h4>Premiere Pro</h4>
+                    <span>3D Spatial Tracking & Renk Eşleme</span>
+                </div>
+                <div class="tech-card">
+                    <h4>Kling AI</h4>
+                    <span>Yapay Zeka Destekli Konsept</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="workflow" class="workflow-section">
-        <h2>Teknoloji & İş Akışı</h2>
-        <div class="tech-list">
-            <div class="tech-item">Kameralar: Sony FX30 & Sinematik Lensler</div>
-            <div class="tech-item">Hava Görüntüleme: DJI Neo 2</div>
-            <div class="tech-item">Kurgu: Adobe Premiere Pro & 3D Spatial Tracking</div>
-            <div class="tech-item">Yapay Zeka: Kling AI Entegreli Görselleştirme</div>
-        </div>
-    </section>
+    <section id="quote" class="quote-section reveal">
+        <div class="quote-wrapper">
+            <div class="quote-header">
+                <h2>Projeyi Başlat</h2>
+                <p>İhtiyaçlarınızı belirleyin, size özel bir teklif hazırlayalım.</p>
+            </div>
 
-    <section id="quote" class="quiz-section">
-        <div class="quiz-container">
-            <h2>Projeni Anlat</h2>
             <form id="quote-form">
                 
                 <div class="quiz-step active" id="step-1">
-                    <h3>1. Projenizin odak noktası nedir?</h3>
-                    <div class="options">
-                        <label><input type="radio" name="project_type" value="etkinlik"> Etkinlik ve Mezuniyet Prodüksiyonu</label>
-                        <label><input type="radio" name="project_type" value="konser"> Sahne Sanatları ve Çok Kameralı Kayıt</label>
-                        <label><input type="radio" name="project_type" value="mekan"> İşletme / Mekan Tanıtım Filmi</label>
-                        <label><input type="radio" name="project_type" value="ai"> Yapay Zeka Destekli Video Üretimi</label>
+                    <h3>Odak noktamız ne olacak?</h3>
+                    <div class="card-options">
+                        <label class="option-card">
+                            <input type="radio" name="project_type" value="etkinlik">
+                            <div class="card-content">Etkinlik & Mezuniyet</div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="project_type" value="konser">
+                            <div class="card-content">Sahne Sanatları (Konser)</div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="project_type" value="mekan">
+                            <div class="card-content">Tanıtım Filmi</div>
+                        </label>
                     </div>
-                    <button type="button" class="next-btn" onclick="nextStep(1)">İleri</button>
+                    <button type="button" class="btn-next" onclick="nextStep(1)">Devam Et →</button>
                 </div>
 
                 <div class="quiz-step" id="step-2">
-                    <h3>2. Çekim için teknik beklentileriniz nelerdir?</h3>
-                    <div class="options">
-                        <label><input type="radio" name="tech_needs" value="tek_kamera"> Tek Kamera Kurulumu</label>
-                        <label><input type="radio" name="tech_needs" value="coklu_kamera"> Çoklu Kamera (Multi-cam)</label>
-                        <label><input type="radio" name="tech_needs" value="drone"> Havadan Görüntüleme (Drone)</label>
-                        <label><input type="radio" name="tech_needs" value="post_only"> Sadece Post-Prodüksiyon</label>
+                    <h3>Teknik beklentileriniz neler?</h3>
+                    <div class="card-options">
+                        <label class="option-card">
+                            <input type="radio" name="tech_needs" value="tek_kamera">
+                            <div class="card-content">Tek Kamera</div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="tech_needs" value="cok_kamera">
+                            <div class="card-content">Çoklu Kamera (Multi-cam)</div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="tech_needs" value="drone">
+                            <div class="card-content">Drone & Hava Çekimi</div>
+                        </label>
                     </div>
-                    <button type="button" class="prev-btn" onclick="prevStep(2)">Geri</button>
-                    <button type="button" class="next-btn" onclick="nextStep(2)">İleri</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn-prev" onclick="prevStep(2)">← Geri</button>
+                        <button type="button" class="btn-next" onclick="nextStep(2)">Devam Et →</button>
+                    </div>
                 </div>
 
                 <div class="quiz-step" id="step-3">
-                    <h3>3. İletişim Bilgileriniz</h3>
-                    <div class="inputs">
+                    <h3>Son Adım: İletişim</h3>
+                    <div class="input-group">
                         <input type="text" placeholder="Adınız Soyadınız" required>
                         <input type="email" placeholder="E-posta Adresiniz" required>
                     </div>
-                    <button type="button" class="prev-btn" onclick="prevStep(3)">Geri</button>
-                    <button type="submit" class="submit-btn">Teklif İste</button>
+                    <div class="btn-group">
+                        <button type="button" class="btn-prev" onclick="prevStep(3)">← Geri</button>
+                        <button type="submit" class="btn-submit">Teklif İste</button>
+                    </div>
                 </div>
+
             </form>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Vizi Medya. Tüm hakları saklıdır.</p>
+        <div class="footer-content">
+            <h2>VİZİ MEDYA</h2>
+            <p>İzmir, Türkiye</p>
+            <p>&copy; 2026 Tüm hakları saklıdır.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
