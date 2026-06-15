@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vizi Medya | Sinematik Prodüksiyon</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
         /* --- Değişkenler & Reset --- */
@@ -16,10 +16,33 @@
             --orange: #FCA311;
             --font-head: 'Syne', sans-serif;
             --font-body: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace; /* Terminal Fontu */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--white); color: var(--black); font-family: var(--font-body); overflow-x: hidden; }
+
+        /* --- SİNEMATİK ÖZEL İMLEÇ (Sadece Masaüstü) --- */
+        @media screen and (min-width: 1024px) {
+            body, a, button, .portfolio-item, .play-button { cursor: none !important; }
+            
+            .custom-cursor {
+                position: fixed; top: 0; left: 0; width: 15px; height: 15px;
+                background-color: transparent; border: 2px solid var(--orange); border-radius: 50%;
+                transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+                transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s, border-color 0.3s;
+                display: flex; align-items: center; justify-content: center;
+                font-family: var(--font-head); font-weight: 700; font-size: 0; color: transparent;
+                backdrop-filter: invert(100%); /* Arka plana göre hafif zıtlık verir */
+            }
+            .custom-cursor.hover-video {
+                width: 80px; height: 80px; background-color: var(--orange); border-color: transparent;
+                font-size: 14px; color: var(--white); backdrop-filter: none; letter-spacing: 1px;
+            }
+            .custom-cursor.hover-btn {
+                width: 50px; height: 50px; background-color: rgba(252, 163, 17, 0.2); border-color: var(--orange);
+            }
+        }
 
         /* --- Navigasyon --- */
         header { position: fixed; width: 100%; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 25px 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; transition: all 0.3s ease; }
@@ -39,40 +62,40 @@
         .hero-content h1 { font-family: var(--font-head); font-size: 6rem; line-height: 1; margin-bottom: 20px; letter-spacing: -2px; }
         .hero-content p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; color: var(--alabaster); }
         
-        .play-btn-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; cursor: pointer; }
-        .play-button { width: 80px; height: 80px; border-radius: 50%; background-color: var(--orange); color: var(--white); border: none; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; z-index: 2; transition: transform 0.3s ease; padding-left: 5px; }
+        .play-btn-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; }
+        .play-button { width: 80px; height: 80px; border-radius: 50%; background-color: var(--orange); color: var(--white); border: none; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; position: relative; z-index: 2; transition: transform 0.3s ease; padding-left: 5px; }
         .play-btn-container:hover .play-button { transform: scale(1.1); }
         .pulse-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background-color: var(--orange); border-radius: 50%; z-index: 1; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
 
-        /* --- Portfolyo Grid --- */
+        /* --- Portfolyo Grid & Terminal --- */
         .portfolio-section { padding: 120px 60px; background-color: var(--white); }
-        .section-header { margin-bottom: 60px; }
+        .section-header { margin-bottom: 30px; } /* Boşluğu azalttık terminal için */
         .section-header h2 { font-family: var(--font-head); font-size: 3rem; color: var(--prussian); }
         .section-header .line { width: 60px; height: 4px; background-color: var(--orange); margin-top: 15px; }
+        
+        /* TERMINAL KOD ALANI */
+        .terminal-container { background: #111; color: #00ff41; font-family: var(--font-mono); padding: 15px 25px; border-radius: 6px; margin-bottom: 50px; display: inline-block; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-left: 4px solid var(--orange); max-width: 100%; overflow-x: hidden; white-space: nowrap; }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; grid-auto-flow: dense; }
-        .portfolio-item { cursor: pointer; position: relative; }
+        .portfolio-item { position: relative; }
         .portfolio-item.large { grid-column: span 2; grid-row: span 2; }
         .portfolio-item.large-horizontal { grid-column: span 2; }
         .img-wrapper { width: 100%; height: 100%; min-height: 350px; overflow: hidden; border-radius: 4px; background-color: var(--prussian); position: relative; }
         
-        /* GÜNCELLENEN KISIM: Gerçek resimlerin ayarı */
-        .portfolio-img { width: 100%; height: 100%; object-fit: cover; opacity: 1; display: block; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; }
-        /* Üzerine gelince resim hafif kararır (arka plandaki prusya mavisi ortaya çıkar) */
+        .portfolio-img, .img-placeholder { width: 100%; height: 100%; object-fit: cover; opacity: 1; display: block; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; }
         .portfolio-item:hover .portfolio-img { transform: scale(1.05); opacity: 0.5; } 
 
-        /* Henüz resim olmayan boş kutular (placeholder) için ayar */
-        .img-placeholder { width: 100%; height: 100%; background-color: var(--prussian); opacity: 0.1; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .img-placeholder { background-color: var(--prussian); opacity: 0.1; }
         .portfolio-item:hover .img-placeholder { transform: scale(1.05); background-color: var(--orange); opacity: 0.2; }
-        
-        .img-wrapper::after { content: '▶ VİDEOYU İZLE'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--orange); color: var(--white); padding: 12px 25px; border-radius: 30px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .portfolio-item:hover .img-wrapper::after { opacity: 1; }
         
         .item-info { margin-top: 20px; }
         .item-info h3 { font-family: var(--font-head); font-size: 1.5rem; color: var(--prussian); margin-bottom: 5px; }
         .item-info p { color: #666; font-size: 0.95rem; }
 
-        /* --- Teknoloji / İş Akışı --- */
+        /* --- Değer Önerisi / İş Akışı --- */
         .workflow-section { padding: 120px 60px; background-color: var(--alabaster); }
         .workflow-content h2 { font-family: var(--font-head); font-size: 2.5rem; color: var(--prussian); margin-bottom: 15px; }
         .workflow-content p { font-size: 1.1rem; color: #555; margin-bottom: 50px; max-width: 600px; }
@@ -86,9 +109,8 @@
         .quote-wrapper { width: 100%; max-width: 800px; }
         .quote-header { text-align: center; margin-bottom: 60px; }
         .quote-header h2 { font-family: var(--font-head); font-size: 2.8rem; color: var(--prussian); }
-        .quiz-step { display: none; }
-        .quiz-step.active { display: block; animation: slideUp 0.5s ease forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .quiz-step { display: none; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; }
+        .quiz-step.active { display: block; opacity: 1; transform: translateY(0); }
         .quiz-step h3 { font-family: var(--font-head); font-size: 1.8rem; color: var(--prussian); margin-bottom: 30px; text-align: center; }
         .card-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .option-card { cursor: pointer; }
@@ -99,7 +121,7 @@
         .input-group input { width: 100%; padding: 20px; margin-bottom: 20px; border: none; background-color: var(--alabaster); border-radius: 8px; font-family: var(--font-body); font-size: 1rem; transition: background-color 0.3s ease; }
         .input-group input:focus { outline: none; background-color: #f5f5f5; box-shadow: 0 0 0 2px var(--orange); }
         .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
-        button { font-family: var(--font-body); font-weight: 600; font-size: 1rem; padding: 15px 35px; border: none; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; }
+        button { font-family: var(--font-body); font-weight: 600; font-size: 1rem; padding: 15px 35px; border: none; border-radius: 30px; transition: all 0.3s ease; }
         .btn-next, .btn-submit { background-color: var(--orange); color: var(--white); margin-left: auto; }
         .btn-next:hover, .btn-submit:hover { background-color: var(--prussian); transform: translateX(5px); }
         .btn-prev { background-color: var(--alabaster); color: var(--prussian); }
@@ -109,7 +131,7 @@
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(10, 15, 25, 0.95); backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.4s ease; }
         .modal.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
         .modal-content { position: relative; width: 90%; max-width: 1100px; background: #000; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .close-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 50px; font-weight: 300; cursor: pointer; transition: color 0.3s; z-index: 2001; }
+        .close-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 50px; font-weight: 300; transition: color 0.3s; z-index: 2001; }
         .close-btn:hover { color: var(--orange); }
         .video-container-modal { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container-modal iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -117,18 +139,25 @@
         footer { background-color: var(--prussian); color: var(--white); padding: 60px 20px; text-align: center; }
         footer h2 { font-family: var(--font-head); letter-spacing: 2px; margin-bottom: 10px; }
         footer p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+
+        /* RESPONSIVE */
+        @media screen and (min-width: 1920px) { .hero-content h1 { font-size: 8rem; } .portfolio-grid, .tech-cards, .quote-wrapper { max-width: 1600px; margin-left: auto; margin-right: auto; } }
+        @media screen and (max-width: 1024px) { header { padding: 20px 40px; } .hero-content h1 { font-size: 4rem; } .portfolio-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); } .portfolio-item.large, .portfolio-item.large-horizontal { grid-column: span 1; grid-row: span 1; } }
+        @media screen and (max-width: 768px) { header { padding: 15px 20px; flex-direction: column; gap: 15px; } nav ul { gap: 15px; flex-wrap: wrap; justify-content: center; } .hero-content h1 { font-size: 3rem; } .portfolio-section, .workflow-section, .quote-section { padding: 60px 20px; } .terminal-container { font-size: 0.75rem; padding: 10px 15px; } }
     </style>
 </head>
 <body>
+
+    <div class="custom-cursor" id="custom-cursor"></div>
 
     <header id="navbar">
         <div class="logo">VİZİ</div>
         <nav>
             <ul>
-                <li><a href="#showreel">Showreel</a></li>
-                <li><a href="#portfolio">İşlerimiz</a></li>
-                <li><a href="#workflow">Ekipman</a></li>
-                <li><a href="#quote" class="btn-quote">Teklif Al</a></li>
+                <li><a href="#showreel" class="hover-target">Showreel</a></li>
+                <li><a href="#portfolio" class="hover-target">İşlerimiz</a></li>
+                <li><a href="#workflow" class="hover-target">Ekipman</a></li>
+                <li><a href="#quote" class="btn-quote hover-target">Teklif Al</a></li>
             </ul>
         </nav>
     </header>
@@ -142,7 +171,7 @@
             </div>
             <div class="play-btn-container" id="play-btn" onclick="openModal('https://drive.google.com/file/d/1Bv_KXUHmiqQBG5eBgPUmPDc3uUB19nrP/preview')">
                 <div class="pulse-ring"></div>
-                <button class="play-button">▶</button>
+                <button class="play-button hover-video-target">▶</button>
             </div>
         </div>
     </section>
@@ -152,9 +181,14 @@
             <h2>Seçili İşler</h2>
             <div class="line"></div>
         </div>
+        
+        <div class="terminal-container" id="terminal-box">
+            <span id="typewriter"></span><span class="cursor-blink">_</span>
+        </div>
+
         <div class="portfolio-grid">
             
-            <div class="portfolio-item large" onclick="openModal('https://drive.google.com/file/d/1Bv_KXUHmiqQBG5eBgPUmPDc3uUB19nrP/preview')">
+            <div class="portfolio-item large hover-video-target" onclick="openModal('https://drive.google.com/file/d/1Bv_KXUHmiqQBG5eBgPUmPDc3uUB19nrP/preview')">
                 <div class="img-wrapper">
                     <img src="cem-adrian-kapak.jpg" alt="UrlaDam Cem Adrian Konseri" class="portfolio-img">
                 </div>
@@ -164,7 +198,17 @@
                 </div>
             </div>
 
-            <div class="portfolio-item" onclick="alert('Bu video yakında eklenecek.')">
+            <div class="portfolio-item hover-video-target" onclick="alert('Bu video yakında eklenecek.')">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>Görünmeyeni Gör</h3>
+                    <p>Kentsel Erişilebilirlik Video Projesi</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item hover-video-target" onclick="alert('Bu video yakında eklenecek.')">
                 <div class="img-wrapper">
                     <div class="img-placeholder"></div>
                 </div>
@@ -174,17 +218,7 @@
                 </div>
             </div>
 
-            <div class="portfolio-item" onclick="alert('Bu video yakında eklenecek.')">
-                <div class="img-wrapper">
-                    <div class="img-placeholder"></div>
-                </div>
-                <div class="item-info">
-                    <h3>Urla Açık Hava</h3>
-                    <p>Çok Kameralı Konser Kaydı</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item large-horizontal" onclick="alert('Bu video yakında eklenecek.')">
+            <div class="portfolio-item large-horizontal hover-video-target" onclick="alert('Bu video yakında eklenecek.')">
                 <div class="img-wrapper">
                     <div class="img-placeholder"></div>
                 </div>
@@ -197,30 +231,31 @@
         </div>
     </section>
 
-<section id="workflow" class="workflow-section">
+    <section id="workflow" class="workflow-section">
         <div class="workflow-content">
             <h2>Size Nasıl Değer Katıyoruz?</h2>
             <p>İhtiyacınıza en uygun yaklaşımı belirliyor, anılarınızı ve markanızı sıradanlıktan kurtaran sinematik çözümler sunuyoruz.</p>
             <div class="tech-cards">
-                <div class="tech-card">
+                <div class="tech-card hover-target">
                     <h4>İşletme & Marka</h4>
                     <span>Vizyonunuzu yansıtan, güven veren prestijli tanıtım filmleri.</span>
                 </div>
-                <div class="tech-card">
+                <div class="tech-card hover-target">
                     <h4>Sahne & Konser</h4>
                     <span>Atmosferi ve enerjiyi ekrana taşıyan çok kameralı performans kayıtları.</span>
                 </div>
-                <div class="tech-card">
+                <div class="tech-card hover-target">
                     <h4>Etkinlik & Mezuniyet</h4>
                     <span>Dinamik hava ve yer çekimleriyle hiçbir anı kaçırmayan kusursuz koordinasyon.</span>
                 </div>
-                <div class="tech-card">
+                <div class="tech-card hover-target">
                     <h4>Sosyal Medya Paketi</h4>
                     <span>Trendleri belirleyen, etkileşimi yüksek yenilikçi ve hızlı içerikler.</span>
                 </div>
             </div>
         </div>
     </section>
+
     <section id="quote" class="quote-section">
         <div class="quote-wrapper">
             <div class="quote-header">
@@ -232,60 +267,60 @@
                 <div class="quiz-step active" id="step-1">
                     <h3>Odak noktamız ne olacak?</h3>
                     <div class="card-options">
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="radio" name="project_type" value="etkinlik">
                             <div class="card-content">Etkinlik & Mezuniyet</div>
                         </label>
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="radio" name="project_type" value="konser">
                             <div class="card-content">Sahne Sanatları (Konser)</div>
                         </label>
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="radio" name="project_type" value="isletme">
                             <div class="card-content">İşletmenize Özel Çekim ve Videolar</div>
                         </label>
                     </div>
-                    <button type="button" class="btn-next" onclick="nextStep(1)">Devam Et →</button>
+                    <button type="button" class="btn-next hover-target" onclick="nextStep(1)">Devam Et →</button>
                 </div>
 
                 <div class="quiz-step" id="step-2">
                     <h3>Teknik beklentileriniz neler?</h3>
                     <p style="text-align: center; color: #888; font-size: 0.9rem; margin-top: -20px; margin-bottom: 20px;">(Birden fazla seçim yapabilirsiniz)</p>
                     <div class="card-options">
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="checkbox" name="tech_needs" value="tek_kamera">
                             <div class="card-content">Tek Kamera</div>
                         </label>
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="checkbox" name="tech_needs" value="cok_kamera">
                             <div class="card-content">Çoklu Kamera (Multi-cam)</div>
                         </label>
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="checkbox" name="tech_needs" value="drone">
                             <div class="card-content">Drone & Hava Çekimi</div>
                         </label>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="prevStep(2)">← Geri</button>
-                        <button type="button" class="btn-next" onclick="nextStep(2)">Devam Et →</button>
+                        <button type="button" class="btn-prev hover-target" onclick="prevStep(2)">← Geri</button>
+                        <button type="button" class="btn-next hover-target" onclick="nextStep(2)">Devam Et →</button>
                     </div>
                 </div>
 
                 <div class="quiz-step" id="step-3">
                     <h3>Çalışma modelimiz nasıl olsun?</h3>
                     <div class="card-options">
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="radio" name="model" value="tek_seferlik">
                             <div class="card-content">Tek Seferlik Proje</div>
                         </label>
-                        <label class="option-card">
+                        <label class="option-card hover-target">
                             <input type="radio" name="model" value="aylik_paket">
                             <div class="card-content">Aylık Paket<br><span style="font-size: 0.85rem; font-weight: normal; margin-top: 5px; display: block;">(4 Video + 8 Story)</span></div>
                         </label>
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="prevStep(3)">← Geri</button>
-                        <button type="button" class="btn-next" onclick="nextStep(3)">Devam Et →</button>
+                        <button type="button" class="btn-prev hover-target" onclick="prevStep(3)">← Geri</button>
+                        <button type="button" class="btn-next hover-target" onclick="nextStep(3)">Devam Et →</button>
                     </div>
                 </div>
 
@@ -297,8 +332,8 @@
                         <input type="tel" placeholder="Telefon Numaranız">
                     </div>
                     <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="prevStep(4)">← Geri</button>
-                        <button type="submit" class="btn-submit">Teklif İste</button>
+                        <button type="button" class="btn-prev hover-target" onclick="prevStep(4)">← Geri</button>
+                        <button type="submit" class="btn-submit hover-target">Teklif İste</button>
                     </div>
                 </div>
             </form>
@@ -306,7 +341,7 @@
     </section>
 
     <div id="video-modal" class="modal">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <span class="close-btn hover-target" onclick="closeModal()">&times;</span>
         <div class="modal-content">
             <div class="video-container-modal">
                 <iframe id="modal-video" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
@@ -323,6 +358,63 @@
     </footer>
 
     <script>
+        // --- 1. SİNEMATİK İMLEÇ SCRIPTİ ---
+        if (window.innerWidth > 1024) {
+            const cursor = document.getElementById('custom-cursor');
+            
+            // İmlecin fareyi takip etmesi
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+
+            // Videolara gelince İZLE yazan kayıt butonu efekti
+            document.querySelectorAll('.hover-video-target').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover-video');
+                    cursor.innerText = 'İZLE';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover-video');
+                    cursor.innerText = '';
+                });
+            });
+
+            // Butonlara veya formlara gelince oluşan focus efekti
+            document.querySelectorAll('.hover-target, input').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover-btn'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover-btn'));
+            });
+        }
+
+        // --- 2. YAPAY ZEKA TERMINAL YAZMA SCRIPTİ ---
+        const textToType = "> prompt: sinematik_kurgu --renk log_to_rec709 --kamera drone_dinamik --iletisim kurumsal [ENTER]";
+        const typewriterElement = document.getElementById('typewriter');
+        let typeIndex = 0;
+        
+        // Kullanıcı sayfayı aşağı kaydırıp terminali görene kadar yazmayı bekle
+        const typeObserver = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                setTimeout(typeWriter, 500); // 0.5 saniye nefes payı
+                typeObserver.disconnect(); // Sadece bir kere çalışsın
+            }
+        });
+        typeObserver.observe(document.getElementById('terminal-box'));
+
+        function typeWriter() {
+            if (typeIndex < textToType.length) {
+                typewriterElement.innerHTML += textToType.charAt(typeIndex);
+                typeIndex++;
+                setTimeout(typeWriter, 35); // Yazı yazma hızı
+            } else {
+                // Yazı bittiğinde ENTER hissi ver ve rengini markanın rengine dönüştür
+                setTimeout(() => {
+                    document.getElementById('terminal-box').style.color = "var(--orange)";
+                    document.getElementById('terminal-box').style.borderLeftColor = "#00ff41";
+                }, 400);
+            }
+        }
+
         // Navbar scroll efekti
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
@@ -339,7 +431,6 @@
                 next.classList.add('active');
             }
         }
-
         function prevStep(currentStep) {
             const current = document.getElementById('step-' + currentStep);
             const prev = document.getElementById('step-' + (currentStep - 1));
@@ -349,7 +440,7 @@
             }
         }
 
-        // --- SİNEMATİK MODAL KONTROLLERİ ---
+        // Modal Kontrolleri
         function openModal(videoUrl) {
             const modal = document.getElementById('video-modal');
             const iframe = document.getElementById('modal-video');
@@ -358,7 +449,6 @@
             setTimeout(() => { modal.classList.add('show'); }, 10);
             document.body.style.overflow = 'hidden'; 
         }
-
         function closeModal() {
             const modal = document.getElementById('video-modal');
             const iframe = document.getElementById('modal-video');
@@ -381,63 +471,43 @@
             projectId: "vizi-96158",
             storageBucket: "vizi-96158.firebasestorage.app",
             messagingSenderId: "145575387910",
-            appId: "1:145575387910:web:59776c4c9a2c20434ff487",
-            measurementId: "G-3QS58WW5KZ"
+            appId: "1:145575387910:web:59776c4c9a2c20434ff487"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         document.getElementById('quote-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const submitBtn = document.querySelector('.btn-submit');
             const originalText = submitBtn.innerText;
-            
             submitBtn.innerText = 'Sisteme Kaydediliyor...';
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.8';
+            submitBtn.disabled = true; submitBtn.style.opacity = '0.8';
 
             const projectTypeEl = document.querySelector('input[name="project_type"]:checked');
             const projectType = projectTypeEl ? projectTypeEl.nextElementSibling.innerText.trim() : "Belirtilmedi";
-            
             const techNeedsEls = document.querySelectorAll('input[name="tech_needs"]:checked');
             let techNeedsArray = [];
             techNeedsEls.forEach(el => techNeedsArray.push(el.nextElementSibling.innerText.trim()));
             const techNeeds = techNeedsArray.length > 0 ? techNeedsArray.join(', ') : "Belirtilmedi";
-            
             const modelEl = document.querySelector('input[name="model"]:checked');
             const modelText = modelEl ? modelEl.nextElementSibling.innerText.replace('\n', ' ').trim() : "Belirtilmedi";
-            
             const inputs = document.querySelectorAll('#step-4 input');
             
             try {
                 await addDoc(collection(db, "talepler"), {
-                    isim: inputs[0].value.trim(),
-                    email: inputs[1].value.trim(),
-                    telefon: inputs.length > 2 ? inputs[2].value.trim() : "",
-                    odak_noktasi: projectType,
-                    teknik: techNeeds,
-                    model: modelText,
-                    tarih: serverTimestamp(),
-                    durum: "Yeni" 
+                    isim: inputs[0].value.trim(), email: inputs[1].value.trim(), telefon: inputs.length > 2 ? inputs[2].value.trim() : "",
+                    odak_noktasi: projectType, teknik: techNeeds, model: modelText, tarih: serverTimestamp(), durum: "Yeni" 
                 });
-
                 alert('Talebiniz sisteme başarıyla kaydedildi! Ekibimiz paneli üzerinden inceleyip en kısa sürede dönüş yapacaktır.');
                 this.reset();
-                
                 const activeStep = document.querySelector('.quiz-step.active');
                 if(activeStep) activeStep.classList.remove('active');
                 const firstStep = document.getElementById('step-1');
                 if(firstStep) firstStep.classList.add('active');
-
             } catch (error) {
-                console.error("Firebase Hatası:", error);
                 alert('Bir bağlantı hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyin.');
             } finally {
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
+                submitBtn.innerText = originalText; submitBtn.disabled = false; submitBtn.style.opacity = '1';
             }
         });
     </script>
