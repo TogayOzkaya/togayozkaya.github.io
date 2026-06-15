@@ -7,13 +7,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* --- Değişkenler & Reset --- */
         :root {
-            --white: #FFFFFF; --alabaster: #E5E5E5; --black: #000000;
-            --prussian: #14213D; --orange: #FCA311;
-            --font-head: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+            --white: #FFFFFF;
+            --alabaster: #E5E5E5;
+            --black: #000000;
+            --prussian: #14213D;
+            --orange: #FCA311;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--white); color: var(--black); font-family: var(--font-body); overflow-x: hidden; }
+
+        /* --- Navigasyon --- */
         header { position: fixed; width: 100%; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 25px 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; transition: all 0.3s ease; }
         header.scrolled { padding: 15px 60px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .logo { font-family: var(--font-head); font-weight: 800; font-size: 1.8rem; color: var(--prussian); letter-spacing: 3px; }
@@ -22,31 +30,43 @@
         nav a:hover { color: var(--orange); }
         .btn-quote { background-color: var(--prussian); color: var(--white); padding: 12px 28px; border-radius: 30px; transition: all 0.3s ease; }
         .btn-quote:hover { background-color: var(--orange); color: var(--white); }
+
+        /* --- Hero / Showreel --- */
         .hero { height: 100vh; width: 100%; background-color: var(--black); position: relative; display: flex; align-items: center; justify-content: center; }
         .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(20,33,61,0.2), rgba(0,0,0,0.6)); z-index: 5; }
         .hero-content { position: absolute; left: 10%; bottom: 20%; color: var(--white); z-index: 10; }
         .hero-content h1 { font-family: var(--font-head); font-size: 6rem; line-height: 1; margin-bottom: 20px; letter-spacing: -2px; }
         .hero-content p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; color: var(--alabaster); }
+        
         .play-btn-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; cursor: pointer; }
         .play-button { width: 80px; height: 80px; border-radius: 50%; background-color: var(--orange); color: var(--white); border: none; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; z-index: 2; transition: transform 0.3s ease; padding-left: 5px; }
         .play-btn-container:hover .play-button { transform: scale(1.1); }
         .pulse-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background-color: var(--orange); border-radius: 50%; z-index: 1; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
+
+        /* --- Portfolyo Grid --- */
         .portfolio-section { padding: 120px 60px; background-color: var(--white); }
         .section-header { margin-bottom: 60px; }
         .section-header h2 { font-family: var(--font-head); font-size: 3rem; color: var(--prussian); }
         .section-header .line { width: 60px; height: 4px; background-color: var(--orange); margin-top: 15px; }
         .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; grid-auto-flow: dense; }
-        .portfolio-item { cursor: pointer; }
+        .portfolio-item { cursor: pointer; position: relative; }
         .portfolio-item.large { grid-column: span 2; grid-row: span 2; }
         .portfolio-item.large-horizontal { grid-column: span 2; }
         .img-wrapper { width: 100%; height: 100%; min-height: 350px; overflow: hidden; border-radius: 4px; background-color: var(--alabaster); position: relative; }
-        .img-placeholder { width: 100%; height: 100%; background-color: var(--prussian); opacity: 0.1; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-        .portfolio-item:hover .img-placeholder { transform: scale(1.05); background-color: var(--orange); opacity: 0.2; }
+        
+        .portfolio-img, .img-placeholder { width: 100%; height: 100%; object-fit: cover; background-color: var(--prussian); opacity: 0.1; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .portfolio-item:hover .portfolio-img, .portfolio-item:hover .img-placeholder { transform: scale(1.05); background-color: var(--orange); opacity: 0.2; }
+        
+        .img-wrapper::after { content: '▶ VİDEOYU İZLE'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--orange); color: var(--white); padding: 12px 25px; border-radius: 30px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .portfolio-item:hover .img-wrapper::after { opacity: 1; }
+        
         .item-info { margin-top: 20px; }
         .item-info h3 { font-family: var(--font-head); font-size: 1.5rem; color: var(--prussian); margin-bottom: 5px; }
         .item-info p { color: #666; font-size: 0.95rem; }
+
+        /* --- Teknoloji / İş Akışı --- */
         .workflow-section { padding: 120px 60px; background-color: var(--alabaster); }
         .workflow-content h2 { font-family: var(--font-head); font-size: 2.5rem; color: var(--prussian); margin-bottom: 15px; }
         .workflow-content p { font-size: 1.1rem; color: #555; margin-bottom: 50px; max-width: 600px; }
@@ -54,6 +74,8 @@
         .tech-card { background-color: var(--white); padding: 40px 30px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; border-bottom: 3px solid transparent; }
         .tech-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); border-bottom: 3px solid var(--orange); }
         .tech-card h4 { font-family: var(--font-head); font-size: 1.3rem; color: var(--prussian); margin-bottom: 10px; }
+
+        /* --- Quiz / Teklif Formu --- */
         .quote-section { padding: 120px 60px; background-color: var(--white); display: flex; justify-content: center; }
         .quote-wrapper { width: 100%; max-width: 800px; }
         .quote-header { text-align: center; margin-bottom: 60px; }
@@ -76,6 +98,16 @@
         .btn-next:hover, .btn-submit:hover { background-color: var(--prussian); transform: translateX(5px); }
         .btn-prev { background-color: var(--alabaster); color: var(--prussian); }
         .btn-prev:hover { background-color: #d5d5d5; transform: translateX(-5px); }
+
+        /* --- SİNEMATİK LIGHTBOX MODAL --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(10, 15, 25, 0.95); backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.4s ease; }
+        .modal.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
+        .modal-content { position: relative; width: 90%; max-width: 1100px; background: #000; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .close-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 50px; font-weight: 300; cursor: pointer; transition: color 0.3s; z-index: 2001; }
+        .close-btn:hover { color: var(--orange); }
+        .video-container-modal { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-container-modal iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
         footer { background-color: var(--prussian); color: var(--white); padding: 60px 20px; text-align: center; }
         footer h2 { font-family: var(--font-head); letter-spacing: 2px; margin-bottom: 10px; }
         footer p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
@@ -102,7 +134,7 @@
                 <h1>Görsel<br>Hikayeler.</h1>
                 <p>Minimalist yaklaşım, sinematik kalite.</p>
             </div>
-            <div class="play-btn-container" id="play-btn" onclick="alert('Video oynatıcı entegre edilecek.')">
+            <div class="play-btn-container" id="play-btn" onclick="openModal('https://drive.google.com/file/d/1Bv_KXUHmiqQBG5eBgPUmPDc3uUB19nrP/preview')">
                 <div class="pulse-ring"></div>
                 <button class="play-button">▶</button>
             </div>
@@ -115,10 +147,47 @@
             <div class="line"></div>
         </div>
         <div class="portfolio-grid">
-            <div class="portfolio-item large"><div class="img-wrapper"><div class="img-placeholder"></div></div><div class="item-info"><h3>Görünmeyeni Gör</h3><p>Kentsel Erişilebilirlik Video Projesi</p></div></div>
-            <div class="portfolio-item"><div class="img-wrapper"><div class="img-placeholder"></div></div><div class="item-info"><h3>BMW iX</h3><p>Otomotiv Dinamik Çekimi</p></div></div>
-            <div class="portfolio-item"><div class="img-wrapper"><div class="img-placeholder"></div></div><div class="item-info"><h3>Urla Açık Hava</h3><p>Çok Kameralı Konser Kaydı</p></div></div>
-            <div class="portfolio-item large-horizontal"><div class="img-wrapper"><div class="img-placeholder"></div></div><div class="item-info"><h3>Mezuniyet Töreni</h3><p>Etkinlik Prodüksiyonu & Ses Senkronizasyonu</p></div></div>
+            
+            <div class="portfolio-item large" onclick="openModal('https://drive.google.com/file/d/1Bv_KXUHmiqQBG5eBgPUmPDc3uUB19nrP/preview')">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>Görünmeyeni Gör</h3>
+                    <p>Kentsel Erişilebilirlik Video Projesi</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" onclick="alert('Bu video yakında eklenecek.')">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>BMW iX</h3>
+                    <p>Otomotiv Dinamik Çekimi</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" onclick="alert('Bu video yakında eklenecek.')">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>Urla Açık Hava</h3>
+                    <p>Çok Kameralı Konser Kaydı</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item large-horizontal" onclick="alert('Bu video yakında eklenecek.')">
+                <div class="img-wrapper">
+                    <div class="img-placeholder"></div>
+                </div>
+                <div class="item-info">
+                    <h3>Mezuniyet Töreni</h3>
+                    <p>Etkinlik Prodüksiyonu & Ses Senkronizasyonu</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -219,6 +288,15 @@
         </div>
     </section>
 
+    <div id="video-modal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <div class="video-container-modal">
+                <iframe id="modal-video" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <h2>VİZİ MEDYA</h2>
@@ -226,21 +304,16 @@
             <p>&copy; 2026 Tüm hakları saklıdır.</p>
         </div>
     </footer>
-<div id="video-modal" class="modal">
-    <span class="close-btn" onclick="closeModal()">&times;</span>
-    <div class="modal-content">
-        <div class="video-container-modal">
-            <iframe id="modal-video" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
+
     <script>
+        // Navbar scroll efekti
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) { navbar.classList.add('scrolled'); } 
             else { navbar.classList.remove('scrolled'); }
         });
 
+        // Quiz geçişleri
         function nextStep(currentStep) {
             const current = document.getElementById('step-' + currentStep);
             const next = document.getElementById('step-' + (currentStep + 1));
@@ -257,6 +330,27 @@
                 current.classList.remove('active');
                 prev.classList.add('active');
             }
+        }
+
+        // --- SİNEMATİK MODAL KONTROLLERİ ---
+        function openModal(videoUrl) {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('modal-video');
+            iframe.src = videoUrl; 
+            modal.style.display = "flex";
+            setTimeout(() => { modal.classList.add('show'); }, 10);
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('modal-video');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = "none";
+                iframe.src = ""; 
+                document.body.style.overflow = 'auto'; 
+            }, 400);
         }
     </script>
 
