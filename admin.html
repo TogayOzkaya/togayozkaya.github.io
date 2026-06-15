@@ -6,15 +6,9 @@
     <title>Vizi Medya | Yönetim Paneli</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --prussian: #14213D;
-            --orange: #FCA311;
-            --white: #FFFFFF;
-            --alabaster: #E5E5E5;
-        }
+        :root { --prussian: #14213D; --orange: #FCA311; --white: #FFFFFF; --alabaster: #E5E5E5; }
         body { font-family: 'Inter', sans-serif; background-color: var(--alabaster); color: var(--prussian); margin: 0; padding: 0; height: 100vh; overflow: hidden; }
         
-        /* --- GİRİŞ EKRANI TASARIMI --- */
         #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--prussian); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease; }
         .login-box { background-color: var(--white); padding: 50px 40px; border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 400px; }
         .login-box h2 { font-family: 'Syne', sans-serif; margin-top: 0; color: var(--prussian); margin-bottom: 30px; letter-spacing: 2px; }
@@ -24,7 +18,6 @@
         .login-box button:hover { background-color: var(--prussian); }
         .error-msg { color: #d9534f; font-size: 0.85rem; margin-top: 10px; display: none; }
 
-        /* --- PANEL TASARIMI (Giriş Yapılana Kadar Gizli) --- */
         #admin-content { padding: 40px; display: none; height: 100vh; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--white); padding: 20px 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .header h1 { font-family: 'Syne', sans-serif; margin: 0; color: var(--prussian); }
@@ -34,24 +27,26 @@
         tr:hover { background-color: #f9f9f9; }
         .status { background: var(--orange); color: var(--white); padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
         .no-data { text-align: center; padding: 50px; color: #888; }
+        .logout-btn { background-color: transparent; border: 1px solid var(--prussian); color: var(--prussian); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .logout-btn:hover { background-color: var(--prussian); color: var(--white); }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h2>VİZİ MEDYA<br><span style="font-size: 1rem; opacity: 0.6; font-family: 'Inter', sans-serif; font-weight: normal; letter-spacing: normal;">Yönetim Paneli</span></h2>
-            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <h2>VİZİ MEDYA<br><span style="font-size: 1rem; opacity: 0.6; font-family: 'Inter', sans-serif; font-weight: normal; letter-spacing: normal;">Güvenli Yönetim</span></h2>
+            <input type="email" id="email" placeholder="Admin E-posta Adresi">
             <input type="password" id="password" placeholder="Şifre">
-            <button onclick="checkLogin()">GİRİŞ YAP</button>
-            <div id="error-message" class="error-msg">Hatalı kullanıcı adı veya şifre!</div>
+            <button id="login-btn">GİRİŞ YAP</button>
+            <div id="error-message" class="error-msg">Hatalı e-posta veya şifre!</div>
         </div>
     </div>
 
     <div id="admin-content">
         <div class="header">
             <h1>Gelen Talepler</h1>
-            <div style="font-size: 0.9rem; color: #666; cursor: pointer;" onclick="location.reload();">Çıkış Yap 🚪</div>
+            <button id="logout-btn" class="logout-btn">Çıkış Yap 🚪</button>
         </div>
 
         <table>
@@ -70,61 +65,73 @@
         </table>
     </div>
 
-    <script>
-        function checkLogin() {
-            // BURADAN KENDİ KULLANICI ADI VE ŞİFRENİ BELİRLEYEBİLİRSİN
-            const dogruKullanici = "vizimedya";
-            const dogruSifre = "@123456123456"; 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        // Authentication kütüphanesini içeri aktarıyoruz
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-            const girilenKullanici = document.getElementById('username').value;
-            const girilenSifre = document.getElementById('password').value;
+        // GERÇEK FIREBASE ANAHTARLARIN
+        const firebaseConfig = {
+            apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
+            authDomain: "vizi-96158.firebaseapp.com",
+            projectId: "vizi-96158",
+            storageBucket: "vizi-96158.firebasestorage.app",
+            messagingSenderId: "145575387910",
+            appId: "1:145575387910:web:59776c4c9a2c20434ff487"
+        };
 
-            if(girilenKullanici === dogruKullanici && girilenSifre === dogruSifre) {
-                // Giriş başarılıysa ekranı değiştir ve veritabanını başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Giriş Yapma İşlemi (Şifre artık kodda yok!)
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+            
+            btn.innerText = "Bekleniyor...";
+            
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch((error) => {
+                    document.getElementById('error-message').style.display = 'block';
+                    btn.innerText = "GİRİŞ YAP";
+                });
+        });
+
+        // Enter tuşu ile giriş
+        document.getElementById("password").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById('login-btn').click();
+            }
+        });
+
+        // Çıkış Yapma İşlemi
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                location.reload(); // Sayfayı yenile ve giriş ekranına dön
+            });
+        });
+
+        // Kullanıcı Giriş Yaptığında Paneli Göster
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Giriş başarılı
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('admin-content').style.display = 'block';
-                    document.body.style.overflow = 'auto'; // Kaydırmayı aç
-                    
-                    // Firebase verilerini çekme fonksiyonunu tetikle
-                    startFirebase();
+                    document.body.style.overflow = 'auto'; 
+                    fetchData(); // Verileri çekmeye başla
                 }, 500);
-            } else {
-                // Hatalı giriş
-                document.getElementById('error-message').style.display = 'block';
-            }
-        }
-
-        // Enter tuşu ile giriş yapabilmek için
-        document.getElementById("password").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                checkLogin();
             }
         });
-    </script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        // Firebase başlatma işlemini bir fonksiyona sardık ki sadece giriş yapınca çalışsın
-        window.startFirebase = function() {
-            const firebaseConfig = {
-                apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
-                authDomain: "vizi-96158.firebaseapp.com",
-                projectId: "vizi-96158",
-                storageBucket: "vizi-96158.firebasestorage.app",
-                messagingSenderId: "145575387910",
-                appId: "1:145575387910:web:59776c4c9a2c20434ff487",
-                measurementId: "G-3QS58WW5KZ"
-            };
-
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
+        // Firebase Verilerini Çeken Fonksiyon
+        function fetchData() {
             const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
-            
             onSnapshot(q, (snapshot) => {
                 const tbody = document.getElementById('table-body');
                 tbody.innerHTML = ""; 
@@ -156,7 +163,7 @@
                     tbody.appendChild(tr);
                 });
             });
-        };
+        }
     </script>
 </body>
 </html>
