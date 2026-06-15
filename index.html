@@ -276,63 +276,82 @@
                 prev.classList.add('active');
             }
         }
+    </script>
 
-        // --- WHATSAPP YÖNLENDİRMESİ ---
-        document.getElementById('quote-form').addEventListener('submit', function(e) {
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // BURAYI FIREBASE PANELİNDEN ALACAĞIN KENDİ BİLGİLERİNLE DEĞİŞTİRMELİSİN
+        const firebaseConfig = {
+            apiKey: "SENIN_API_KEY",
+            authDomain: "vizi-medya.firebaseapp.com",
+            projectId: "vizi-medya",
+            storageBucket: "vizi-medya.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        // Uygulamayı ve Veritabanını Başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Form Gönderim İşlemi
+        document.getElementById('quote-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const viziWhatsAppNumber = "905336817651"; 
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.innerText;
             
-            // Adım 1
+            // Kullanıcıyı bekletirken butonu güncelle
+            submitBtn.innerText = 'Sisteme Kaydediliyor...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.8';
+
+            // Adımlardaki Verileri Topla
             const projectTypeEl = document.querySelector('input[name="project_type"]:checked');
             const projectType = projectTypeEl ? projectTypeEl.nextElementSibling.innerText.trim() : "Belirtilmedi";
             
-            // Adım 2 (Çoklu Seçim)
             const techNeedsEls = document.querySelectorAll('input[name="tech_needs"]:checked');
             let techNeedsArray = [];
-            techNeedsEls.forEach(function(el) {
-                techNeedsArray.push(el.nextElementSibling.innerText.trim());
-            });
+            techNeedsEls.forEach(el => techNeedsArray.push(el.nextElementSibling.innerText.trim()));
             const techNeeds = techNeedsArray.length > 0 ? techNeedsArray.join(', ') : "Belirtilmedi";
             
-            // Adım 3
             const modelEl = document.querySelector('input[name="model"]:checked');
             const modelText = modelEl ? modelEl.nextElementSibling.innerText.replace('\n', ' ').trim() : "Belirtilmedi";
             
-            // Adım 4
             const inputs = document.querySelectorAll('#step-4 input');
-            const customerName = inputs.length > 0 && inputs[0].value ? inputs[0].value.trim() : "Belirtilmedi";
-            const customerEmail = inputs.length > 1 && inputs[1].value ? inputs[1].value.trim() : "Belirtilmedi";
-            const customerPhone = inputs.length > 2 && inputs[2].value ? inputs[2].value.trim() : "Belirtilmedi";
-
-            // WhatsApp Mesajı
-            const whatsappMessage = `Merhaba Vizi Medya! Web siteniz üzerinden yeni bir proje talebi oluşturdum. Detaylar aşağıdadır:
-
-👤 *Kişisel Bilgiler*
-İsim: ${customerName}
-E-posta: ${customerEmail}
-Telefon: ${customerPhone}
-
-🎬 *Proje Detayları*
-Odak Noktası: ${projectType}
-Teknik Beklentiler: ${techNeeds}
-Çalışma Modeli: ${modelText}
-
-Bu talebimle ilgili fiyat teklifinizi ve geri dönüşünüzü bekliyorum. İyi çalışmalar!`;
-
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            const whatsappUrl = `https://wa.me/${viziWhatsAppNumber}?text=${encodedMessage}`;
             
-            window.open(whatsappUrl, '_blank');
-            
-            // Formu Sıfırla
-            this.reset();
-            const activeStep = document.querySelector('.quiz-step.active');
-            if(activeStep) activeStep.classList.remove('active');
-            
-            const firstStep = document.getElementById('step-1');
-            if(firstStep) {
-                firstStep.classList.add('active');
+            try {
+                // Veritabanına Yaz
+                await addDoc(collection(db, "talepler"), {
+                    isim: inputs[0].value.trim(),
+                    email: inputs[1].value.trim(),
+                    telefon: inputs.length > 2 ? inputs[2].value.trim() : "",
+                    odak_noktasi: projectType,
+                    teknik: techNeeds,
+                    model: modelText,
+                    tarih: serverTimestamp(),
+                    durum: "Yeni" 
+                });
+
+                alert('Talebiniz sisteme başarıyla kaydedildi! Ekibimiz paneli üzerinden inceleyip en kısa sürede dönüş yapacaktır.');
+                this.reset(); // Formu temizle
+                
+                // Formu başarıyla gönderdikten sonra ilk adıma geri dön
+                const activeStep = document.querySelector('.quiz-step.active');
+                if(activeStep) activeStep.classList.remove('active');
+                const firstStep = document.getElementById('step-1');
+                if(firstStep) firstStep.classList.add('active');
+
+            } catch (error) {
+                console.error("Firebase Hatası:", error);
+                alert('Bir bağlantı hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyin.');
+            } finally {
+                // İşlem bitince butonu eski haline getir
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
             }
         });
     </script>
