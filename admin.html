@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizi Medya | Yönetim Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --prussian: #14213D;
+            --orange: #FCA311;
+            --white: #FFFFFF;
+            --alabaster: #E5E5E5;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--alabaster);
+            color: var(--prussian);
+            margin: 0;
+            padding: 40px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            background: var(--white);
+            padding: 20px 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .header h1 {
+            font-family: 'Syne', sans-serif;
+            margin: 0;
+            color: var(--prussian);
+        }
+        table {
+            width: 100%;
+            background: var(--white);
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--alabaster);
+        }
+        th {
+            background-color: var(--prussian);
+            color: var(--white);
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .status {
+            background: var(--orange);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>VİZİ MEDYA | Gelen Talepler</h1>
+        <div style="font-size: 0.9rem; color: #666;">Canlı Veritabanı (Firestore)</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Müşteri Bilgileri</th>
+                <th>Odak Noktası</th>
+                <th>Teknik & Model</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <tr><td colspan="5" class="no-data">Yükleniyor...</td></tr>
+        </tbody>
+    </table>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // DİKKAT: Ana sayfadaki AYNI config kodlarını buraya da yapıştırmalısın
+        const firebaseConfig = {
+            apiKey: "SENIN_API_KEY",
+            authDomain: "vizi-medya.firebaseapp.com",
+            projectId: "vizi-medya",
+            // ...
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Verileri Canlı Olarak Çek (Tarihe göre en yeni en üstte)
+        const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = ""; // İçeriği temizle
+
+            if (snapshot.empty) {
+                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const tarih = data.tarih ? data.tarih.toDate().toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' }) : "Bilinmiyor";
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${tarih}</td>
+                    <td>
+                        <strong>${data.isim}</strong><br>
+                        <span style="font-size:0.85rem; color:#666;">${data.email}</span><br>
+                        <span style="font-size:0.85rem; color:#666;">${data.telefon}</span>
+                    </td>
+                    <td>${data.odak_noktasi}</td>
+                    <td>
+                        <span style="display:block; margin-bottom:5px;"><strong>Teknik:</strong> ${data.teknik}</span>
+                        <span><strong>Model:</strong> ${data.model}</span>
+                    </td>
+                    <td><span class="status">${data.durum}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
+    </script>
+</body>
+</html>
