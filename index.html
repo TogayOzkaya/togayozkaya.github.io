@@ -54,10 +54,16 @@
         .portfolio-item { cursor: pointer; position: relative; }
         .portfolio-item.large { grid-column: span 2; grid-row: span 2; }
         .portfolio-item.large-horizontal { grid-column: span 2; }
-        .img-wrapper { width: 100%; height: 100%; min-height: 350px; overflow: hidden; border-radius: 4px; background-color: var(--alabaster); position: relative; }
+        .img-wrapper { width: 100%; height: 100%; min-height: 350px; overflow: hidden; border-radius: 4px; background-color: var(--prussian); position: relative; }
         
-        .portfolio-img, .img-placeholder { width: 100%; height: 100%; object-fit: cover; background-color: var(--prussian); opacity: 0.1; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-        .portfolio-item:hover .portfolio-img, .portfolio-item:hover .img-placeholder { transform: scale(1.05); background-color: var(--orange); opacity: 0.2; }
+        /* GÜNCELLENEN KISIM: Gerçek resimlerin ayarı */
+        .portfolio-img { width: 100%; height: 100%; object-fit: cover; opacity: 1; display: block; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; }
+        /* Üzerine gelince resim hafif kararır (arka plandaki prusya mavisi ortaya çıkar) */
+        .portfolio-item:hover .portfolio-img { transform: scale(1.05); opacity: 0.5; } 
+
+        /* Henüz resim olmayan boş kutular (placeholder) için ayar */
+        .img-placeholder { width: 100%; height: 100%; background-color: var(--prussian); opacity: 0.1; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .portfolio-item:hover .img-placeholder { transform: scale(1.05); background-color: var(--orange); opacity: 0.2; }
         
         .img-wrapper::after { content: '▶ VİDEOYU İZLE'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--orange); color: var(--white); padding: 12px 25px; border-radius: 30px; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
         .portfolio-item:hover .img-wrapper::after { opacity: 1; }
