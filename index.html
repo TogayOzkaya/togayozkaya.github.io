@@ -7,21 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Değişkenler & Reset --- */
         :root {
-            --white: #FFFFFF;
-            --alabaster: #E5E5E5;
-            --black: #000000;
-            --prussian: #14213D;
-            --orange: #FCA311;
-            --font-head: 'Syne', sans-serif;
-            --font-body: 'Inter', sans-serif;
+            --white: #FFFFFF; --alabaster: #E5E5E5; --black: #000000;
+            --prussian: #14213D; --orange: #FCA311;
+            --font-head: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background-color: var(--white); color: var(--black); font-family: var(--font-body); overflow-x: hidden; }
-
-        /* --- Navigasyon --- */
         header { position: fixed; width: 100%; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 25px 60px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 1000; transition: all 0.3s ease; }
         header.scrolled { padding: 15px 60px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
         .logo { font-family: var(--font-head); font-weight: 800; font-size: 1.8rem; color: var(--prussian); letter-spacing: 3px; }
@@ -30,22 +22,17 @@
         nav a:hover { color: var(--orange); }
         .btn-quote { background-color: var(--prussian); color: var(--white); padding: 12px 28px; border-radius: 30px; transition: all 0.3s ease; }
         .btn-quote:hover { background-color: var(--orange); color: var(--white); }
-
-        /* --- Hero / Showreel --- */
         .hero { height: 100vh; width: 100%; background-color: var(--black); position: relative; display: flex; align-items: center; justify-content: center; }
         .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(20,33,61,0.2), rgba(0,0,0,0.6)); z-index: 5; }
         .hero-content { position: absolute; left: 10%; bottom: 20%; color: var(--white); z-index: 10; }
         .hero-content h1 { font-family: var(--font-head); font-size: 6rem; line-height: 1; margin-bottom: 20px; letter-spacing: -2px; }
         .hero-content p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; color: var(--alabaster); }
-        
         .play-btn-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; cursor: pointer; }
         .play-button { width: 80px; height: 80px; border-radius: 50%; background-color: var(--orange); color: var(--white); border: none; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; z-index: 2; transition: transform 0.3s ease; padding-left: 5px; }
         .play-btn-container:hover .play-button { transform: scale(1.1); }
         .pulse-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background-color: var(--orange); border-radius: 50%; z-index: 1; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
-
-        /* --- Portfolyo Grid --- */
         .portfolio-section { padding: 120px 60px; background-color: var(--white); }
         .section-header { margin-bottom: 60px; }
         .section-header h2 { font-family: var(--font-head); font-size: 3rem; color: var(--prussian); }
@@ -60,8 +47,6 @@
         .item-info { margin-top: 20px; }
         .item-info h3 { font-family: var(--font-head); font-size: 1.5rem; color: var(--prussian); margin-bottom: 5px; }
         .item-info p { color: #666; font-size: 0.95rem; }
-
-        /* --- Teknoloji / İş Akışı --- */
         .workflow-section { padding: 120px 60px; background-color: var(--alabaster); }
         .workflow-content h2 { font-family: var(--font-head); font-size: 2.5rem; color: var(--prussian); margin-bottom: 15px; }
         .workflow-content p { font-size: 1.1rem; color: #555; margin-bottom: 50px; max-width: 600px; }
@@ -69,18 +54,13 @@
         .tech-card { background-color: var(--white); padding: 40px 30px; border-radius: 8px; transition: transform 0.3s ease, box-shadow 0.3s ease; border-bottom: 3px solid transparent; }
         .tech-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); border-bottom: 3px solid var(--orange); }
         .tech-card h4 { font-family: var(--font-head); font-size: 1.3rem; color: var(--prussian); margin-bottom: 10px; }
-
-        /* --- Quiz / Teklif Formu --- */
         .quote-section { padding: 120px 60px; background-color: var(--white); display: flex; justify-content: center; }
         .quote-wrapper { width: 100%; max-width: 800px; }
         .quote-header { text-align: center; margin-bottom: 60px; }
         .quote-header h2 { font-family: var(--font-head); font-size: 2.8rem; color: var(--prussian); }
-        
-        /* GÜVENLİ VE STABİL ANİMASYON SİSTEMİ */
         .quiz-step { display: none; }
         .quiz-step.active { display: block; animation: slideUp 0.5s ease forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
         .quiz-step h3 { font-family: var(--font-head); font-size: 1.8rem; color: var(--prussian); margin-bottom: 30px; text-align: center; }
         .card-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .option-card { cursor: pointer; }
@@ -96,7 +76,6 @@
         .btn-next:hover, .btn-submit:hover { background-color: var(--prussian); transform: translateX(5px); }
         .btn-prev { background-color: var(--alabaster); color: var(--prussian); }
         .btn-prev:hover { background-color: #d5d5d5; transform: translateX(-5px); }
-
         footer { background-color: var(--prussian); color: var(--white); padding: 60px 20px; text-align: center; }
         footer h2 { font-family: var(--font-head); letter-spacing: 2px; margin-bottom: 10px; }
         footer p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
@@ -164,7 +143,6 @@
             </div>
 
             <form id="quote-form">
-                
                 <div class="quiz-step active" id="step-1">
                     <h3>Odak noktamız ne olacak?</h3>
                     <div class="card-options">
@@ -237,7 +215,6 @@
                         <button type="submit" class="btn-submit">Teklif İste</button>
                     </div>
                 </div>
-
             </form>
         </div>
     </section>
@@ -251,14 +228,12 @@
     </footer>
 
     <script>
-        // --- NAVBAR SCROLL EFEKTİ ---
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) { navbar.classList.add('scrolled'); } 
             else { navbar.classList.remove('scrolled'); }
         });
 
-        // --- GÜVENLİ QUİZ GEÇİŞLERİ ---
         function nextStep(currentStep) {
             const current = document.getElementById('step-' + currentStep);
             const next = document.getElementById('step-' + (currentStep + 1));
@@ -282,33 +257,29 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // BURAYI FIREBASE PANELİNDEN ALACAĞIN KENDİ BİLGİLERİNLE DEĞİŞTİRMELİSİN
         const firebaseConfig = {
-            apiKey: "SENIN_API_KEY",
-            authDomain: "vizi-medya.firebaseapp.com",
-            projectId: "vizi-medya",
-            storageBucket: "vizi-medya.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+            apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
+            authDomain: "vizi-96158.firebaseapp.com",
+            projectId: "vizi-96158",
+            storageBucket: "vizi-96158.firebasestorage.app",
+            messagingSenderId: "145575387910",
+            appId: "1:145575387910:web:59776c4c9a2c20434ff487",
+            measurementId: "G-3QS58WW5KZ"
         };
 
-        // Uygulamayı ve Veritabanını Başlat
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Form Gönderim İşlemi
         document.getElementById('quote-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.querySelector('.btn-submit');
             const originalText = submitBtn.innerText;
             
-            // Kullanıcıyı bekletirken butonu güncelle
             submitBtn.innerText = 'Sisteme Kaydediliyor...';
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.8';
 
-            // Adımlardaki Verileri Topla
             const projectTypeEl = document.querySelector('input[name="project_type"]:checked');
             const projectType = projectTypeEl ? projectTypeEl.nextElementSibling.innerText.trim() : "Belirtilmedi";
             
@@ -323,7 +294,6 @@
             const inputs = document.querySelectorAll('#step-4 input');
             
             try {
-                // Veritabanına Yaz
                 await addDoc(collection(db, "talepler"), {
                     isim: inputs[0].value.trim(),
                     email: inputs[1].value.trim(),
@@ -336,9 +306,8 @@
                 });
 
                 alert('Talebiniz sisteme başarıyla kaydedildi! Ekibimiz paneli üzerinden inceleyip en kısa sürede dönüş yapacaktır.');
-                this.reset(); // Formu temizle
+                this.reset();
                 
-                // Formu başarıyla gönderdikten sonra ilk adıma geri dön
                 const activeStep = document.querySelector('.quiz-step.active');
                 if(activeStep) activeStep.classList.remove('active');
                 const firstStep = document.getElementById('step-1');
@@ -348,7 +317,6 @@
                 console.error("Firebase Hatası:", error);
                 alert('Bir bağlantı hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyin.');
             } finally {
-                // İşlem bitince butonu eski haline getir
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
