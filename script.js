@@ -92,24 +92,69 @@ function prevStep(currentStep) {
     }, 400);
 }
 
-// Form Gönderimi
+// --- WHATSAPP ENTEGRELİ FORM GÖNDERİMİ ---
 document.getElementById('quote-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const submitBtn = document.querySelector('.btn-submit');
-    const originalText = submitBtn.innerText;
+    // 1. WhatsApp Numaran (Ülke kodu ile, + ve boşluk olmadan)
+    const viziWhatsAppNumber = "905336817651"; 
     
-    submitBtn.innerText = 'Gönderiliyor...';
+    // 2. Form Verilerini Topla
     
-    // Simüle edilmiş sunucu yanıtı
-    setTimeout(() => {
-        alert('Talebiniz başarıyla alındı! Vizi Medya ekibi sizinle en kısa sürede iletişime geçecektir.');
-        this.reset();
-        submitBtn.innerText = originalText;
-        
-        // İlk adıma dön
-        const activeStep = document.querySelector('.quiz-step.active');
-        if(activeStep) activeStep.classList.remove('active');
-        document.getElementById('step-1').classList.add('active');
-    }, 1000);
+    // Adım 1: Odak Noktası
+    const projectTypeEl = document.querySelector('input[name="project_type"]:checked');
+    const projectType = projectTypeEl ? projectTypeEl.nextElementSibling.innerText.trim() : "Belirtilmedi";
+    
+    // Adım 2: Teknik Beklentiler (Çoklu Seçim)
+    const techNeedsEls = document.querySelectorAll('input[name="tech_needs"]:checked');
+    let techNeedsArray = [];
+    techNeedsEls.forEach(function(el) {
+        techNeedsArray.push(el.nextElementSibling.innerText.trim());
+    });
+    const techNeeds = techNeedsArray.length > 0 ? techNeedsArray.join(', ') : "Belirtilmedi";
+    
+    // Adım 3: Çalışma Modeli
+    const modelEl = document.querySelector('input[name="model"]:checked');
+    const modelText = modelEl ? modelEl.nextElementSibling.innerText.replace('\n', ' ').trim() : "Belirtilmedi";
+    
+    // Adım 4: İletişim Bilgileri
+    const inputs = document.querySelectorAll('#step-4 input');
+    const customerName = inputs.length > 0 && inputs[0].value ? inputs[0].value.trim() : "Belirtilmedi";
+    const customerEmail = inputs.length > 1 && inputs[1].value ? inputs[1].value.trim() : "Belirtilmedi";
+    const customerPhone = inputs.length > 2 && inputs[2].value ? inputs[2].value.trim() : "Belirtilmedi";
+
+    // 3. Profesyonel WhatsApp Mesaj Taslağını Oluştur
+    const whatsappMessage = 
+`Merhaba Vizi Medya! Web siteniz üzerinden yeni bir proje talebi oluşturdum. Detaylar aşağıdadır:
+
+👤 *Kişisel Bilgiler*
+İsim: ${customerName}
+E-posta: ${customerEmail}
+Telefon: ${customerPhone}
+
+🎬 *Proje Detayları*
+Odak Noktası: ${projectType}
+Teknik Beklentiler: ${techNeeds}
+Çalışma Modeli: ${modelText}
+
+Bu talebimle ilgili fiyat teklifinizi ve geri dönüşünüzü bekliyorum. İyi çalışmalar!`;
+
+    // 4. WhatsApp API Linkini Oluştur ve Yönlendir
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    const whatsappUrl = `https://wa.me/${viziWhatsAppNumber}?text=${encodedMessage}`;
+    
+    // Kullanıcıyı WhatsApp'a yönlendir (Yeni sekmede açar)
+    window.open(whatsappUrl, '_blank');
+    
+    // 5. Yönlendirme sonrası formu sıfırla ve ilk adıma dön
+    this.reset();
+    const activeStep = document.querySelector('.quiz-step.active');
+    if(activeStep) activeStep.classList.remove('active');
+    
+    const firstStep = document.getElementById('step-1');
+    if(firstStep) {
+        firstStep.classList.add('active');
+        firstStep.style.opacity = '1';
+        firstStep.style.transform = 'translateY(0)';
+    }
 });
