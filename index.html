@@ -588,62 +588,82 @@
                 <p>İhtiyaçlarınızı belirleyin, size özel bir teklif hazırlayalım.</p>
             </div>
 
-            <form id="quote-form">
-                
-                <div class="quiz-step active" id="step-1">
-                    <h3>Odak noktamız ne olacak?</h3>
-                    <div class="card-options">
-                        <label class="option-card">
-                            <input type="radio" name="project_type" value="etkinlik">
-                            <div class="card-content">Etkinlik & Mezuniyet</div>
-                        </label>
-                        <label class="option-card">
-                            <input type="radio" name="project_type" value="konser">
-                            <div class="card-content">Sahne Sanatları (Konser)</div>
-                        </label>
-                        <label class="option-card">
-                            <input type="radio" name="project_type" value="mekan">
-                            <div class="card-content">Tanıtım Filmi</div>
-                        </label>
-                    </div>
-                    <button type="button" class="btn-next" onclick="nextStep(1)">Devam Et →</button>
-                </div>
+<form id="quote-form">
+    
+    <div class="quiz-step active" id="step-1">
+        <h3>Odak noktamız ne olacak?</h3>
+        <div class="card-options">
+            <label class="option-card">
+                <input type="radio" name="project_type" value="etkinlik">
+                <div class="card-content">Etkinlik & Mezuniyet</div>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="project_type" value="konser">
+                <div class="card-content">Sahne Sanatları (Konser)</div>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="project_type" value="isletme">
+                <div class="card-content">İşletmenize Özel Çekim ve Videolar</div>
+            </label>
+        </div>
+        <button type="button" class="btn-next" onclick="nextStep(1)">Devam Et →</button>
+    </div>
 
-                <div class="quiz-step" id="step-2">
-                    <h3>Teknik beklentileriniz neler?</h3>
-                    <div class="card-options">
-                        <label class="option-card">
-                            <input type="radio" name="tech_needs" value="tek_kamera">
-                            <div class="card-content">Tek Kamera</div>
-                        </label>
-                        <label class="option-card">
-                            <input type="radio" name="tech_needs" value="cok_kamera">
-                            <div class="card-content">Çoklu Kamera (Multi-cam)</div>
-                        </label>
-                        <label class="option-card">
-                            <input type="radio" name="tech_needs" value="drone">
-                            <div class="card-content">Drone & Hava Çekimi</div>
-                        </label>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="prevStep(2)">← Geri</button>
-                        <button type="button" class="btn-next" onclick="nextStep(2)">Devam Et →</button>
-                    </div>
-                </div>
+    <div class="quiz-step" id="step-2">
+        <h3>Teknik beklentileriniz neler?</h3>
+        <span class="multiple-hint" style="display:block; text-align:center; color:#888; margin-top:-20px; margin-bottom:20px; font-size:0.9rem;">(Birden fazla seçim yapabilirsiniz)</span>
+        <div class="card-options">
+            <label class="option-card">
+                <input type="checkbox" name="tech_needs" value="tek_kamera">
+                <div class="card-content">Tek Kamera</div>
+            </label>
+            <label class="option-card">
+                <input type="checkbox" name="tech_needs" value="cok_kamera">
+                <div class="card-content">Çoklu Kamera (Multi-cam)</div>
+            </label>
+            <label class="option-card">
+                <input type="checkbox" name="tech_needs" value="drone">
+                <div class="card-content">Drone & Hava Çekimi</div>
+            </label>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(2)">← Geri</button>
+            <button type="button" class="btn-next" onclick="nextStep(2)">Devam Et →</button>
+        </div>
+    </div>
 
-                <div class="quiz-step" id="step-3">
-                    <h3>Son Adım: İletişim</h3>
-                    <div class="input-group">
-                        <input type="text" placeholder="Adınız Soyadınız" required>
-                        <input type="email" placeholder="E-posta Adresiniz" required>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn-prev" onclick="prevStep(3)">← Geri</button>
-                        <button type="submit" class="btn-submit">Teklif İste</button>
-                    </div>
-                </div>
+    <div class="quiz-step" id="step-3">
+        <h3>Çalışma modelimiz nasıl olsun?</h3>
+        <div class="card-options">
+            <label class="option-card">
+                <input type="radio" name="model" value="tek_seferlik">
+                <div class="card-content">Tek Seferlik Proje</div>
+            </label>
+            <label class="option-card">
+                <input type="radio" name="model" value="aylik_paket">
+                <div class="card-content">Aylık Paket<br><span style="font-size: 0.85rem; font-weight: normal;">(4 Video + 8 Story)</span></div>
+            </label>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(3)">← Geri</button>
+            <button type="button" class="btn-next" onclick="nextStep(3)">Devam Et →</button>
+        </div>
+    </div>
 
-            </form>
+    <div class="quiz-step" id="step-4">
+        <h3>Son Adım: İletişim</h3>
+        <div class="input-group">
+            <input type="text" placeholder="Adınız Soyadınız" required>
+            <input type="email" placeholder="E-posta Adresiniz" required>
+            <input type="tel" placeholder="Telefon Numaranız">
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn-prev" onclick="prevStep(4)">← Geri</button>
+            <button type="submit" class="btn-submit">Teklif İste</button>
+        </div>
+    </div>
+
+</form>
         </div>
     </section>
 
