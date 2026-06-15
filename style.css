@@ -420,7 +420,8 @@ video {
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
-.option-card input:checked + .card-content {
+.option-card input[type="radio"]:checked + .card-content,
+.option-card input[type="checkbox"]:checked + .card-content {
     background-color: var(--white);
     border-color: var(--orange);
     color: var(--orange);
@@ -570,4 +571,58 @@ footer h2 {
 footer p {
     color: rgba(255,255,255,0.6);
     font-size: 0.9rem;
+}
+
+/* =======================================================
+   --- RESPONSIVE TASARIM (TÜM MONİTÖR & CİHAZ UYUMLULUĞU) ---
+   ======================================================= */
+
+/* 1. DEV MONİTÖRLER & 4K EKRANLAR (1920px ve üzeri) */
+@media screen and (min-width: 1920px) {
+    .hero-content h1 { font-size: 8rem; }
+    .hero-content p { font-size: 1.5rem; }
+    
+    .portfolio-grid, .tech-cards, .quote-wrapper { 
+        max-width: 1600px; 
+        margin-left: auto; 
+        margin-right: auto; 
+    }
+}
+
+/* 2. STANDART LAPTOP EKRANLARI (1024px - 1440px arası) */
+@media screen and (max-width: 1440px) {
+    .hero-content h1 { font-size: 5rem; }
+    .portfolio-section, .workflow-section, .quote-section { padding: 100px 40px; }
+}
+
+/* 3. KÜÇÜK LAPTOPLAR & TABLETLER (1024px ve altı) */
+@media screen and (max-width: 1024px) {
+    header { padding: 20px 40px; }
+    .hero-content h1 { font-size: 4rem; }
+    
+    .portfolio-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .portfolio-item.large { grid-column: span 1; grid-row: span 1; } 
+    .portfolio-item.large-horizontal { grid-column: span 1; }
+    
+    .quote-header h2 { font-size: 2.2rem; }
+}
+
+/* 4. MOBİL TELEFONLAR (768px ve altı) */
+@media screen and (max-width: 768px) {
+    header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+    nav ul { gap: 15px; flex-wrap: wrap; justify-content: center; }
+    nav a { font-size: 0.8rem; }
+    .btn-quote { padding: 8px 20px; }
+
+    .hero-content { left: 5%; bottom: 10%; }
+    .hero-content h1 { font-size: 3rem; }
+    .play-button { width: 60px; height: 60px; font-size: 1.2rem; }
+    .pulse-ring { width: 60px; height: 60px; }
+
+    .portfolio-section, .workflow-section, .quote-section { padding: 60px 20px; }
+    .section-header h2 { font-size: 2rem; }
+    .img-wrapper { min-height: 250px; }
+    
+    .btn-group { flex-direction: column; gap: 15px; }
+    .btn-next, .btn-submit, .btn-prev { width: 100%; margin: 0; text-align: center; }
 }
