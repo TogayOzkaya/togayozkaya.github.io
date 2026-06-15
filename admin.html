@@ -12,62 +12,15 @@
             --white: #FFFFFF;
             --alabaster: #E5E5E5;
         }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--alabaster);
-            color: var(--prussian);
-            margin: 0;
-            padding: 40px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            background: var(--white);
-            padding: 20px 40px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .header h1 {
-            font-family: 'Syne', sans-serif;
-            margin: 0;
-            color: var(--prussian);
-        }
-        table {
-            width: 100%;
-            background: var(--white);
-            border-collapse: collapse;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        th, td {
-            padding: 20px;
-            text-align: left;
-            border-bottom: 1px solid var(--alabaster);
-        }
-        th {
-            background-color: var(--prussian);
-            color: var(--white);
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        .status {
-            background: var(--orange);
-            color: var(--white);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-        .no-data {
-            text-align: center;
-            padding: 50px;
-            color: #888;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--alabaster); color: var(--prussian); margin: 0; padding: 40px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--white); padding: 20px 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .header h1 { font-family: 'Syne', sans-serif; margin: 0; color: var(--prussian); }
+        table { width: 100%; background: var(--white); border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        th, td { padding: 20px; text-align: left; border-bottom: 1px solid var(--alabaster); }
+        th { background-color: var(--prussian); color: var(--white); font-weight: 600; }
+        tr:hover { background-color: #f9f9f9; }
+        .status { background: var(--orange); color: var(--white); padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
+        .no-data { text-align: center; padding: 50px; color: #888; }
     </style>
 </head>
 <body>
@@ -96,23 +49,25 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // DİKKAT: Ana sayfadaki AYNI config kodlarını buraya da yapıştırmalısın
+        // GERÇEK FIREBASE ANAHTARLARIN BURADA
         const firebaseConfig = {
-            apiKey: "SENIN_API_KEY",
-            authDomain: "vizi-medya.firebaseapp.com",
-            projectId: "vizi-medya",
-            // ...
+            apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
+            authDomain: "vizi-96158.firebaseapp.com",
+            projectId: "vizi-96158",
+            storageBucket: "vizi-96158.firebasestorage.app",
+            messagingSenderId: "145575387910",
+            appId: "1:145575387910:web:59776c4c9a2c20434ff487",
+            measurementId: "G-3QS58WW5KZ"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Verileri Canlı Olarak Çek (Tarihe göre en yeni en üstte)
         const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
         
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('table-body');
-            tbody.innerHTML = ""; // İçeriği temizle
+            tbody.innerHTML = ""; 
 
             if (snapshot.empty) {
                 tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
