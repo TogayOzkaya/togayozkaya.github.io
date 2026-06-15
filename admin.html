@@ -12,7 +12,20 @@
             --white: #FFFFFF;
             --alabaster: #E5E5E5;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--alabaster); color: var(--prussian); margin: 0; padding: 40px; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--alabaster); color: var(--prussian); margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+        
+        /* --- GİRİŞ EKRANI TASARIMI --- */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--prussian); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.5s ease; }
+        .login-box { background-color: var(--white); padding: 50px 40px; border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); text-align: center; width: 100%; max-width: 400px; }
+        .login-box h2 { font-family: 'Syne', sans-serif; margin-top: 0; color: var(--prussian); margin-bottom: 30px; letter-spacing: 2px; }
+        .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid var(--alabaster); border-radius: 8px; font-family: 'Inter', sans-serif; box-sizing: border-box; background-color: #f9f9f9; }
+        .login-box input:focus { outline: none; border-color: var(--orange); }
+        .login-box button { width: 100%; background-color: var(--orange); color: var(--white); padding: 15px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .login-box button:hover { background-color: var(--prussian); }
+        .error-msg { color: #d9534f; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+        /* --- PANEL TASARIMI (Giriş Yapılana Kadar Gizli) --- */
+        #admin-content { padding: 40px; display: none; height: 100vh; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--white); padding: 20px 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .header h1 { font-family: 'Syne', sans-serif; margin: 0; color: var(--prussian); }
         table { width: 100%; background: var(--white); border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
@@ -25,77 +38,125 @@
 </head>
 <body>
 
-    <div class="header">
-        <h1>VİZİ MEDYA | Gelen Talepler</h1>
-        <div style="font-size: 0.9rem; color: #666;">Canlı Veritabanı (Firestore)</div>
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>VİZİ MEDYA<br><span style="font-size: 1rem; opacity: 0.6; font-family: 'Inter', sans-serif; font-weight: normal; letter-spacing: normal;">Yönetim Paneli</span></h2>
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+            <input type="password" id="password" placeholder="Şifre">
+            <button onclick="checkLogin()">GİRİŞ YAP</button>
+            <div id="error-message" class="error-msg">Hatalı kullanıcı adı veya şifre!</div>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Tarih</th>
-                <th>Müşteri Bilgileri</th>
-                <th>Odak Noktası</th>
-                <th>Teknik & Model</th>
-                <th>Durum</th>
-            </tr>
-        </thead>
-        <tbody id="table-body">
-            <tr><td colspan="5" class="no-data">Yükleniyor...</td></tr>
-        </tbody>
-    </table>
+    <div id="admin-content">
+        <div class="header">
+            <h1>Gelen Talepler</h1>
+            <div style="font-size: 0.9rem; color: #666; cursor: pointer;" onclick="location.reload();">Çıkış Yap 🚪</div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Müşteri Bilgileri</th>
+                    <th>Odak Noktası</th>
+                    <th>Teknik & Model</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr><td colspan="5" class="no-data">Veriler yükleniyor...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function checkLogin() {
+            // BURADAN KENDİ KULLANICI ADI VE ŞİFRENİ BELİRLEYEBİLİRSİN
+            const dogruKullanici = "vizimedya";
+            const dogruSifre = "@123456123456"; 
+
+            const girilenKullanici = document.getElementById('username').value;
+            const girilenSifre = document.getElementById('password').value;
+
+            if(girilenKullanici === dogruKullanici && girilenSifre === dogruSifre) {
+                // Giriş başarılıysa ekranı değiştir ve veritabanını başlat
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('admin-content').style.display = 'block';
+                    document.body.style.overflow = 'auto'; // Kaydırmayı aç
+                    
+                    // Firebase verilerini çekme fonksiyonunu tetikle
+                    startFirebase();
+                }, 500);
+            } else {
+                // Hatalı giriş
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        // Enter tuşu ile giriş yapabilmek için
+        document.getElementById("password").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkLogin();
+            }
+        });
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // GERÇEK FIREBASE ANAHTARLARIN BURADA
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
-            authDomain: "vizi-96158.firebaseapp.com",
-            projectId: "vizi-96158",
-            storageBucket: "vizi-96158.firebasestorage.app",
-            messagingSenderId: "145575387910",
-            appId: "1:145575387910:web:59776c4c9a2c20434ff487",
-            measurementId: "G-3QS58WW5KZ"
-        };
+        // Firebase başlatma işlemini bir fonksiyona sardık ki sadece giriş yapınca çalışsın
+        window.startFirebase = function() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
+                authDomain: "vizi-96158.firebaseapp.com",
+                projectId: "vizi-96158",
+                storageBucket: "vizi-96158.firebasestorage.app",
+                messagingSenderId: "145575387910",
+                appId: "1:145575387910:web:59776c4c9a2c20434ff487",
+                measurementId: "G-3QS58WW5KZ"
+            };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = ""; 
 
-        const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
-        
-        onSnapshot(q, (snapshot) => {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = ""; 
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
+                    return;
+                }
 
-            if (snapshot.empty) {
-                tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
-                return;
-            }
-
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const tarih = data.tarih ? data.tarih.toDate().toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' }) : "Bilinmiyor";
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${tarih}</td>
-                    <td>
-                        <strong>${data.isim}</strong><br>
-                        <span style="font-size:0.85rem; color:#666;">${data.email}</span><br>
-                        <span style="font-size:0.85rem; color:#666;">${data.telefon}</span>
-                    </td>
-                    <td>${data.odak_noktasi}</td>
-                    <td>
-                        <span style="display:block; margin-bottom:5px;"><strong>Teknik:</strong> ${data.teknik}</span>
-                        <span><strong>Model:</strong> ${data.model}</span>
-                    </td>
-                    <td><span class="status">${data.durum}</span></td>
-                `;
-                tbody.appendChild(tr);
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const tarih = data.tarih ? data.tarih.toDate().toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' }) : "Bilinmiyor";
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${tarih}</td>
+                        <td>
+                            <strong>${data.isim}</strong><br>
+                            <span style="font-size:0.85rem; color:#666;">${data.email}</span><br>
+                            <span style="font-size:0.85rem; color:#666;">${data.telefon}</span>
+                        </td>
+                        <td>${data.odak_noktasi}</td>
+                        <td>
+                            <span style="display:block; margin-bottom:5px;"><strong>Teknik:</strong> ${data.teknik}</span>
+                            <span><strong>Model:</strong> ${data.model}</span>
+                        </td>
+                        <td><span class="status">${data.durum}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             });
-        });
+        };
     </script>
 </body>
 </html>
