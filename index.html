@@ -226,7 +226,14 @@
             <p>&copy; 2026 Tüm hakları saklıdır.</p>
         </div>
     </footer>
-
+<div id="video-modal" class="modal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+        <div class="video-container-modal">
+            <iframe id="modal-video" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
     <script>
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
