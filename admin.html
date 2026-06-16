@@ -22,13 +22,16 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; background: var(--white); padding: 20px 40px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .header h1 { font-family: 'Syne', sans-serif; margin: 0; color: var(--prussian); }
         table { width: 100%; background: var(--white); border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        th, td { padding: 20px; text-align: left; border-bottom: 1px solid var(--alabaster); }
+        th, td { padding: 20px; text-align: left; border-bottom: 1px solid var(--alabaster); vertical-align: top; }
         th { background-color: var(--prussian); color: var(--white); font-weight: 600; }
         tr:hover { background-color: #f9f9f9; }
         .status { background: var(--orange); color: var(--white); padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; }
         .no-data { text-align: center; padding: 50px; color: #888; }
         .logout-btn { background-color: transparent; border: 1px solid var(--prussian); color: var(--prussian); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; }
         .logout-btn:hover { background-color: var(--prussian); color: var(--white); }
+        
+        /* GÜNCELLEME: Mesaj sütununun taşmasını engelleyen stil */
+        .msg-cell { max-width: 300px; line-height: 1.5; font-size: 0.9rem; color: #444; }
     </style>
 </head>
 <body>
@@ -56,11 +59,14 @@
                     <th>Müşteri Bilgileri</th>
                     <th>Odak Noktası</th>
                     <th>Teknik & Model</th>
+                    <!-- GÜNCELLEME: Yeni Sütun Başlığı -->
+                    <th>Proje Detayı / Mesaj</th>
                     <th>Durum</th>
                 </tr>
             </thead>
             <tbody id="table-body">
-                <tr><td colspan="5" class="no-data">Veriler yükleniyor...</td></tr>
+                <!-- GÜNCELLEME: Colspan 5'ten 6'ya çıkarıldı -->
+                <tr><td colspan="6" class="no-data">Veriler yükleniyor...</td></tr>
             </tbody>
         </table>
     </div>
@@ -68,10 +74,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        // Authentication kütüphanesini içeri aktarıyoruz
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // GERÇEK FIREBASE ANAHTARLARIN
         const firebaseConfig = {
             apiKey: "AIzaSyD_t-pGz7nsPJZNqGEtN2fbhp9JNcsyLvM",
             authDomain: "vizi-96158.firebaseapp.com",
@@ -85,7 +89,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Giriş Yapma İşlemi (Şifre artık kodda yok!)
         document.getElementById('login-btn').addEventListener('click', () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
@@ -100,7 +103,6 @@
                 });
         });
 
-        // Enter tuşu ile giriş
         document.getElementById("password").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -108,28 +110,24 @@
             }
         });
 
-        // Çıkış Yapma İşlemi
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => {
-                location.reload(); // Sayfayı yenile ve giriş ekranına dön
+                location.reload(); 
             });
         });
 
-        // Kullanıcı Giriş Yaptığında Paneli Göster
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Giriş başarılı
                 document.getElementById('login-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('admin-content').style.display = 'block';
                     document.body.style.overflow = 'auto'; 
-                    fetchData(); // Verileri çekmeye başla
+                    fetchData(); 
                 }, 500);
             }
         });
 
-        // Firebase Verilerini Çeken Fonksiyon
         function fetchData() {
             const q = query(collection(db, "talepler"), orderBy("tarih", "desc"));
             onSnapshot(q, (snapshot) => {
@@ -137,13 +135,16 @@
                 tbody.innerHTML = ""; 
 
                 if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">Henüz yeni bir talep bulunmuyor.</td></tr>';
                     return;
                 }
 
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const tarih = data.tarih ? data.tarih.toDate().toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' }) : "Bilinmiyor";
+                    
+                    // GÜNCELLEME: Mesajı güvenli bir şekilde çekiyoruz
+                    const mesaj = data.mesaj ? data.mesaj : "<em style='color:#999;'>Belirtilmedi</em>";
                     
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -158,6 +159,8 @@
                             <span style="display:block; margin-bottom:5px;"><strong>Teknik:</strong> ${data.teknik}</span>
                             <span><strong>Model:</strong> ${data.model}</span>
                         </td>
+                        <!-- GÜNCELLEME: Mesajı tabloya yerleştiriyoruz -->
+                        <td class="msg-cell">${mesaj}</td>
                         <td><span class="status">${data.durum}</span></td>
                     `;
                     tbody.appendChild(tr);
