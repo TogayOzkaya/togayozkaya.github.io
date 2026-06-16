@@ -16,7 +16,7 @@
             --orange: #FCA311;
             --font-head: 'Syne', sans-serif;
             --font-body: 'Inter', sans-serif;
-            --font-mono: 'Fira Code', monospace; /* Terminal Fontu */
+            --font-mono: 'Fira Code', monospace; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
@@ -33,7 +33,7 @@
                 transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s, border-color 0.3s;
                 display: flex; align-items: center; justify-content: center;
                 font-family: var(--font-head); font-weight: 700; font-size: 0; color: transparent;
-                backdrop-filter: invert(100%); /* Arka plana göre hafif zıtlık verir */
+                backdrop-filter: invert(100%); 
             }
             .custom-cursor.hover-video {
                 width: 80px; height: 80px; background-color: var(--orange); border-color: transparent;
@@ -70,11 +70,10 @@
 
         /* --- Portfolyo Grid & Terminal --- */
         .portfolio-section { padding: 120px 60px; background-color: var(--white); }
-        .section-header { margin-bottom: 30px; } /* Boşluğu azalttık terminal için */
+        .section-header { margin-bottom: 30px; } 
         .section-header h2 { font-family: var(--font-head); font-size: 3rem; color: var(--prussian); }
         .section-header .line { width: 60px; height: 4px; background-color: var(--orange); margin-top: 15px; }
         
-        /* TERMINAL KOD ALANI */
         .terminal-container { background: #111; color: #00ff41; font-family: var(--font-mono); padding: 15px 25px; border-radius: 6px; margin-bottom: 50px; display: inline-block; font-size: 0.95rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-left: 4px solid var(--orange); max-width: 100%; overflow-x: hidden; white-space: nowrap; }
         .cursor-blink { animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -118,10 +117,14 @@
         .card-content { background-color: var(--alabaster); padding: 30px 20px; text-align: center; border-radius: 8px; font-weight: 600; color: var(--prussian); border: 2px solid transparent; transition: all 0.3s ease; height: 100%; display: flex; align-items: center; justify-content: center; }
         .option-card:hover .card-content { background-color: var(--white); border-color: rgba(252, 163, 17, 0.5); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         .option-card input:checked + .card-content { background-color: var(--white); border-color: var(--orange); color: var(--orange); box-shadow: 0 10px 20px rgba(252, 163, 17, 0.1); }
-        .input-group input { width: 100%; padding: 20px; margin-bottom: 20px; border: none; background-color: var(--alabaster); border-radius: 8px; font-family: var(--font-body); font-size: 1rem; transition: background-color 0.3s ease; }
-        .input-group input:focus { outline: none; background-color: #f5f5f5; box-shadow: 0 0 0 2px var(--orange); }
+        
+        /* GÜNCELLEME: Textarea (Konu Kutusu) için CSS eklendi */
+        .input-group input, .input-group textarea { width: 100%; padding: 20px; margin-bottom: 20px; border: none; background-color: var(--alabaster); border-radius: 8px; font-family: var(--font-body); font-size: 1rem; transition: background-color 0.3s ease; }
+        .input-group textarea { resize: vertical; min-height: 120px; } /* Kutucuğun yüksekliği ve boyutlandırma ayarı */
+        .input-group input:focus, .input-group textarea:focus { outline: none; background-color: #f5f5f5; box-shadow: 0 0 0 2px var(--orange); }
+        
         .btn-group { display: flex; justify-content: space-between; margin-top: 30px; }
-        button { font-family: var(--font-body); font-weight: 600; font-size: 1rem; padding: 15px 35px; border: none; border-radius: 30px; transition: all 0.3s ease; }
+        button { font-family: var(--font-body); font-weight: 600; font-size: 1rem; padding: 15px 35px; border: none; border-radius: 30px; transition: all 0.3s ease; cursor: pointer; }
         .btn-next, .btn-submit { background-color: var(--orange); color: var(--white); margin-left: auto; }
         .btn-next:hover, .btn-submit:hover { background-color: var(--prussian); transform: translateX(5px); }
         .btn-prev { background-color: var(--alabaster); color: var(--prussian); }
@@ -131,7 +134,7 @@
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(10, 15, 25, 0.95); backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.4s ease; }
         .modal.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
         .modal-content { position: relative; width: 90%; max-width: 1100px; background: #000; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .close-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 50px; font-weight: 300; transition: color 0.3s; z-index: 2001; }
+        .close-btn { position: absolute; top: 30px; right: 40px; color: var(--white); font-size: 50px; font-weight: 300; transition: color 0.3s; z-index: 2001; cursor: pointer; }
         .close-btn:hover { color: var(--orange); }
         .video-container-modal { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
         .video-container-modal iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
@@ -156,6 +159,7 @@
             <ul>
                 <li><a href="#showreel" class="hover-target">Showreel</a></li>
                 <li><a href="#portfolio" class="hover-target">İşlerimiz</a></li>
+                <!-- GÜNCELLEME: Ekipman yazısı Hizmetler oldu -->
                 <li><a href="#workflow" class="hover-target">Hizmetler</a></li>
                 <li><a href="#quote" class="btn-quote hover-target">Teklif Al</a></li>
             </ul>
@@ -325,11 +329,13 @@
                 </div>
 
                 <div class="quiz-step" id="step-4">
-                    <h3>Son Adım: İletişim</h3>
+                    <!-- GÜNCELLEME: Konu / Proje Detayı Alanı Eklendi -->
+                    <h3>Son Adım: Detaylar & İletişim</h3>
                     <div class="input-group">
-                        <input type="text" placeholder="Adınız Soyadınız" required>
-                        <input type="email" placeholder="E-posta Adresiniz" required>
-                        <input type="tel" placeholder="Telefon Numaranız">
+                        <input type="text" placeholder="Adınız Soyadınız" required class="hover-target">
+                        <input type="email" placeholder="E-posta Adresiniz" required class="hover-target">
+                        <input type="tel" placeholder="Telefon Numaranız" class="hover-target">
+                        <textarea placeholder="Projenizden veya hayalinizdeki işten kısaca bahsedin..." class="hover-target"></textarea>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn-prev hover-target" onclick="prevStep(4)">← Geri</button>
@@ -362,13 +368,11 @@
         if (window.innerWidth > 1024) {
             const cursor = document.getElementById('custom-cursor');
             
-            // İmlecin fareyi takip etmesi
             document.addEventListener('mousemove', (e) => {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             });
 
-            // Videolara gelince İZLE yazan kayıt butonu efekti
             document.querySelectorAll('.hover-video-target').forEach(el => {
                 el.addEventListener('mouseenter', () => {
                     cursor.classList.add('hover-video');
@@ -380,8 +384,7 @@
                 });
             });
 
-            // Butonlara veya formlara gelince oluşan focus efekti
-            document.querySelectorAll('.hover-target, input').forEach(el => {
+            document.querySelectorAll('.hover-target, input, textarea').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hover-btn'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('hover-btn'));
             });
@@ -392,11 +395,10 @@
         const typewriterElement = document.getElementById('typewriter');
         let typeIndex = 0;
         
-        // Kullanıcı sayfayı aşağı kaydırıp terminali görene kadar yazmayı bekle
         const typeObserver = new IntersectionObserver((entries) => {
             if(entries[0].isIntersecting) {
-                setTimeout(typeWriter, 500); // 0.5 saniye nefes payı
-                typeObserver.disconnect(); // Sadece bir kere çalışsın
+                setTimeout(typeWriter, 500); 
+                typeObserver.disconnect(); 
             }
         });
         typeObserver.observe(document.getElementById('terminal-box'));
@@ -405,9 +407,8 @@
             if (typeIndex < textToType.length) {
                 typewriterElement.innerHTML += textToType.charAt(typeIndex);
                 typeIndex++;
-                setTimeout(typeWriter, 35); // Yazı yazma hızı
+                setTimeout(typeWriter, 35); 
             } else {
-                // Yazı bittiğinde ENTER hissi ver ve rengini markanın rengine dönüştür
                 setTimeout(() => {
                     document.getElementById('terminal-box').style.color = "var(--orange)";
                     document.getElementById('terminal-box').style.borderLeftColor = "#00ff41";
@@ -461,6 +462,7 @@
         }
     </script>
 
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -491,12 +493,23 @@
             const techNeeds = techNeedsArray.length > 0 ? techNeedsArray.join(', ') : "Belirtilmedi";
             const modelEl = document.querySelector('input[name="model"]:checked');
             const modelText = modelEl ? modelEl.nextElementSibling.innerText.replace('\n', ' ').trim() : "Belirtilmedi";
+            
+            // GÜNCELLEME: Konu/Mesaj kutusundaki veriyi de Firebase'e gönderiyoruz
             const inputs = document.querySelectorAll('#step-4 input');
+            const textarea = document.querySelector('#step-4 textarea');
+            const mesaj = textarea ? textarea.value.trim() : "";
             
             try {
                 await addDoc(collection(db, "talepler"), {
-                    isim: inputs[0].value.trim(), email: inputs[1].value.trim(), telefon: inputs.length > 2 ? inputs[2].value.trim() : "",
-                    odak_noktasi: projectType, teknik: techNeeds, model: modelText, tarih: serverTimestamp(), durum: "Yeni" 
+                    isim: inputs[0].value.trim(), 
+                    email: inputs[1].value.trim(), 
+                    telefon: inputs.length > 2 ? inputs[2].value.trim() : "",
+                    mesaj: mesaj, // Yeni veri buraya ekleniyor
+                    odak_noktasi: projectType, 
+                    teknik: techNeeds, 
+                    model: modelText, 
+                    tarih: serverTimestamp(), 
+                    durum: "Yeni" 
                 });
                 alert('Talebiniz sisteme başarıyla kaydedildi! Ekibimiz paneli üzerinden inceleyip en kısa sürede dönüş yapacaktır.');
                 this.reset();
